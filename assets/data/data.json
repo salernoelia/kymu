@@ -1,0 +1,78 @@
+{
+    "games": [
+      {
+        "id": 1,
+        "title": "Cutlery Organizer",
+        "description": "Pick up cutlery and put it away in a drawer.",
+        "movements": ["elbow_flexion", "elbow_extension", "shoulder_abduction", "shoulder_adduction"],
+        "preview": "../images/cutlery_game.png"
+      },
+      {
+        "id": 2,
+        "title": "Snake Path",
+        "description": "Guide a snake along a path and collect coins.",
+        "movements": ["wrist_pronation", "wrist_supination"],
+        "preview": "../images/snake_game.png"
+      },
+      {
+        "id": 3,
+        "title": "Firefighter",
+        "description": "Put out fires by holding and aiming a water hose.",
+        "movements": ["shoulder_abduction", "shoulder_adduction", "shoulder_flexion", "shoulder_extension"],
+        "preview": "../images/firefighter_game.png"
+      },
+      {
+        "id": 4,
+        "title": "Obstacle Runner",
+        "description": "Avoid obstacles in a 2D runner with wrist movements.",
+        "movements": ["wrist_flexion", "wrist_extension"],
+        "preview": "../images/runner_game.png"
+      },
+      {
+        "id": 5,
+        "title": "Fruit Catcher",
+        "description": "Catch falling fruits by moving hands left or right.",
+        "movements": ["elbow_flexion", "elbow_extension"],
+        "preview": "../images/fruit_catcher.png"
+      },
+      {
+        "id": 6,
+        "title": "Ball Balance",
+        "description": "Balance a virtual ball on a platform using wrist control.",
+        "movements": ["wrist_pronation", "wrist_supination"],
+        "preview": "../images/ball_balance.png"
+      },
+      {
+        "id": 7,
+        "title": "Tower Builder",
+        "description": "Stack blocks to build a tower.",
+        "movements": ["shoulder_abduction", "elbow_extension"],
+        "preview": "../images/tower_builder.png"
+      },
+      {
+        "id": 8,
+        "title": "Bubble Pop",
+        "description": "Pop floating bubbles by reaching out.",
+        "movements": ["shoulder_flexion", "shoulder_extension"],
+        "preview": "../images/bubble_pop.png"
+      }
+    ],
+    "movements": [
+      { "id": 1, "name": "Shoulder Abduction" },
+      { "id": 2, "name": "Shoulder Adduction" },
+      { "id": 3, "name": "Elbow Flexion" },
+      { "id": 4, "name": "Elbow Extension" },
+      { "id": 5, "name": "Wrist Pronation" },
+      { "id": 6, "name": "Wrist Supination" },
+      { "id": 7, "name": "Wrist Flexion" },
+      { "id": 8, "name": "Wrist Extension" }
+    ],
+    "patients": [
+              { "id": 1, "name": "Johan Izmir", "age": 67, "condition": "Moderate" },
+              { "id": 2, "name": "Dwight Schrute", "age": 58, "condition": "Severe" },
+              { "id": 3, "name": "Luka Novak", "age": 72, "condition": "Mild" },
+              { "id": 4, "name": "Sofia Konyanova", "age": 65, "condition": "Moderate" },
+              { "id": 5, "name": "Elisabetta Rossi", "age": 60, "condition": "Severe" },
+              { "id": 6, "name": "Martin Luther", "age": 68, "condition": "Mild" }
+            ]
+}
