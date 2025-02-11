@@ -19,6 +19,10 @@ export default defineNuxtConfig({
     layoutTransition: { name: "project-fade", mode: "out-in" },
   },
 
+  supabase: {
+    redirect: false,
+  },
+
   googleFonts: {
     families: {
       Caladea: [300, 500, 700],

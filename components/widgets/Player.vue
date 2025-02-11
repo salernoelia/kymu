@@ -3,7 +3,7 @@
         <!-- <Startup />
         <IceSettings /> -->
         <div id="player" ref="playerDiv">
-            <img id="playButton" v-if="showPlayButtonFlag" src="/images/Play.png" alt="Start Streaming"
+            <PlayCircleOutlined id="playButton" v-if="showPlayButtonFlag" src="/images/Play.png" alt="Start Streaming"
                 @click="onClickPlayButton" />
             <video id="Video" ref="videoElement" style="touch-action: none" playsInline @loadedmetadata="onLoadedVideo"
                 @click="onClickPlayButton" />
@@ -22,11 +22,14 @@
 </template>
 
 <script setup lang="ts">
-import * as Config from "../../assets/js/config.js";
-import { createDisplayStringArray } from "../../assets/js/stats.js";
-import { VideoPlayer } from "../../assets/js/videoplayer.js";
-import { RenderStreaming } from "../../assets/module/renderstreaming.js";
-import { Signaling, WebSocketSignaling } from "../../assets/module/signaling.js";
+import {
+    PlayCircleOutlined
+} from "@ant-design/icons-vue";
+import * as Config from "~/assets/js/config.js";
+import { createDisplayStringArray } from "~/assets/js/stats.js";
+import { VideoPlayer } from "~/assets/js/videoplayer.js";
+import { RenderStreaming } from "~/assets/module/renderstreaming.js";
+import { Signaling, WebSocketSignaling } from "~/assets/module/signaling.js";
 
 const playerDiv = ref<HTMLElement | null>(null);
 const videoElement = ref<HTMLVideoElement | null>(null);
