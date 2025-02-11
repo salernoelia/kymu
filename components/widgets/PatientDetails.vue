@@ -15,7 +15,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { patient } = defineProps(["patient"]);
 const emit = defineEmits(["close"]);
 

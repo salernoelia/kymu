@@ -11,7 +11,7 @@
   </ul>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { patients } = defineProps(["patients"]);
 const emit = defineEmits(["patientClick"]);
 

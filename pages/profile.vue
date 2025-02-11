@@ -10,11 +10,7 @@
 </template>
 
 <script setup lang="ts">
-interface User {
-    name: string;
-    email: string;
-    bio: string;
-}
+import type { User } from '~/types';
 
 const user = ref<User>({
     name: 'Dr. Elanowski',

@@ -11,12 +11,7 @@
 </template>
 
 <script setup lang="ts">
-interface TrainingProgram {
-  id: number;
-  name: string;
-  description: string;
-  details: string;
-}
+import type { TrainingProgram } from "~/types";
 
 const trainingPrograms = ref<TrainingProgram[]>([
   {

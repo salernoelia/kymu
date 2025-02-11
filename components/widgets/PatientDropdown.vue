@@ -39,7 +39,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const selectedPatients = ref([]);
 const patients = defineProps(['patients']);
 

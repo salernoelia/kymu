@@ -28,6 +28,8 @@
 </template>
 
 <script setup lang="ts">
+import type { StatsByPatient } from "~/types";
+
 const patients = ref([]);
 const selectedPatient = ref("");
 const statistics = ref([]);
@@ -43,15 +45,7 @@ const fetchPatientStats = () => {
     return;
   }
 
-  interface Stat {
-    id: number;
-    title: string;
-    value: string | number;
-  }
 
-  interface StatsByPatient {
-    [key: number]: Stat[];
-  }
 
   const statsByPatient: StatsByPatient = {
     1: [

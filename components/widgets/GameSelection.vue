@@ -9,7 +9,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { games } = defineProps(['games']);
 const selectedGame = ref(null);
 

@@ -7,7 +7,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const { movements } = defineProps(['movements']);
 const selectedMovements = ref([]);
 </script>

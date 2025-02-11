@@ -20,11 +20,7 @@
 </template>
 
 <script setup lang="ts">
-interface Settings {
-    username: string;
-    email: string;
-    notifications: boolean;
-};
+import type { Settings } from '~/types';
 
 const settings = ref<Settings>({
     username: '',

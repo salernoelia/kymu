@@ -21,7 +21,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useIceServers } from "../../assets/js/icesettings.js";
 
 const { iceServers, url, username, password, addServer, removeServer, reset } =
