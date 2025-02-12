@@ -25,7 +25,7 @@
                         <PlusCircleOutlined class="mr-3" />
                         Create Exercises
                     </nuxt-link>
-                    <nuxt-link :to="localePath('//training-programs')"
+                    <nuxt-link :to="localePath('/training-programs')"
                         :class="['flex items-center p-4 rounded transition', isActive('/training-programs') ? 'bg-blue-700' : 'hover:bg-gray-700']">
                         <CheckCircleOutlined class="mr-3" />
                         Training Programs

@@ -166,11 +166,11 @@ export class WebSocketSignaling extends EventTarget {
     this.sleep = (msec) => new Promise((resolve) => setTimeout(resolve, msec));
 
     let websocketUrl;
-    if (location.protocol === "https:") {
-      websocketUrl = "wss://" + websocketServerURL;
-    } else {
-      websocketUrl = "ws://" + websocketServerURL;
-    }
+    // if (location.protocol === "https:") {
+    //   websocketUrl = "wss://" + websocketServerURL;
+    // } else {
+    websocketUrl = "wss://" + websocketServerURL;
+    // }
 
     this.websocket = new WebSocket(websocketUrl);
     this.connectionId = null;

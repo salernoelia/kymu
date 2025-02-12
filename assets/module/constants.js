@@ -1,2 +1,2 @@
-export const serverURL = "http://192.168.1.137:80";
-export const websocketServerURL = "192.168.1.137:80";
+export const serverURL = "https://thesis-render-streaming-server.onrender.com";
+export const websocketServerURL = "thesis-render-streaming-server.onrender.com";

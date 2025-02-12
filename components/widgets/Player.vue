@@ -12,14 +12,14 @@
         </div>
 
     </div>
-    <div id="message" :style="{ display: messageDisplay }">
+    <!-- <div id="message" :style="{ display: messageDisplay }">
         {{ message }}
     </div>
     <select id="codecPreferences" ref="codecPreferences" :disabled="codecPreferencesDisabled">
         <option v-for="codec in codecs" :key="codec.value" :value="codec.value">
             {{ codec.label }}
         </option>
-    </select>
+    </select> -->
 </template>
 
 <script setup lang="ts">
