@@ -3,6 +3,14 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-02-11",
   ssr: false,
+  // typescript: {
+  //   typeCheck: true,
+  // },
+
+  future: {
+    compatibilityVersion: 4,
+  },
+
   css: ["~/assets/css/main.css", "~/assets/css/reset.css"],
   modules: [
     "@nuxt/ui",
@@ -14,6 +22,13 @@ export default defineNuxtConfig({
     "@nuxtjs/supabase",
     "@vite-pwa/nuxt",
   ],
+
+  i18n: {
+    vueI18n: "./i18n.config.ts",
+    locales: ["de", "en", "fr"], // used in URL path prefix
+    defaultLocale: "de", // default locale of your project for Nuxt pages and routings
+  },
+
   app: {
     pageTransition: { name: "slide-fade", mode: "out-in" },
     layoutTransition: { name: "project-fade", mode: "out-in" },

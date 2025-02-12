@@ -1,5 +1,8 @@
 <template>
     <div>
+        <h1>
+            {{ $t('welcome') }}
+        </h1>
         <WidgetsPlayer id="player" />
         <h1>
             Hello {{ profiles }}!
@@ -8,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { Database } from '~/types/database';
+import type { Database } from '~/shared/types/database';
 
 
 const supabase = useSupabaseClient();
@@ -18,7 +21,7 @@ const profiles = ref([]);
 
 onMounted(async () => {
     let { data, error } = await supabase
-        .from("profiles")
+        .from("test")
         .select("*");
 
     console.log(data, error);
@@ -26,8 +29,6 @@ onMounted(async () => {
     if (data) {
         profiles.value = data;
     }
-
-
 });
 
 </script>

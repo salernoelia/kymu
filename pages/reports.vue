@@ -28,14 +28,19 @@
 </template>
 
 <script setup lang="ts">
-import type { StatsByPatient } from "~/types";
+import type { StatsByPatient } from "~/shared/types/stats";
+import type { Patient } from "~/shared/types/patient";
 
-const patients = ref([]);
+
+const patients = ref<Patient[]>([]);
 const selectedPatient = ref("");
 const statistics = ref([]);
 
 const loadPatients = async () => {
   const data = await import("../assets/data/data.json");
+  if (!data.patients) {
+    return;
+  }
   patients.value = data.patients;
 };
 

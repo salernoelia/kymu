@@ -11,7 +11,7 @@
 </template>
 
 <script setup lang="ts">
-import type { TrainingProgram } from "~/types/training";
+import type { TrainingProgram } from '~/shared/types/training';
 
 // selectedProgram = ref(null)
 

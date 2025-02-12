@@ -167,7 +167,7 @@ function setCodecPreferences() {
         if (codecPreferences.value && codecPreferences.value.selectedIndex >= 0) {
             const preferredCodec =
                 codecPreferences.value.options[codecPreferences.value.selectedIndex];
-            if (preferredCodec.value !== "") {
+            if (preferredCodec?.value !== "" && preferredCodec) {
                 const [mimeType, sdpFmtpLine] = preferredCodec.value.split(" ");
 
                 const capabilities = RTCRtpSender.getCapabilities("video");
@@ -190,7 +190,8 @@ function setCodecPreferences() {
     const transceivers = renderstreaming?.getTransceivers()
         ?.filter((t) => t.receiver.track.kind == "video") ?? [];
     if (transceivers && transceivers.length > 0) {
-        transceivers.forEach((t) => t.setCodecPreferences(selectedCodecs));
+        const validCodecs = selectedCodecs.filter((codec): codec is RTCRtpCodec => codec !== undefined);
+        transceivers.forEach((t) => t.setCodecPreferences(validCodecs));
     }
 }
 
