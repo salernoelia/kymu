@@ -1,5 +1,4 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
-import yaml from "js-yaml";
 
 export default defineNuxtConfig({
   devtools: { enabled: true },
