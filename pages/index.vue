@@ -1,7 +1,7 @@
 <template>
     <div>
         <h1>
-            {{ $t('welcome') }}
+            {{ $t('hello') }}
         </h1>
         <WidgetsPlayer id="player" />
         <h1>

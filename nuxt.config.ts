@@ -1,4 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
+import yaml from "js-yaml";
+
 export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-02-11",
@@ -24,9 +26,14 @@ export default defineNuxtConfig({
   ],
 
   i18n: {
-    vueI18n: "./i18n.config.ts",
-    locales: ["de", "en", "fr"], // used in URL path prefix
-    defaultLocale: "de", // default locale of your project for Nuxt pages and routings
+    strategy: "prefix_except_default",
+    langDir: "../locales/",
+    locales: [
+      { code: "de", file: "de.yaml", iso: "de-DE" },
+      { code: "en", file: "en.yaml", iso: "en-US" },
+      { code: "fr", file: "fr.yaml", iso: "fr-FR" },
+    ],
+    defaultLocale: "de",
   },
 
   app: {

@@ -9,7 +9,125 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      profiles: {
+      exercises: {
+        Row: {
+          created_at: string
+          description: string
+          id: number
+          images_urls: string[] | null
+          name: string
+          therapist_id: number
+          videos_urls: string[] | null
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: number
+          images_urls?: string[] | null
+          name: string
+          therapist_id: number
+          videos_urls?: string[] | null
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: number
+          images_urls?: string[] | null
+          name?: string
+          therapist_id?: number
+          videos_urls?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "exercises_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patient_achievements: {
+        Row: {
+          created_at: string
+          exercise_id: number
+          id: number
+          minutes: number | null
+          repetitions: number | null
+          vr_session_id: number
+        }
+        Insert: {
+          created_at?: string
+          exercise_id: number
+          id?: number
+          minutes?: number | null
+          repetitions?: number | null
+          vr_session_id: number
+        }
+        Update: {
+          created_at?: string
+          exercise_id?: number
+          id?: number
+          minutes?: number | null
+          repetitions?: number | null
+          vr_session_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patient_achievements_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "patient_achievements_vr_session_id_fkey"
+            columns: ["vr_session_id"]
+            isOneToOne: false
+            referencedRelation: "vr_sessions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      patients: {
+        Row: {
+          condition_gmfcs: number | null
+          created_at: string
+          first_name: string
+          id: number
+          last_name: string
+          therapist_id: number
+          uid: string
+        }
+        Insert: {
+          condition_gmfcs?: number | null
+          created_at?: string
+          first_name: string
+          id?: number
+          last_name: string
+          therapist_id: number
+          uid: string
+        }
+        Update: {
+          condition_gmfcs?: number | null
+          created_at?: string
+          first_name?: string
+          id?: number
+          last_name?: string
+          therapist_id?: number
+          uid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "patients_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      specialist_types: {
         Row: {
           created_at: string
           id: number
@@ -26,6 +144,187 @@ export type Database = {
           name?: string
         }
         Relationships: []
+      }
+      test: {
+        Row: {
+          created_at: string | null
+          id: number
+        }
+        Insert: {
+          created_at?: string | null
+          id?: never
+        }
+        Update: {
+          created_at?: string | null
+          id?: never
+        }
+        Relationships: []
+      }
+      therapists: {
+        Row: {
+          city: string | null
+          country: string | null
+          created_at: string
+          first_name: string
+          id: number
+          last_name: string
+          phone_number: string | null
+          postal_code: string | null
+          prefix_phone_number: string | null
+          specialist_type: string | null
+          street: string | null
+          street_number: string | null
+          uid: string
+        }
+        Insert: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          first_name: string
+          id?: number
+          last_name: string
+          phone_number?: string | null
+          postal_code?: string | null
+          prefix_phone_number?: string | null
+          specialist_type?: string | null
+          street?: string | null
+          street_number?: string | null
+          uid: string
+        }
+        Update: {
+          city?: string | null
+          country?: string | null
+          created_at?: string
+          first_name?: string
+          id?: number
+          last_name?: string
+          phone_number?: string | null
+          postal_code?: string | null
+          prefix_phone_number?: string | null
+          specialist_type?: string | null
+          street?: string | null
+          street_number?: string | null
+          uid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "therapists_specialist_type_fkey"
+            columns: ["specialist_type"]
+            isOneToOne: false
+            referencedRelation: "specialist_types"
+            referencedColumns: ["name"]
+          },
+        ]
+      }
+      training_plan_selected_exercises: {
+        Row: {
+          created_at: string
+          duration_minutes: number | null
+          exercise_id: number
+          id: number
+          physical_location: string | null
+          repetitions: number | null
+          training_plan_id: number
+          vr_location: string | null
+        }
+        Insert: {
+          created_at?: string
+          duration_minutes?: number | null
+          exercise_id: number
+          id?: number
+          physical_location?: string | null
+          repetitions?: number | null
+          training_plan_id: number
+          vr_location?: string | null
+        }
+        Update: {
+          created_at?: string
+          duration_minutes?: number | null
+          exercise_id?: number
+          id?: number
+          physical_location?: string | null
+          repetitions?: number | null
+          training_plan_id?: number
+          vr_location?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_plan_selected_exercises_exercise_id_fkey"
+            columns: ["exercise_id"]
+            isOneToOne: false
+            referencedRelation: "exercises"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_plan_selected_exercises_training_plan_id_fkey"
+            columns: ["training_plan_id"]
+            isOneToOne: false
+            referencedRelation: "training_plans"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_plans: {
+        Row: {
+          created_at: string
+          id: number
+          patient_id: number
+          therapist_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          patient_id: number
+          therapist_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          patient_id?: number
+          therapist_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "training_plans_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "training_plans_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      vr_sessions: {
+        Row: {
+          created_at: string
+          id: number
+          patient_id: number
+        }
+        Insert: {
+          created_at?: string
+          id?: number
+          patient_id: number
+        }
+        Update: {
+          created_at?: string
+          id?: number
+          patient_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "vr_sessions_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {

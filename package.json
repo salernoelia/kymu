@@ -22,7 +22,8 @@
     "typescript": "^5.7.3",
     "vue": "^3.3.8",
     "vue-router": "^4.2.5",
-    "vue-tsc": "^2.1.10"
+    "vue-tsc": "^2.1.10",
+    "yaml-loader": "^0.8.1"
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
@@ -30,6 +31,7 @@
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/tailwindcss": "^6.13.1",
-    "@tailwindcss/line-clamp": "^0.4.4"
+    "@tailwindcss/line-clamp": "^0.4.4",
+    "js-yaml-loader": "^1.2.2"
   }
 }
