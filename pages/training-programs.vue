@@ -11,7 +11,13 @@
 </template>
 
 <script setup lang="ts">
-import type { TrainingProgram } from "~/types";
+import type { TrainingProgram } from "~/types/training";
+
+// selectedProgram = ref(null)
+
+// function selectProgram(program) {
+//   this.selectedProgram = program;
+// }
 
 const trainingPrograms = ref<TrainingProgram[]>([
   {
@@ -99,11 +105,7 @@ const trainingPrograms = ref<TrainingProgram[]>([
       "Patients simulate painting a virtual canvas, encouraging smooth wrist and shoulder coordination while performing circular and linear strokes."
   }
 ]);
-selectedProgram = ref(null)
 
-function selectProgram(program) {
-  this.selectedProgram = program;
-}
 
 </script>
 

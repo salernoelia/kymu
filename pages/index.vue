@@ -23,7 +23,10 @@ onMounted(async () => {
 
     console.log(data, error);
 
-    profiles.value = data;
+    if (data) {
+        profiles.value = data;
+    }
+
 
 });
 

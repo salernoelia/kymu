@@ -22,16 +22,34 @@
 </template>
 
 <script setup lang="ts">
-import { useIceServers } from "../../assets/js/icesettings.js";
+import { useIceServers } from "~/assets/js/icesettings.js";
+
+import type { Ref } from 'vue';
+
+interface IceServer {
+    urls: string[];
+    username?: string;
+    password?: string;
+}
 
 const { iceServers, url, username, password, addServer, removeServer, reset } =
-    useIceServers();
+    useIceServers() as {
+        iceServers: Ref<IceServer[]>;
+        url: Ref<string>;
+        username: Ref<string>;
+        password: Ref<string>;
+        addServer: () => void;
+        removeServer: (index: number) => void;
+        reset: () => void;
+    };
 
 function removeSelectedServers() {
     const selectedOptions = document.querySelectorAll("#servers option:checked");
     selectedOptions.forEach((option) => {
-        const index = Array.from(option.parentNode.children).indexOf(option);
-        removeServer(index);
+        if (option.parentNode) {
+            const index = Array.from(option.parentNode.children).indexOf(option);
+            removeServer(index);
+        }
     });
 }
 </script>

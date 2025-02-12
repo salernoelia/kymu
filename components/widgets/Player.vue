@@ -10,15 +10,16 @@
             <img id="fullscreenButton" ref="fullScreenButtonElement" src="/images/FullScreen.png" alt="Fullscreen"
                 @click="onClickFullscreenButton" />
         </div>
-        <!-- <div id="message" :style="{ display: messageDisplay }">
-            {{ message }}
-        </div> -->
-        <!-- <select id="codecPreferences" ref="codecPreferences" :disabled="codecPreferencesDisabled">
-            <option v-for="codec in codecs" :key="codec.value" :value="codec.value">
-                {{ codec.label }}
-            </option>
-        </select> -->
+
     </div>
+    <div id="message" :style="{ display: messageDisplay }">
+        {{ message }}
+    </div>
+    <select id="codecPreferences" ref="codecPreferences" :disabled="codecPreferencesDisabled">
+        <option v-for="codec in codecs" :key="codec.value" :value="codec.value">
+            {{ codec.label }}
+        </option>
+    </select>
 </template>
 
 <script setup lang="ts">

@@ -16,6 +16,8 @@ body {
   margin: 0;
   padding: 1em;
   word-break: break-word;
+  color: black;
+  background-color: white;
 }
 
 button {
@@ -117,6 +119,10 @@ div#message {
   border-top: 1px solid #666;
   margin: 1em;
   padding: 1em;
+}
+
+input {
+  color: black !important;
 }
 
 @media screen and (max-width: 650px) {
