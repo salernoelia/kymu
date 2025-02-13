@@ -16,6 +16,7 @@ import type { Database } from '~/shared/types/database';
 
 const supabase = useSupabaseClient();
 
+//oijfdsodj
 
 const profiles = ref([]);
 
