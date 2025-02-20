@@ -1,9 +1,6 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
 export default defineNuxtConfig({
-  build: {
-    transpile: ["@nuxtjs/supabase", "nuxt/dist/app/compat/capi"],
-  },
   devtools: { enabled: true },
   compatibilityDate: "2025-02-11",
   ssr: false,
@@ -38,15 +35,20 @@ export default defineNuxtConfig({
     defaultLocale: "de",
   },
 
-  app: {
-    pageTransition: { name: "slide-fade", mode: "out-in" },
-    layoutTransition: { name: "project-fade", mode: "out-in" },
-  },
+  // app: {
+  //   pageTransition: { name: "slide-fade", mode: "out-in" },
+  //   layoutTransition: { name: "project-fade", mode: "out-in" },
+  // },
 
   supabase: {
-    redirect: false,
+    redirect: true,
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
+    redirectOptions: {
+      login: "/login",
+      callback: "/confirm",
+      exclude: ["/register"],
+    },
   },
 
   googleFonts: {

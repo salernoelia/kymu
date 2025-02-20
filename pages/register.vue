@@ -1,14 +1,11 @@
 <template>
     <div class="flex justify-center items-center h-screen">
-      <LoginForm />
+      <RegisterForm />
     </div>
   </template>
   
   <script setup>
   definePageMeta({
     layout: 'empty',
-    middleware: ['auth'],
   });
-
-
   </script>
