@@ -1,7 +1,7 @@
 import type { Config } from "tailwindcss";
 import defaultTheme from "tailwindcss/defaultTheme";
 
-export default <Config>{
+export default <Config> {
   darkMode: "class",
   theme: {
     extend: {
