@@ -8,6 +8,14 @@ export default defineNuxtConfig({
   //   typeCheck: true,
   // },
 
+  //  auto imports of types
+  imports: {
+    dirs: [
+      "~/types/*.d.ts",
+      "~/types/ui/*.d.ts",
+    ],
+  },
+
   future: {
     compatibilityVersion: 4,
   },
@@ -31,6 +39,7 @@ export default defineNuxtConfig({
       { code: "de", file: "de.yaml", iso: "de-DE" },
       { code: "en", file: "en.yaml", iso: "en-US" },
       { code: "fr", file: "fr.yaml", iso: "fr-FR" },
+      { code: "it", file: "it.yaml", iso: "it-IT" },
     ],
     defaultLocale: "de",
   },
@@ -47,7 +56,7 @@ export default defineNuxtConfig({
     redirectOptions: {
       login: "/login",
       callback: "/confirm",
-      exclude: ["/register"],
+      exclude: ["/signup"],
     },
   },
 

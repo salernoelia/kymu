@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Database } from '~/shared/types/database';
 
 
 const supabase = useSupabaseClient();
