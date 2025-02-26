@@ -9,43 +9,151 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      exercises: {
+      connection_families_and_therapists: {
         Row: {
           created_at: string
+          family_id: string
+          id: number
+          therapist_id: string
+        }
+        Insert: {
+          created_at?: string
+          family_id: string
+          id?: number
+          therapist_id: string
+        }
+        Update: {
+          created_at?: string
+          family_id?: string
+          id?: number
+          therapist_id?: string
+        }
+        Relationships: []
+      }
+      default_exercise_instructions: {
+        Row: {
+          "3d_animation_urls": string[] | null
+          created_at: string
+          id: number
+          images_urls: string[] | null
+          videos_urls: string[] | null
+        }
+        Insert: {
+          "3d_animation_urls"?: string[] | null
+          created_at?: string
+          id?: number
+          images_urls?: string[] | null
+          videos_urls?: string[] | null
+        }
+        Update: {
+          "3d_animation_urls"?: string[] | null
+          created_at?: string
+          id?: number
+          images_urls?: string[] | null
+          videos_urls?: string[] | null
+        }
+        Relationships: []
+      }
+      default_exercises: {
+        Row: {
+          created_at: string
+          default_scene_id: number
           description: string
+          duration_seconds_goal: number | null
+          focus_type: string
+          id: number
+          name: string
+          possible_exercise_instructions: number[] | null
+          repetitions_goal: number | null
+          thumbnail_url: string | null
+        }
+        Insert: {
+          created_at?: string
+          default_scene_id: number
+          description: string
+          duration_seconds_goal?: number | null
+          focus_type?: string
+          id?: number
+          name: string
+          possible_exercise_instructions?: number[] | null
+          repetitions_goal?: number | null
+          thumbnail_url?: string | null
+        }
+        Update: {
+          created_at?: string
+          default_scene_id?: number
+          description?: string
+          duration_seconds_goal?: number | null
+          focus_type?: string
+          id?: number
+          name?: string
+          possible_exercise_instructions?: number[] | null
+          repetitions_goal?: number | null
+          thumbnail_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_default_exercises_default_scene_id_fkey"
+            columns: ["default_scene_id"]
+            isOneToOne: false
+            referencedRelation: "default_scenes"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      default_scenes: {
+        Row: {
+          created_at: string
           id: number
           images_urls: string[] | null
           name: string
-          therapist_uid: string
           videos_urls: string[] | null
         }
         Insert: {
           created_at?: string
-          description: string
           id?: number
           images_urls?: string[] | null
           name: string
-          therapist_uid: string
           videos_urls?: string[] | null
         }
         Update: {
           created_at?: string
-          description?: string
           id?: number
           images_urls?: string[] | null
           name?: string
-          therapist_uid?: string
           videos_urls?: string[] | null
         }
-        Relationships: [
-          {
-            foreignKeyName: "exercises_therapist_id_fkey"
-            columns: ["therapist_uid"]
-            isOneToOne: false
-            referencedRelation: "therapists"
-            referencedColumns: ["uid"]
-          },
-        ]
+        Relationships: []
+      }
+      families: {
+        Row: {
+          caregiver_first_name: string | null
+          caregiver_last_name: string | null
+          created_at: string
+          patient_first_name: string
+          patient_last_name: string
+          therapist_uid: string
+          uid: string
+        }
+        Insert: {
+          caregiver_first_name?: string | null
+          caregiver_last_name?: string | null
+          created_at?: string
+          patient_first_name: string
+          patient_last_name: string
+          therapist_uid: string
+          uid: string
+        }
+        Update: {
+          caregiver_first_name?: string | null
+          caregiver_last_name?: string | null
+          created_at?: string
+          patient_first_name?: string
+          patient_last_name?: string
+          therapist_uid?: string
+          uid?: string
+        }
+        Relationships: []
       }
       patient_achievements: {
         Row: {
@@ -80,7 +188,7 @@ export type Database = {
             foreignKeyName: "patient_achievements_exercise_id_fkey"
             columns: ["exercise_id"]
             isOneToOne: false
-            referencedRelation: "exercises"
+            referencedRelation: "default_exercises"
             referencedColumns: ["id"]
           },
           {
@@ -134,24 +242,6 @@ export type Database = {
           },
         ]
       }
-      profiles: {
-        Row: {
-          first_name: string | null
-          id: string
-          last_name: string | null
-        }
-        Insert: {
-          first_name?: string | null
-          id: string
-          last_name?: string | null
-        }
-        Update: {
-          first_name?: string | null
-          id?: string
-          last_name?: string | null
-        }
-        Relationships: []
-      }
       specialist_types: {
         Row: {
           created_at: string
@@ -167,21 +257,6 @@ export type Database = {
           created_at?: string
           id?: number
           name?: string
-        }
-        Relationships: []
-      }
-      test: {
-        Row: {
-          created_at: string | null
-          id: number
-        }
-        Insert: {
-          created_at?: string | null
-          id?: never
-        }
-        Update: {
-          created_at?: string | null
-          id?: never
         }
         Relationships: []
       }
@@ -241,51 +316,145 @@ export type Database = {
           },
         ]
       }
-      training_plan_selected_exercises: {
+      training_block_exercises: {
         Row: {
           created_at: string
-          duration_minutes: number | null
-          exercise_id: number
+          default_exercise_id: number
+          duration_seconds_goal: number | null
+          family_scene_adjustment_access: boolean
+          focus_type: string
           id: number
-          physical_location: string | null
-          repetitions: number | null
-          training_plan_id: number
-          vr_location: string | null
+          repetitions_goal: number | null
+          training_block_id: number
         }
         Insert: {
           created_at?: string
-          duration_minutes?: number | null
-          exercise_id: number
+          default_exercise_id: number
+          duration_seconds_goal?: number | null
+          family_scene_adjustment_access?: boolean
+          focus_type?: string
           id?: number
-          physical_location?: string | null
-          repetitions?: number | null
-          training_plan_id: number
-          vr_location?: string | null
+          repetitions_goal?: number | null
+          training_block_id: number
         }
         Update: {
           created_at?: string
-          duration_minutes?: number | null
-          exercise_id?: number
+          default_exercise_id?: number
+          duration_seconds_goal?: number | null
+          family_scene_adjustment_access?: boolean
+          focus_type?: string
           id?: number
-          physical_location?: string | null
-          repetitions?: number | null
-          training_plan_id?: number
-          vr_location?: string | null
+          repetitions_goal?: number | null
+          training_block_id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "training_plan_selected_exercises_exercise_id_fkey"
-            columns: ["exercise_id"]
+            foreignKeyName: "public_training_block_exercises_default_exercise_id_fkey"
+            columns: ["default_exercise_id"]
             isOneToOne: false
-            referencedRelation: "exercises"
+            referencedRelation: "default_exercises"
             referencedColumns: ["id"]
           },
           {
-            foreignKeyName: "training_plan_selected_exercises_training_plan_id_fkey"
+            foreignKeyName: "public_training_block_exercises_training_block_id_fkey"
+            columns: ["training_block_id"]
+            isOneToOne: false
+            referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_blocks: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          order_position: number
+          training_plan_id: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          order_position: number
+          training_plan_id: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          order_position?: number
+          training_plan_id?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_training_blocks_training_plan_id_fkey"
             columns: ["training_plan_id"]
             isOneToOne: false
             referencedRelation: "training_plans"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      training_blocks_default_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          order_position: number
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          order_position: number
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          order_position?: number
+        }
+        Relationships: []
+      }
+      training_blocks_therapist_templates: {
+        Row: {
+          created_at: string
+          description: string | null
+          id: number
+          name: string
+          order_position: number
+          therapist_uid: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name: string
+          order_position: number
+          therapist_uid: string
+        }
+        Update: {
+          created_at?: string
+          description?: string | null
+          id?: number
+          name?: string
+          order_position?: number
+          therapist_uid?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "public_training_blocks_therapist_templates_therapist_uid_fkey"
+            columns: ["therapist_uid"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["uid"]
           },
         ]
       }
@@ -324,6 +493,30 @@ export type Database = {
             referencedColumns: ["uid"]
           },
         ]
+      }
+      user_profiles: {
+        Row: {
+          first_name: string | null
+          id: string
+          language: string | null
+          last_name: string | null
+          user_type: string | null
+        }
+        Insert: {
+          first_name?: string | null
+          id: string
+          language?: string | null
+          last_name?: string | null
+          user_type?: string | null
+        }
+        Update: {
+          first_name?: string | null
+          id?: string
+          language?: string | null
+          last_name?: string | null
+          user_type?: string | null
+        }
+        Relationships: []
       }
       vr_sessions: {
         Row: {
