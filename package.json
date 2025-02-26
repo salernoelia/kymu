@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "npx supabase gen types typescript --project-id 'vdrwkcubtpypoysioqiw' --schema public > shared/database.d.ts  && nuxt dev",
+    "dev": "npx supabase gen types typescript --project-id 'whbtmepowglwmocqunyw' --schema public > shared/database.d.ts  && nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"

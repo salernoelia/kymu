@@ -28,7 +28,22 @@ export type Database = {
           id?: number
           therapist_id?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_connection_families_and_therapists_family_id_fkey"
+            columns: ["family_id"]
+            isOneToOne: false
+            referencedRelation: "families"
+            referencedColumns: ["uid"]
+          },
+          {
+            foreignKeyName: "public_connection_families_and_therapists_therapist_id_fkey"
+            columns: ["therapist_id"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["uid"]
+          },
+        ]
       }
       default_exercise_instructions: {
         Row: {
@@ -153,7 +168,15 @@ export type Database = {
           therapist_uid?: string
           uid?: string
         }
-        Relationships: []
+        Relationships: [
+          {
+            foreignKeyName: "public_families_therapist_uid_fkey"
+            columns: ["therapist_uid"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["uid"]
+          },
+        ]
       }
       patient_achievements: {
         Row: {
@@ -195,7 +218,7 @@ export type Database = {
             foreignKeyName: "patient_achievements_patient_uid_fkey"
             columns: ["patient_uid"]
             isOneToOne: false
-            referencedRelation: "patients"
+            referencedRelation: "families"
             referencedColumns: ["uid"]
           },
           {
@@ -204,41 +227,6 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "vr_sessions"
             referencedColumns: ["id"]
-          },
-        ]
-      }
-      patients: {
-        Row: {
-          condition_gmfcs: number | null
-          created_at: string
-          first_name: string
-          last_name: string
-          therapist_uid: string
-          uid: string
-        }
-        Insert: {
-          condition_gmfcs?: number | null
-          created_at?: string
-          first_name: string
-          last_name: string
-          therapist_uid: string
-          uid: string
-        }
-        Update: {
-          condition_gmfcs?: number | null
-          created_at?: string
-          first_name?: string
-          last_name?: string
-          therapist_uid?: string
-          uid?: string
-        }
-        Relationships: [
-          {
-            foreignKeyName: "patients_therapist_id_fkey"
-            columns: ["therapist_uid"]
-            isOneToOne: false
-            referencedRelation: "therapists"
-            referencedColumns: ["uid"]
           },
         ]
       }
@@ -267,6 +255,7 @@ export type Database = {
           country: string | null
           created_at: string
           first_name: string
+          language: string | null
           last_name: string
           phone_number: string | null
           postal_code: string | null
@@ -282,6 +271,7 @@ export type Database = {
           country?: string | null
           created_at?: string
           first_name: string
+          language?: string | null
           last_name: string
           phone_number?: string | null
           postal_code?: string | null
@@ -297,6 +287,7 @@ export type Database = {
           country?: string | null
           created_at?: string
           first_name?: string
+          language?: string | null
           last_name?: string
           phone_number?: string | null
           postal_code?: string | null
@@ -461,20 +452,26 @@ export type Database = {
       training_plans: {
         Row: {
           created_at: string
+          description: string | null
           id: number
-          patient_uid: string | null
+          name: string
+          patient_uid: string
           therapist_uid: string
         }
         Insert: {
           created_at?: string
+          description?: string | null
           id?: number
-          patient_uid?: string | null
+          name: string
+          patient_uid: string
           therapist_uid: string
         }
         Update: {
           created_at?: string
+          description?: string | null
           id?: number
-          patient_uid?: string | null
+          name?: string
+          patient_uid?: string
           therapist_uid?: string
         }
         Relationships: [
@@ -482,7 +479,7 @@ export type Database = {
             foreignKeyName: "training_plans_patient_id_fkey"
             columns: ["patient_uid"]
             isOneToOne: false
-            referencedRelation: "patients"
+            referencedRelation: "families"
             referencedColumns: ["uid"]
           },
           {
@@ -539,7 +536,7 @@ export type Database = {
             foreignKeyName: "vr_sessions_patient_id_fkey"
             columns: ["patient_uid"]
             isOneToOne: false
-            referencedRelation: "patients"
+            referencedRelation: "families"
             referencedColumns: ["uid"]
           },
         ]
