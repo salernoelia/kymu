@@ -19,7 +19,6 @@ body {
 }
 
 button {
-  margin: 20px 10px 0 0;
   width: 130px;
 }
 
@@ -28,8 +27,6 @@ button#gather {
 }
 
 section {
-  border-bottom: 1px solid #eee;
-  margin: 0 0 1.5em 0;
   padding: 0 0 1.5em 0;
 }
 
@@ -41,12 +38,6 @@ section#iceServers label {
 section#iceServers input {
   margin: 0 0 10px;
   width: 260px;
-}
-
-select {
-  margin: 0 1em 1em 0;
-  position: relative;
-  top: -1px;
 }
 
 select#servers {

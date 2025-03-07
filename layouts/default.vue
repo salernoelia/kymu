@@ -50,7 +50,7 @@ watch(user, (newUser) => {
         </div>
       </header>
 
-      <main class="flex-grow p-6 overflow-auto">
+      <main class="p-4 flex-grow overflow-y-auto">
         <slot />
       </main>
     </div>

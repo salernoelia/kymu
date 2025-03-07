@@ -1,5 +1,22 @@
 <template>
   <div class="flex flex-col">
+    <WidgetsVerticalCarousell
+      @current-slide="(i) => console.log('clicke', i)"
+      :initialSlide="0"
+      :slides="[
+        { title: 'Slide 1', content: 'Content 1' },
+        { title: 'Slide 2', content: 'Content 2' },
+        { title: 'Slide 3', content: 'Content 3' },
+        { title: 'Slide 4', content: 'Content 4' },
+        { title: 'Slide 5', content: 'Content 5' },
+      ]"
+    />
+    <WidgetsThreeModelViewer
+      modelPath="/models/box.glb"
+      :scale="2"
+      @exercise-variant="(v) => console.log('exercise variant', v)"
+    />
+
     <WidgetsD3PieChart
       :data="pieChartData"
       title="Budget Allocation"
@@ -26,18 +43,6 @@
       :height="400"
       barColor="#3498db"
     />
-    <WidgetsVerticalCarousell
-      @current-slide="(i) => console.log('clicke', i)"
-      :initialSlide="0"
-      :slides="[
-        { title: 'Slide 1', content: 'Content 1' },
-        { title: 'Slide 2', content: 'Content 2' },
-        { title: 'Slide 3', content: 'Content 3' },
-        { title: 'Slide 4', content: 'Content 4' },
-        { title: 'Slide 5', content: 'Content 5' },
-      ]"
-    />
-    <WidgetsThreeModelViewer />
   </div>
 </template>
 
@@ -50,14 +55,6 @@ const pieChartData = ref([
   { name: "Administration", value: 150 },
 ]);
 
-const barChartData = ref([
-  { name: "Jan", value: 45 },
-  { name: "Feb", value: 23 },
-  { name: "Mar", value: 56 },
-  { name: "Apr", value: 78 },
-  { name: "May", value: 42 },
-]);
-
 const bubbleData = ref([
   { name: "Research", value: 85, category: "Development" },
   { name: "Design", value: 65, category: "Development" },
@@ -68,16 +65,24 @@ const bubbleData = ref([
   { name: "Support", value: 25, category: "Operations" },
 ]);
 
-// To demonstrate animation on data updates
-setTimeout(() => {
-  barChartData.value = [
-    { name: "Jan", value: 65 },
-    { name: "Feb", value: 59 },
-    { name: "Mar", value: 80 },
-    { name: "Apr", value: 55 },
-    { name: "May", value: 40 },
-  ];
-}, 3000);
+const barChartData = ref([
+  { name: "Jan", value: 45 },
+  { name: "Feb", value: 23 },
+  { name: "Mar", value: 56 },
+  { name: "Apr", value: 78 },
+  { name: "May", value: 42 },
+]);
+
+// to demonstrate animation on data updates
+// setTimeout(() => {
+//   barChartData.value = [
+//     { name: "Jan", value: 65 },
+//     { name: "Feb", value: 59 },
+//     { name: "Mar", value: 80 },
+//     { name: "Apr", value: 55 },
+//     { name: "May", value: 40 },
+//   ];
+// }, 3000);
 </script>
 
 <style scoped></style>

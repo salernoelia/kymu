@@ -73,12 +73,16 @@ const prevSlide = () => {
 const scrollToCurrentSlide = () => {
   const currentElement = slideElements.value[currentSlide.value];
   if (carouselEl.value && currentElement) {
-    currentElement.scrollIntoView({
-      behavior: "smooth",
-    });
+    const containerRect = carouselEl.value.getBoundingClientRect();
+    const elementRect = currentElement.getBoundingClientRect();
+    const relativeTop = elementRect.top - containerRect.top;
+
+    carouselEl.value.scrollTop =
+      carouselEl.value.scrollTop +
+      relativeTop -
+      (containerRect.height - elementRect.height) / 2;
   }
 };
-
 const handleScroll = () => {
   if (!carouselEl.value || slideElements.value.length === 0) return;
 
