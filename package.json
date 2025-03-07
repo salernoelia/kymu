@@ -32,6 +32,8 @@
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/tailwindcss": "^6.13.1",
     "@tailwindcss/line-clamp": "^0.4.4",
-    "js-yaml-loader": "^1.2.2"
+    "d3": "^7.9.0",
+    "js-yaml-loader": "^1.2.2",
+    "three": "^0.174.0"
   }
 }

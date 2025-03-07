@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex-col">
     <h1>
       {{ $t("hello") }}
     </h1>
@@ -10,8 +10,6 @@
 
 <script setup lang="ts">
 const supabase = useSupabaseClient();
-
-//oijfdsodjdgslkjgodsij
 
 const profiles = ref([]);
 
@@ -31,5 +29,6 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
+  max-width: 500px;
 }
 </style>
