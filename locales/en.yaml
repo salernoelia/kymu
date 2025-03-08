@@ -1,1 +1,5 @@
 hello: "Hello World"
+add-block: "Add Block"
+edit-block: "Edit Block"
+add-exercise: "Add Exercise"
+edit-exercise: "Edit Exercise"

@@ -2,48 +2,38 @@
     <div class="kanban-column" @dragover.prevent="onDragOver" @dragenter.prevent="onDragEnter" @dragleave="onDragLeave"
         @drop="onDrop" :data-column-id="column.id" :class="{ 'drop-active': isDropTarget }">
         <div class="column-header">
-            <div v-if="isEditing" class="edit-column">
-                <input v-model="editTitle" type="text" placeholder="Column Title" @keyup.enter="saveColumnEdit"
-                    ref="titleInput">
-                <button @click="saveColumnEdit">Save</button>
-                <button @click="cancelColumnEdit">Cancel</button>
-            </div>
-            <div v-else class="column-title-display">
+            <div class="column-title-display">
                 <div class="column-title">
-
                     <h3>{{ column.title }}</h3>
                 </div>
                 <div class="column-actions">
-                    <button @click="startEditing">Edit</button>
-                    <button @click="$emit('delete-column', column.id)">Delete</button>
+                    <button @click="editColumn">Edit</button>
+                    <button @click="handleColumnDelete('dialog')">Delete</button>
+
+                    <dialog ref="dialog">
+                        <p>Are you sure you want to delete this column?</p>
+                        <button @click="handleColumnDelete('yes')">Yes</button>
+                        <button @click="handleColumnDelete('no')">No</button>
+                    </dialog>
                 </div>
             </div>
         </div>
 
         <div class="cards-container">
             <template v-for="(card, index) in sortedCards" :key="card.id">
-                <!-- Show drop indicator before card if this is the drop position -->
                 <div v-if="draggedOverIndex === index" class="drop-indicator"></div>
 
-                <KanbanCard :card="card" @update-card="$emit('update-card', card.id, $event)"
-                    @delete-card="$emit('delete-card', card.id)" @dragstart="onDragStart"
+                <KanbanCard :card="card" @delete-card="$emit('delete-card', $event)" @dragstart="onDragStart"
                     @dragover="onCardDragOver(index, $event)" />
             </template>
 
-            <!-- Show drop indicator at the end if needed -->
             <div v-if="draggedOverIndex === sortedCards.length || (isDropTarget && !sortedCards.length)"
                 class="drop-indicator">
             </div>
         </div>
 
         <div class="add-card">
-            <div v-if="isAddingCard" class="add-card-form">
-                <input v-model="newCardTitle" type="text" placeholder="Card title" @keyup.enter="addCard"
-                    ref="cardInput">
-                <button @click="addCard">Add</button>
-                <button @click="cancelAddCard">Cancel</button>
-            </div>
-            <button v-else @click="startAddingCard" class="add-card-button">
+            <button @click="addCard" class="add-card-button">
                 + Add Card
             </button>
         </div>
@@ -51,6 +41,7 @@
 </template>
 
 <script setup lang="ts">
+const deleteColumnDialog = templateRef('dialog');
 
 const props = defineProps<{
     column: KanbanColumn;
@@ -58,62 +49,46 @@ const props = defineProps<{
 }>();
 
 const emit = defineEmits<{
-    'add-card': [columnId: string, title: string];
     'delete-card': [cardId: string];
-    'update-card': [cardId: string, updatedCard: { title: string, description: string }];
     'delete-column': [columnId: string];
-    'update-column': [columnId: string, updatedColumn: { title: string }];
     'card-moved': [payload: { cardId: string, toColumnId: string, newIndex: number }];
 }>();
 
-const isAddingCard = ref(false);
-const newCardTitle = ref('');
-const isEditing = ref(false);
-const editTitle = ref(props.column.title);
-const titleInput = ref<HTMLInputElement | null>(null);
-const cardInput = ref<HTMLInputElement | null>(null);
+const kanbanActions = inject('kanbanActions') as {
+    openEditColumnSidebar: (columnId: string) => void;
+    openAddCardSidebar: (columnId: string) => void;
+    openEditCardSidebar: (cardId: string) => void;
+};
 
 const sortedCards = computed(() => {
     return [...props.cards].sort((a, b) => a.order - b.order);
 });
 
-const startAddingCard = () => {
-    isAddingCard.value = true;
-    nextTick(() => {
-        cardInput.value?.focus();
-    });
-};
-
 const addCard = () => {
-    if (newCardTitle.value.trim()) {
-        emit('add-card', props.column.id, newCardTitle.value.trim());
-        newCardTitle.value = '';
-        isAddingCard.value = false;
+    kanbanActions.openAddCardSidebar(props.column.id);
+};
+
+const editColumn = () => {
+    kanbanActions.openEditColumnSidebar(props.column.id);
+};
+
+interface ColumnDeleteOptions {
+    dialog: string;
+    yes: string;
+    no: string;
+}
+
+const handleColumnDelete = (option: keyof ColumnDeleteOptions) => {
+
+    if (option === 'dialog') {
+        deleteColumnDialog.value.showModal();
+    } else if (option === 'yes') {
+        emit('delete-column', props.column.id);
+    } else if (option === 'no') {
+        deleteColumnDialog.value.close();
+    } else {
+        console.error('Invalid option');
     }
-};
-
-const cancelAddCard = () => {
-    newCardTitle.value = '';
-    isAddingCard.value = false;
-};
-
-const startEditing = () => {
-    isEditing.value = true;
-    nextTick(() => {
-        titleInput.value?.focus();
-    });
-};
-
-const saveColumnEdit = () => {
-    if (editTitle.value.trim()) {
-        emit('update-column', props.column.id, { title: editTitle.value.trim() });
-        isEditing.value = false;
-    }
-};
-
-const cancelColumnEdit = () => {
-    editTitle.value = props.column.title;
-    isEditing.value = false;
 };
 
 const isDropTarget = ref(false);
@@ -290,8 +265,8 @@ button {
 }
 
 .drop-active {
-    background-color: #e9f7fe;
-    box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+    background-color: #ffffff;
+
 }
 
 .drop-placeholder {
@@ -305,7 +280,7 @@ button {
 .drop-indicator {
     height: 80px;
     background-color: rgba(0, 120, 215, 0.1);
-    border: 2px dashed #0078d7;
+    border: 2px dashed #99d1ff;
     border-radius: 3px;
     margin: 4px 0;
     transition: all 0.2s ease;

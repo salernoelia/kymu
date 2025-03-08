@@ -9,4 +9,6 @@ export interface KanbanCard {
 export interface KanbanColumn {
     id: string;
     title: string;
+    description: string;
+    goal: string;
 }

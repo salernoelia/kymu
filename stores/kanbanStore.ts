@@ -2,17 +2,72 @@ export const useKanbanStore = defineStore("kanban", {
     state: () => ({
         columns: [] as KanbanColumn[],
         cards: [] as KanbanCard[],
+        formMode: null as
+            | "add-column"
+            | "edit-column"
+            | "add-card"
+            | "edit-card"
+            | null,
+        activeColumnId: null as string | null,
+        activeCardId: null as string | null,
+        formData: {
+            title: "",
+            description: "",
+        },
     }),
 
     actions: {
-        addColumn(title: string) {
+        // Form management actions
+        setFormMode(
+            mode:
+                | "add-column"
+                | "edit-column"
+                | "add-card"
+                | "edit-card"
+                | null,
+        ) {
+            this.formMode = mode;
+        },
+
+        setActiveColumn(columnId: string | null) {
+            this.activeColumnId = columnId;
+        },
+
+        setActiveCard(cardId: string | null) {
+            this.activeCardId = cardId;
+
+            if (cardId) {
+                const card = this.cards.find((c) => c.id === cardId);
+                if (card) {
+                    this.formData = {
+                        title: card.title,
+                        description: card.description,
+                    };
+                }
+            }
+        },
+
+        resetForm() {
+            this.formMode = null;
+            this.activeColumnId = null;
+            this.activeCardId = null;
+            this.formData = { title: "", description: "" };
+        },
+
+        // Existing actions
+        addColumn(title: string, description: string, goal: string) {
             this.columns.push({
                 id: `column-${Date.now()}`,
                 title,
+                description,
+                goal,
             });
         },
 
-        updateColumn(columnId: string, updatedColumn: { title: string }) {
+        updateColumn(
+            columnId: string,
+            updatedColumn: { title: string; description: string; goal: string },
+        ) {
             const index = this.columns.findIndex((col) => col.id === columnId);
             if (index !== -1) {
                 this.columns[index] = {
@@ -100,6 +155,56 @@ export const useKanbanStore = defineStore("kanban", {
         resetBoard() {
             this.columns = [];
             this.cards = [];
+        },
+
+        // Save form data based on current form mode
+        saveForm() {
+            if (!this.formMode) return;
+
+            const { title, description } = this.formData;
+
+            switch (this.formMode) {
+                case "add-column":
+                    if (title.trim()) {
+                        this.addColumn(title.trim(), "", "");
+                    }
+                    break;
+
+                case "edit-column":
+                    if (this.activeColumnId && title.trim()) {
+                        this.updateColumn(this.activeColumnId, {
+                            title: title.trim(),
+                            description: "",
+                            goal: "",
+                        });
+                    }
+                    break;
+
+                case "add-card":
+                    if (this.activeColumnId && title.trim()) {
+                        this.addCard({
+                            id: `card-${Date.now()}`,
+                            columnId: this.activeColumnId,
+                            title: title.trim(),
+                            description: description || "",
+                            order:
+                                this.getMaxOrderForColumn(this.activeColumnId) +
+                                1,
+                        });
+                    }
+                    break;
+
+                case "edit-card":
+                    if (this.activeCardId && title.trim()) {
+                        this.updateCard(this.activeCardId, {
+                            title: title.trim(),
+                            description: description || "",
+                        });
+                    }
+                    break;
+            }
+
+            this.resetForm();
         },
     },
 });

@@ -5,6 +5,7 @@
                 <h2 v-if="title" class="sidebar__title">{{ title }}</h2>
                 <button class="sidebar__close" @click="close">
                     <span class="sr-only">Close</span>
+                    <!-- proforma close icon -->
                     <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
                         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -56,7 +57,6 @@ const close = () => {
     emit('closed');
 };
 
-// Expose method to open the sidebar
 defineExpose({
     open: () => {
         isOpen.value = true;
@@ -130,7 +130,7 @@ defineExpose({
     z-index: 998;
 }
 
-// Transitions
+// ==== Transitions ====
 .slide-enter-active,
 .slide-leave-active {
     transition: transform 0.5s ease-in-out;

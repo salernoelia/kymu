@@ -88,6 +88,21 @@ div#warning {
   border: 1px solid transparent;
 }
 
+dialog {
+  border: 1px solid #ccc;
+  background-color: #fbfbfb;
+
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  padding: 3em;
+  width: 400px;
+  color: #000;
+}
+::backdrop {
+  background-color: rgba(0, 0, 0, 0.5);
+  opacity: 0.75;
+}
+
 div.box {
   margin: 1em;
 }
