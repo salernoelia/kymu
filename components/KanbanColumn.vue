@@ -1,5 +1,6 @@
 <template>
-    <div class="kanban-column" @dragover.prevent @drop="onDrop" :data-column-id="column.id">
+    <div class="kanban-column" @dragover.prevent="onDragOver" @dragenter.prevent="onDragEnter" @dragleave="onDragLeave"
+        @drop="onDrop" :data-column-id="column.id" :class="{ 'drop-active': isDropTarget }">
         <div class="column-header">
             <div v-if="isEditing" class="edit-column">
                 <input v-model="editTitle" type="text" placeholder="Column Title" @keyup.enter="saveColumnEdit"
@@ -23,6 +24,7 @@
             <KanbanCard v-for="card in sortedCards" :key="card.id" :card="card"
                 @update-card="$emit('update-card', card.id, $event)" @delete-card="$emit('delete-card', card.id)"
                 @dragstart="onDragStart" />
+            <div v-if="isDropTarget && !cards.length" class="drop-placeholder"></div>
         </div>
 
         <div class="add-card">
@@ -105,6 +107,9 @@ const cancelColumnEdit = () => {
     isEditing.value = false;
 };
 
+const isDropTarget = ref(false);
+const dragCounter = ref(0);
+
 const onDragStart = (event: DragEvent, card: KanbanCard) => {
     if (event.dataTransfer) {
         event.dataTransfer.effectAllowed = 'move';
@@ -113,7 +118,30 @@ const onDragStart = (event: DragEvent, card: KanbanCard) => {
     }
 };
 
+const onDragEnter = (event: DragEvent) => {
+    dragCounter.value++;
+    isDropTarget.value = true;
+};
+
+const onDragLeave = (event: DragEvent) => {
+    dragCounter.value--;
+
+    // Only remove highlight when completely left the container
+    if (dragCounter.value === 0) {
+        isDropTarget.value = false;
+    }
+};
+
+const onDragOver = (event: DragEvent) => {
+    if (event.dataTransfer) {
+        event.dataTransfer.dropEffect = 'move';
+    }
+};
+
 const onDrop = (event: DragEvent) => {
+    isDropTarget.value = false;
+    dragCounter.value = 0;
+
     if (!event.dataTransfer) return;
 
     const cardId = event.dataTransfer.getData('cardId');
@@ -189,6 +217,8 @@ const onDrop = (event: DragEvent) => {
 .cards-container {
     min-height: 10px;
     flex-grow: 1;
+    padding-top: 4px;
+    padding-bottom: 4px;
 }
 
 .add-card-button {
@@ -211,5 +241,18 @@ input {
 button {
     cursor: pointer;
     margin-right: 4px;
+}
+
+.drop-active {
+    background-color: #e9f7fe;
+    box-shadow: 0 0 5px rgba(0, 120, 215, 0.5);
+}
+
+.drop-placeholder {
+    height: 80px;
+    background-color: rgba(0, 120, 215, 0.1);
+    border: 2px dashed #0078d7;
+    border-radius: 3px;
+    margin-bottom: 8px;
 }
 </style>
