@@ -5,7 +5,6 @@ export const useKanbanStore = defineStore("kanban", {
     }),
 
     actions: {
-        // Column operations
         addColumn(title: string) {
             this.columns.push({
                 id: `column-${Date.now()}`,
@@ -24,9 +23,7 @@ export const useKanbanStore = defineStore("kanban", {
         },
 
         deleteColumn(columnId: string) {
-            // Delete the column
             this.columns = this.columns.filter((col) => col.id !== columnId);
-            // Delete all cards in this column
             this.cards = this.cards.filter((card) =>
                 card.columnId !== columnId
             );
@@ -53,7 +50,6 @@ export const useKanbanStore = defineStore("kanban", {
             // Remove the card
             this.cards = this.cards.filter((card) => card.id !== cardId);
 
-            // Reorder remaining cards in the same column
             const columnCards = this.cards
                 .filter((card) => card.columnId === deletedCard.columnId)
                 .sort((a, b) => a.order - b.order);
@@ -68,11 +64,8 @@ export const useKanbanStore = defineStore("kanban", {
             if (!cardToMove) return;
 
             const sourceColumnId = cardToMove.columnId;
-
-            // Remove card from its current position
             cardToMove.columnId = targetColumnId;
 
-            // Reorder cards in source column
             if (sourceColumnId !== targetColumnId) {
                 const sourceCards = this.cards
                     .filter((card) => card.columnId === sourceColumnId)
@@ -83,17 +76,14 @@ export const useKanbanStore = defineStore("kanban", {
                 });
             }
 
-            // Reorder cards in target column
             const targetCards = this.cards
                 .filter((card) =>
                     card.columnId === targetColumnId && card.id !== cardId
                 )
                 .sort((a, b) => a.order - b.order);
 
-            // Insert the card at the new index
             targetCards.splice(newIndex, 0, cardToMove);
 
-            // Update order for all cards in the target column
             targetCards.forEach((card, index) => {
                 card.order = index;
             });

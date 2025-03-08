@@ -1,7 +1,9 @@
 <template>
     <div class="kanban-container">
+        <button @click="openSidebar">Open Sidebar</button>
+
         <div class="kanban-board">
-            <h1>Kanban Board</h1>
+            <h1>Unit Editor</h1>
             <div class="board-container">
                 <KanbanColumn v-for="column in kanbanState.columns" :key="column.id" :column="column"
                     :cards="getCardsForColumn(column.id)" @add-card="addCard" @delete-card="deleteCard"
@@ -9,14 +11,26 @@
                     @update-column="updateColumn" />
                 <button class="add-column-btn" @click="addColumn">+ Add Column</button>
             </div>
+
+            <KanbanUnitSidebar v-model="sidebarOpen" title="Patient Details" width="50%"
+                @closed="handleSidebarClosed" />
         </div>
     </div>
 </template>
 
 <script setup lang="ts">
-
 const kanbanStore = useKanbanStore();
 const kanbanState = computed(() => kanbanStore);
+
+const sidebarOpen = ref(false);
+
+const openSidebar = () => {
+    sidebarOpen.value = true;
+};
+
+const handleSidebarClosed = () => {
+    console.log('Sidebar was closed');
+};
 
 const getCardsForColumn = (columnId: string) => {
     return kanbanState.value.cards.filter(card => card.columnId === columnId);

@@ -1,5 +1,4 @@
 h1 {
-  border-bottom: 1px solid #ccc;
   font-weight: 500;
   margin: 0 0 0.8em 0;
   padding: 0 0 0.2em 0;
@@ -19,18 +18,12 @@ body {
   word-break: break-word;
 }
 
-button {
-  width: 130px;
-}
-
 button#gather {
   display: block;
 }
 
 section {
   border-bottom: 1px solid #eee;
-  margin: 0 0 1.5em 0;
-  padding: 0 0 1.5em 0;
 }
 
 section#iceServers label {
@@ -39,12 +32,10 @@ section#iceServers label {
 }
 
 section#iceServers input {
-  margin: 0 0 10px;
   width: 260px;
 }
 
 select {
-  margin: 0 1em 1em 0;
   position: relative;
   top: -1px;
 }
@@ -57,23 +48,12 @@ select#servers {
 
 section:last-child {
   border-bottom: none;
-  margin: 0;
   padding: 0;
 }
 
 div#container {
-  margin: 0 auto 0 auto;
   max-width: 60em;
   padding: 1em 1.5em 1.3em 1.5em;
-}
-
-code {
-  padding: 0.1em 0.25em;
-  color: #444;
-  background-color: #e7edf3;
-  border-radius: 3px;
-  border: solid 1px #d6dde4;
-  font-weight: 400;
 }
 
 p {
@@ -95,7 +75,6 @@ p.borderBelow {
 }
 
 video {
-  margin: 0 0 20px 0;
   --width: 100%;
   width: var(--width);
   height: calc(var(--width) * 0.75);

@@ -21,10 +21,19 @@
         </div>
 
         <div class="cards-container">
-            <KanbanCard v-for="card in sortedCards" :key="card.id" :card="card"
-                @update-card="$emit('update-card', card.id, $event)" @delete-card="$emit('delete-card', card.id)"
-                @dragstart="onDragStart" />
-            <div v-if="isDropTarget && !cards.length" class="drop-placeholder"></div>
+            <template v-for="(card, index) in sortedCards" :key="card.id">
+                <!-- Show drop indicator before card if this is the drop position -->
+                <div v-if="draggedOverIndex === index" class="drop-indicator"></div>
+
+                <KanbanCard :card="card" @update-card="$emit('update-card', card.id, $event)"
+                    @delete-card="$emit('delete-card', card.id)" @dragstart="onDragStart"
+                    @dragover="onCardDragOver(index, $event)" />
+            </template>
+
+            <!-- Show drop indicator at the end if needed -->
+            <div v-if="draggedOverIndex === sortedCards.length || (isDropTarget && !sortedCards.length)"
+                class="drop-indicator">
+            </div>
         </div>
 
         <div class="add-card">
@@ -109,6 +118,7 @@ const cancelColumnEdit = () => {
 
 const isDropTarget = ref(false);
 const dragCounter = ref(0);
+const draggedOverIndex = ref(-1);
 
 const onDragStart = (event: DragEvent, card: KanbanCard) => {
     if (event.dataTransfer) {
@@ -129,12 +139,55 @@ const onDragLeave = (event: DragEvent) => {
     // Only remove highlight when completely left the container
     if (dragCounter.value === 0) {
         isDropTarget.value = false;
+        draggedOverIndex.value = -1;
     }
 };
 
 const onDragOver = (event: DragEvent) => {
     if (event.dataTransfer) {
         event.dataTransfer.dropEffect = 'move';
+
+        // If dragging directly over the column and not over a card
+        if ((event.target as HTMLElement).classList.contains('cards-container') ||
+            (event.target as HTMLElement).classList.contains('kanban-column')) {
+            const cardElements = document.querySelectorAll(`[data-column-id="${props.column.id}"] .kanban-card`);
+
+            if (cardElements.length === 0) {
+                draggedOverIndex.value = 0;
+                return;
+            }
+
+            // Calculate insert position based on mouse position
+            const mouseY = event.clientY;
+            let newIndex = cardElements.length;  // Default to end
+
+            for (let i = 0; i < cardElements.length; i++) {
+                const rect = (cardElements[i] as HTMLElement).getBoundingClientRect();
+                const cardMiddle = rect.top + rect.height / 2;
+
+                if (mouseY < cardMiddle) {
+                    newIndex = i;
+                    break;
+                }
+            }
+
+            draggedOverIndex.value = newIndex;
+        }
+    }
+};
+
+const onCardDragOver = (index: number, event: DragEvent) => {
+    event.stopPropagation();
+    const rect = (event.currentTarget as HTMLElement).getBoundingClientRect();
+    const mouseY = event.clientY;
+
+    // Determine if we're in the top or bottom half of the card
+    if (mouseY < rect.top + rect.height / 2) {
+        // Top half - place before this card
+        draggedOverIndex.value = index;
+    } else {
+        // Bottom half - place after this card
+        draggedOverIndex.value = index + 1;
     }
 };
 
@@ -147,26 +200,17 @@ const onDrop = (event: DragEvent) => {
     const cardId = event.dataTransfer.getData('cardId');
     const targetColumnId = props.column.id;
 
-    const cardElements = document.querySelectorAll(`[data-column-id="${targetColumnId}"] .kanban-card`);
-    let insertIndex = cardElements.length;
-
-    const mouseY = event.clientY;
-
-    for (let i = 0; i < cardElements.length; i++) {
-        const rect = (cardElements[i] as HTMLElement).getBoundingClientRect();
-        const cardMiddle = rect.top + rect.height / 2;
-
-        if (mouseY < cardMiddle) {
-            insertIndex = i;
-            break;
-        }
-    }
+    // Use the tracked index if available, otherwise calculate it
+    let insertIndex = draggedOverIndex.value >= 0 ? draggedOverIndex.value : sortedCards.value.length;
 
     emit('card-moved', {
         cardId,
         toColumnId: targetColumnId,
         newIndex: insertIndex
     });
+
+    // Reset the drag state
+    draggedOverIndex.value = -1;
 };
 </script>
 
@@ -219,6 +263,8 @@ const onDrop = (event: DragEvent) => {
     flex-grow: 1;
     padding-top: 4px;
     padding-bottom: 4px;
+    display: flex;
+    flex-direction: column;
 }
 
 .add-card-button {
@@ -254,5 +300,14 @@ button {
     border: 2px dashed #0078d7;
     border-radius: 3px;
     margin-bottom: 8px;
+}
+
+.drop-indicator {
+    height: 80px;
+    background-color: rgba(0, 120, 215, 0.1);
+    border: 2px dashed #0078d7;
+    border-radius: 3px;
+    margin: 4px 0;
+    transition: all 0.2s ease;
 }
 </style>
