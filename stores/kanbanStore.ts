@@ -1,156 +1,110 @@
-import { defineStore } from "pinia";
-
-interface KanbanCard {
-    id: string;
-    columnId: string;
-    title: string;
-    description: string;
-    order: number;
-}
-
-interface KanbanColumn {
-    id: string;
-    title: string;
-    order: number;
-}
-
-interface KanbanState {
-    columns: KanbanColumn[];
-    cards: KanbanCard[];
-}
-
 export const useKanbanStore = defineStore("kanban", {
-    state: (): KanbanState => ({
-        columns: [
-            { id: "column-1", title: "To Do", order: 0 },
-            { id: "column-2", title: "In Progress", order: 1 },
-            { id: "column-3", title: "Done", order: 2 },
-        ],
-        cards: [
-            {
-                id: "card-1",
-                columnId: "column-1",
-                title: "Task 1",
-                description: "Description for task 1",
-                order: 0,
-            },
-            {
-                id: "card-2",
-                columnId: "column-1",
-                title: "Task 2",
-                description: "Description for task 2",
-                order: 1,
-            },
-            {
-                id: "card-3",
-                columnId: "column-2",
-                title: "Task 3",
-                description: "Description for task 3",
-                order: 0,
-            },
-        ],
+    state: () => ({
+        columns: [] as KanbanColumn[],
+        cards: [] as KanbanCard[],
     }),
 
     actions: {
+        // Column operations
         addColumn(title: string) {
-            const newColumn: KanbanColumn = {
+            this.columns.push({
                 id: `column-${Date.now()}`,
                 title,
-                order: this.columns.length,
-            };
-            this.columns.push(newColumn);
+            });
         },
 
-        updateColumn(columnId: string, updates: Partial<KanbanColumn>) {
+        updateColumn(columnId: string, updatedColumn: { title: string }) {
             const index = this.columns.findIndex((col) => col.id === columnId);
             if (index !== -1) {
-                this.columns[index] = { ...this.columns[index], ...updates };
+                this.columns[index] = {
+                    ...this.columns[index],
+                    ...updatedColumn,
+                };
             }
         },
 
         deleteColumn(columnId: string) {
+            // Delete the column
             this.columns = this.columns.filter((col) => col.id !== columnId);
+            // Delete all cards in this column
             this.cards = this.cards.filter((card) =>
                 card.columnId !== columnId
             );
-            this.reorderColumns();
         },
 
-        reorderColumns() {
-            this.columns.forEach((col, index) => {
-                col.order = index;
-            });
+        // Card operations
+        addCard(card: Omit<KanbanCard, "order"> & { order?: number }) {
+            const order = card.order ??
+                this.getMaxOrderForColumn(card.columnId) + 1;
+            this.cards.push({ ...card, order });
         },
 
-        addCard(card: KanbanCard) {
-            this.cards.push(card);
-        },
-
-        updateCard(cardId: string, updates: Partial<KanbanCard>) {
+        updateCard(cardId: string, updatedCard: Partial<KanbanCard>) {
             const index = this.cards.findIndex((card) => card.id === cardId);
             if (index !== -1) {
-                this.cards[index] = { ...this.cards[index], ...updates };
+                this.cards[index] = { ...this.cards[index], ...updatedCard };
             }
         },
 
         deleteCard(cardId: string) {
+            const deletedCard = this.cards.find((card) => card.id === cardId);
+            if (!deletedCard) return;
+
+            // Remove the card
             this.cards = this.cards.filter((card) => card.id !== cardId);
-            this.reorderCards();
-        },
 
-        reorderCards() {
-            const columnMap = new Map();
-
-            this.cards.forEach((card) => {
-                if (!columnMap.has(card.columnId)) {
-                    columnMap.set(card.columnId, []);
-                }
-                columnMap.get(card.columnId).push(card);
-            });
-
-            columnMap.forEach((cards) => {
-                cards.sort((a: KanbanCard, b: KanbanCard) => a.order - b.order);
-                cards.forEach((card: KanbanCard, index: number) => {
-                    card.order = index;
-                });
-            });
-        },
-
-        moveCard(cardId: string, toColumnId: string, newIndex: number) {
-            const cardIndex = this.cards.findIndex((card) =>
-                card.id === cardId
-            );
-            if (cardIndex === -1) return;
-
-            const card = this.cards[cardIndex];
-            const fromColumnId = card.columnId;
-
-            // Update the card's column
-            card.columnId = toColumnId;
-
-            // Get cards in the destination column
+            // Reorder remaining cards in the same column
             const columnCards = this.cards
-                .filter((c) => c.columnId === toColumnId && c.id !== cardId)
+                .filter((card) => card.columnId === deletedCard.columnId)
                 .sort((a, b) => a.order - b.order);
 
-            // Insert the card at the right position
-            columnCards.splice(newIndex, 0, card);
-
-            // Update orders
-            columnCards.forEach((c, i) => {
-                c.order = i;
+            columnCards.forEach((card, index) => {
+                card.order = index;
             });
+        },
 
-            // If moving between columns, reorder the source column
-            if (fromColumnId !== toColumnId) {
+        moveCard(cardId: string, targetColumnId: string, newIndex: number) {
+            const cardToMove = this.cards.find((card) => card.id === cardId);
+            if (!cardToMove) return;
+
+            const sourceColumnId = cardToMove.columnId;
+
+            // Remove card from its current position
+            cardToMove.columnId = targetColumnId;
+
+            // Reorder cards in source column
+            if (sourceColumnId !== targetColumnId) {
                 const sourceCards = this.cards
-                    .filter((c) => c.columnId === fromColumnId)
+                    .filter((card) => card.columnId === sourceColumnId)
                     .sort((a, b) => a.order - b.order);
 
-                sourceCards.forEach((c, i) => {
-                    c.order = i;
+                sourceCards.forEach((card, index) => {
+                    card.order = index;
                 });
             }
+
+            // Reorder cards in target column
+            const targetCards = this.cards
+                .filter((card) =>
+                    card.columnId === targetColumnId && card.id !== cardId
+                )
+                .sort((a, b) => a.order - b.order);
+
+            // Insert the card at the new index
+            targetCards.splice(newIndex, 0, cardToMove);
+
+            // Update order for all cards in the target column
+            targetCards.forEach((card, index) => {
+                card.order = index;
+            });
+        },
+
+        getMaxOrderForColumn(columnId: string): number {
+            const columnCards = this.cards.filter((card) =>
+                card.columnId === columnId
+            );
+            if (columnCards.length === 0) return 0;
+            return Math.max(...columnCards.map((card) => card.order));
         },
 
         resetBoard() {

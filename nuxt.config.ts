@@ -1,5 +1,3 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
-
 export default defineNuxtConfig({
   devtools: { enabled: true },
   compatibilityDate: "2025-02-11",
@@ -7,6 +5,13 @@ export default defineNuxtConfig({
   // typescript: {
   //   typeCheck: true,
   // },
+
+  imports: {
+    dirs: [
+      "~/types/*.d.ts",
+      "~/types/ui/*.d.ts",
+    ],
+  },
 
   future: {
     compatibilityVersion: 4,
