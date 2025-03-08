@@ -4,7 +4,7 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "npx supabase gen types typescript --project-id 'whbtmepowglwmocqunyw' --schema public > shared/database.d.ts  && nuxt dev",
+    "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare"
@@ -12,10 +12,13 @@
   "devDependencies": {
     "@nuxt/devtools": "latest",
     "@nuxt/image": "^1.9.0",
-    "@nuxtjs/i18n": "^9.2.0",
+    "@nuxt/scripts": "^0.11.0",
+    "@nuxtjs/i18n": "npm:@nuxtjs/i18n-edge@9.2.1-29013776.4a8d7d5",
     "@nuxtjs/supabase": "^1.4.6",
     "@pinia/nuxt": "^0.10.0",
     "@types/d3": "^7.4.3",
+    "@types/three": "^0.174.0",
+    "@unhead/vue": "^2.0.0-rc.8",
     "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/nuxt": "^12.5.0",
     "nuxt": "^3.8.2",
@@ -28,13 +31,22 @@
   },
   "dependencies": {
     "@ant-design/icons-vue": "^7.0.1",
+    "@mediapipe/camera_utils": "^0.3.1675466862",
+    "@mediapipe/control_utils": "^0.6.1675466023",
+    "@mediapipe/control_utils_3d": "^0.3.1675466062",
+    "@mediapipe/drawing_utils": "^0.3.1675466124",
+    "@mediapipe/hands": "^0.4.1675469240",
+    "@mediapipe/holistic": "^0.5.1675471629",
+    "@mediapipe/pose": "^0.5.1675469404",
     "@nuxt/ui": "^2.21.0",
     "@nuxtjs/color-mode": "^3.5.2",
     "@nuxtjs/google-fonts": "^3.2.0",
     "@nuxtjs/tailwindcss": "^6.13.1",
+    "@pixiv/three-vrm": "^3.3.5",
     "@tailwindcss/line-clamp": "^0.4.4",
     "d3": "^7.9.0",
     "js-yaml-loader": "^1.2.2",
+    "kalidokit": "^1.1.5",
     "three": "^0.174.0"
   }
 }

@@ -30,6 +30,7 @@ export default defineNuxtConfig({
     "@nuxtjs/i18n",
     "@nuxtjs/supabase",
     "@vite-pwa/nuxt",
+    "@nuxt/scripts",
   ],
 
   i18n: {
