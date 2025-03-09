@@ -1,3 +1,10 @@
 hello: "Hello World"
 signup: "Sign Up"
 login: "Log In"
+
+# units
+unit-editor: "Unit Editor"
+unit-name: "Unit Name"
+unit-description: "Unit Description"
+unit-type: "Unit Type"
+unit-select-placeholder: "Select a unit"
