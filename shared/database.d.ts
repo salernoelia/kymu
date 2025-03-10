@@ -297,15 +297,7 @@ export type Database = {
           street_number?: string | null
           uid?: string
         }
-        Relationships: [
-          {
-            foreignKeyName: "therapists_specialist_type_fkey"
-            columns: ["specialist_type"]
-            isOneToOne: false
-            referencedRelation: "specialist_types"
-            referencedColumns: ["name"]
-          },
-        ]
+        Relationships: []
       }
       training_block_exercises: {
         Row: {
@@ -315,8 +307,12 @@ export type Database = {
           family_scene_adjustment_access: boolean
           focus_type: string
           id: number
+          name: string | null
+          order_position: number
           repetitions_goal: number | null
+          therapist_uid: string
           training_block_id: number
+          training_unit_id: number
         }
         Insert: {
           created_at?: string
@@ -325,8 +321,12 @@ export type Database = {
           family_scene_adjustment_access?: boolean
           focus_type?: string
           id?: number
+          name?: string | null
+          order_position: number
           repetitions_goal?: number | null
+          therapist_uid: string
           training_block_id: number
+          training_unit_id: number
         }
         Update: {
           created_at?: string
@@ -335,8 +335,12 @@ export type Database = {
           family_scene_adjustment_access?: boolean
           focus_type?: string
           id?: number
+          name?: string | null
+          order_position?: number
           repetitions_goal?: number | null
+          therapist_uid?: string
           training_block_id?: number
+          training_unit_id?: number
         }
         Relationships: [
           {
@@ -347,10 +351,24 @@ export type Database = {
             referencedColumns: ["id"]
           },
           {
+            foreignKeyName: "public_training_block_exercises_therapist_uid_fkey"
+            columns: ["therapist_uid"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["uid"]
+          },
+          {
             foreignKeyName: "public_training_block_exercises_training_block_id_fkey"
             columns: ["training_block_id"]
             isOneToOne: false
             referencedRelation: "training_blocks"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "public_training_block_exercises_training_unit_id_fkey"
+            columns: ["training_unit_id"]
+            isOneToOne: false
+            referencedRelation: "training_units"
             referencedColumns: ["id"]
           },
         ]
@@ -362,7 +380,9 @@ export type Database = {
           id: number
           name: string
           order_position: number
-          training_plan_id: number
+          patient_uid: string | null
+          therapist_uid: string
+          training_unit_id: number
         }
         Insert: {
           created_at?: string
@@ -370,7 +390,9 @@ export type Database = {
           id?: number
           name: string
           order_position: number
-          training_plan_id: number
+          patient_uid?: string | null
+          therapist_uid: string
+          training_unit_id: number
         }
         Update: {
           created_at?: string
@@ -378,14 +400,30 @@ export type Database = {
           id?: number
           name?: string
           order_position?: number
-          training_plan_id?: number
+          patient_uid?: string | null
+          therapist_uid?: string
+          training_unit_id?: number
         }
         Relationships: [
           {
-            foreignKeyName: "public_training_blocks_training_plan_id_fkey"
-            columns: ["training_plan_id"]
+            foreignKeyName: "public_training_blocks_patient_uid_fkey"
+            columns: ["patient_uid"]
             isOneToOne: false
-            referencedRelation: "training_plans"
+            referencedRelation: "families"
+            referencedColumns: ["uid"]
+          },
+          {
+            foreignKeyName: "public_training_blocks_therapist_uid_fkey"
+            columns: ["therapist_uid"]
+            isOneToOne: false
+            referencedRelation: "therapists"
+            referencedColumns: ["uid"]
+          },
+          {
+            foreignKeyName: "public_training_blocks_training_plan_id_fkey"
+            columns: ["training_unit_id"]
+            isOneToOne: false
+            referencedRelation: "training_units"
             referencedColumns: ["id"]
           },
         ]
@@ -449,7 +487,7 @@ export type Database = {
           },
         ]
       }
-      training_plans: {
+      training_units: {
         Row: {
           created_at: string
           description: string | null
