@@ -1,3 +1,17 @@
-hello: "Hallo Welt"
-signup: "Registieren"
+# general
+home: "Home"
+signup: "Registrieren"
 login: "Einloggen"
+
+# unit editor
+unit-editor: "Unit Editor"
+unit-name: "Unit Name"
+unit-description: "Unit Beschreibung"
+unit-type: "Unit Typ"
+unit-select-placeholder: "Wähle einen Unit Typ"
+
+# VR viewer
+vr-viewer: "VR Viewer"
+vr-viewer-title: "Viewer"
+vr-viewer-description: "Mit dem Viewer kannst du eien Live-Vorschau der VR-Einheit sehen."
+vr-viewer-select-placeholder: "Wähle einen Viewer Typ"

@@ -24,13 +24,13 @@
     <!-- views -->
     <div v-if="view === 'list'">
       <WidgetsPatientList
-        :patients="patients"
+        :families
         @patientClick="(p) => navigateTo(localePath(`/patient/${p.id}`))"
       />
     </div>
     <div v-else-if="view === 'grid'">
       <WidgetsPatientGrid
-        :patients="patients"
+        :families
         @patientClick="(p) => navigateTo(localePath(`/patient/${p.id}`))"
       />
     </div>
@@ -45,10 +45,12 @@
 </template>
 
 <script setup lang="ts">
-import jsonData from "~/assets/data/data.json";
-const patients = ref(jsonData.patients);
-
+const supabase = useSupabaseClient();
+const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
+
+// import jsonData from "~/assets/data/data.json";
+const families = ref();
 
 const view = ref("list");
 const selectedPatient = ref(null);
@@ -66,4 +68,28 @@ const getButtonClass = (targetView: string) => {
     ? "bg-blue-500 text-white"
     : "bg-white text-gray-700";
 };
+
+const loadFamilyData = async () => {
+  if (!supabaseUser.value) {
+    console.error("No user logged in");
+    return;
+  }
+  const { data, error } = await supabase
+    .from("families")
+    .select("*")
+    .eq("therapist_uid", supabaseUser.value?.id);
+
+  if (error) {
+    console.error("Error fetching patient data", error);
+    return;
+  }
+
+  families.value = data;
+
+  console.log("Patient data", data);
+};
+
+onMounted(async () => {
+  await loadFamilyData();
+});
 </script>

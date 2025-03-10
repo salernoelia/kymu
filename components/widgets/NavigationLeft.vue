@@ -1,6 +1,6 @@
 <template>
   <aside class="sidebar bg-gray-900 text-white w-64 flex flex-col">
-    <div class="p-4 text-xl font-semibold">ReGain Platform</div>
+    <div class="p-4 text-xl font-semibold">Kymu</div>
     <!-- nav -->
     <div class="flex flex-col justify-between h-full">
       <div>
@@ -12,9 +12,20 @@
               isActive('/') ? 'bg-blue-700' : 'hover:bg-gray-700',
             ]"
           >
-            <HomeOutlined class="mr-3" />
-            Dashboard
+            <!-- <HomeOutlined class="mr-3" /> -->
+            Home
           </nuxt-link>
+          <nuxt-link
+            :to="localePath('/viewer')"
+            :class="[
+              'flex items-center p-4 rounded transition',
+              isActive('/viewer') ? 'bg-blue-700' : 'hover:bg-gray-700',
+            ]"
+          >
+            <!-- <HomeOutlined class="mr-3" /> -->
+            VR Viewer
+          </nuxt-link>
+
           <nuxt-link
             :to="localePath('/editor')"
             :class="[
@@ -22,6 +33,8 @@
               isActive('/editor') ? 'bg-blue-700' : 'hover:bg-gray-700',
             ]"
           >
+            <!-- <UsergroupAddOutlined class="mr-3" /> -->
+
             Editor
           </nuxt-link>
 
@@ -32,11 +45,11 @@
               isActive('/patients') ? 'bg-blue-700' : 'hover:bg-gray-700',
             ]"
           >
-            <UsergroupAddOutlined class="mr-3" />
+            <!-- <UsergroupAddOutlined class="mr-3" /> -->
             Patients
           </nuxt-link>
 
-          <nuxt-link
+          <!-- <nuxt-link
             :to="localePath('/exercisesAlt')"
             :class="[
               'flex items-center p-4 rounded transition',
@@ -45,8 +58,20 @@
           >
             <PlusCircleOutlined class="mr-3" />
             Create Exercises
-          </nuxt-link>
+          </nuxt-link> -->
           <nuxt-link
+            :to="localePath('/training-programs')"
+            :class="[
+              'flex items-center p-4 rounded transition',
+              isActive('/training-programs')
+                ? 'bg-blue-700'
+                : 'hover:bg-gray-700',
+            ]"
+          >
+            <!-- <CheckCircleOutlined class="mr-3" /> -->
+            Explore Kymu
+          </nuxt-link>
+          <!-- <nuxt-link
             :to="localePath('/training-programs')"
             :class="[
               'flex items-center p-4 rounded transition',
@@ -57,8 +82,8 @@
           >
             <CheckCircleOutlined class="mr-3" />
             Training Programs
-          </nuxt-link>
-
+          </nuxt-link> -->
+          <!-- 
           <nuxt-link
             :to="localePath('/reports')"
             :class="[
@@ -68,8 +93,8 @@
           >
             <BarChartOutlined class="mr-3" />
             Progress Reports
-          </nuxt-link>
-
+          </nuxt-link> -->
+          <!-- 
           <nuxt-link
             :to="localePath('/library')"
             :class="[
@@ -79,9 +104,9 @@
           >
             <FolderOpenOutlined class="mr-3" />
             Exercise Library
-          </nuxt-link>
+          </nuxt-link> -->
 
-          <nuxt-link
+          <!-- <nuxt-link
             :to="localePath('/documentation')"
             :class="[
               'flex items-center p-4 rounded transition',
@@ -90,7 +115,7 @@
           >
             <FileTextOutlined class="mr-3" />
             Documentation
-          </nuxt-link>
+          </nuxt-link> -->
         </nav>
       </div>
       <div>
@@ -101,7 +126,7 @@
             isActive('/settings') ? 'bg-blue-700' : 'hover:bg-gray-700',
           ]"
         >
-          <SettingOutlined class="mr-3" />
+          <!-- <SettingOutlined class="mr-3" /> -->
           Settings
         </nuxt-link>
 
@@ -112,7 +137,7 @@
             isActive('/profile') ? 'bg-blue-700' : 'hover:bg-gray-700',
           ]"
         >
-          <UserOutlined class="mr-3" />
+          <!-- <UserOutlined class="mr-3" /> -->
           Profile
         </nuxt-link>
       </div>
