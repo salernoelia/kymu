@@ -3,9 +3,11 @@ interface TrainingBlock {
   name: string;
   description: string;
   created_at: string;
+  order_position: number;
   patient_uid: string;
   therapist_uid: string;
   training_unit_id: number;
+  [key: string]: any;
 }
 
 interface TrainingBlockExercise {
@@ -17,6 +19,7 @@ interface TrainingBlockExercise {
   repetition_goal: number;
   focus_type: string;
   family_scene_adjustment_access: boolean;
+  [key: string]: any;
 }
 
 interface TrainingUnit {

@@ -18,7 +18,7 @@
 <script setup lang="ts">
 const { locale } = useI18n();
 const localePath = useLocalePath();
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 
 const units = ref<any[]>([]);
 const selectedUnit = ref<null | any>(null);
