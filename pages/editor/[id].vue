@@ -60,6 +60,7 @@ const unit = reactive<TrainingUnit>({
 const draggingExercise = ref(null);
 const dragInProgress = ref(false);
 provide("dragInProgress", dragInProgress);
+provide("draggingExerciseData", draggingExercise);
 
 onMounted(async () => {
   await loadTrainingUnit();

@@ -5,64 +5,54 @@ export function useTrainingUnitMovable() {
         targetBlockId: number,
         newPosition: number,
     ) => {
-        const exercise = unit.training_block_exercises.find((ex) =>
-            ex.id === exerciseId
+        const exerciseToMove = unit.training_block_exercises.find(
+            (ex) => ex.id === exerciseId,
         );
-        if (!exercise) return;
 
-        const oldBlockId = exercise.training_block_id;
-        const oldPosition = exercise.order_position;
+        if (!exerciseToMove) return false;
 
-        if (oldBlockId === targetBlockId && oldPosition !== newPosition) {
-            unit.training_block_exercises.forEach((ex) => {
-                if (
-                    ex.training_block_id === targetBlockId &&
-                    ex.id !== exerciseId
-                ) {
-                    if (oldPosition < newPosition) {
-                        if (
-                            ex.order_position > oldPosition &&
-                            ex.order_position <= newPosition
-                        ) {
-                            ex.order_position--;
-                        }
-                    } else {
-                        if (
-                            ex.order_position >= newPosition &&
-                            ex.order_position < oldPosition
-                        ) {
-                            ex.order_position++;
-                        }
-                    }
-                }
-            });
-        } else if (oldBlockId !== targetBlockId) {
-            unit.training_block_exercises.forEach((ex) => {
-                if (
-                    ex.training_block_id === oldBlockId &&
-                    ex.order_position > oldPosition
-                ) {
-                    ex.order_position--;
-                }
-            });
+        const sourceBlockId = exerciseToMove.training_block_id;
+        const originalPosition = exerciseToMove.order_position;
 
-            unit.training_block_exercises.forEach((ex) => {
-                if (
-                    ex.training_block_id === targetBlockId &&
-                    ex.order_position >= newPosition
-                ) {
-                    ex.order_position++;
-                }
-            });
+        const updatedExercises = unit.training_block_exercises.filter(
+            (ex) => ex.id !== exerciseId,
+        );
+
+        const sourceBlockExercises = updatedExercises.filter(
+            (ex) => ex.training_block_id === sourceBlockId,
+        );
+
+        sourceBlockExercises.sort((a, b) =>
+            a.order_position - b.order_position
+        );
+        sourceBlockExercises.forEach((ex, index) => {
+            ex.order_position = index;
+        });
+
+        const targetBlockExercises = updatedExercises.filter(
+            (ex) => ex.training_block_id === targetBlockId,
+        );
+
+        targetBlockExercises.sort((a, b) =>
+            a.order_position - b.order_position
+        );
+
+        for (let i = 0; i < targetBlockExercises.length; i++) {
+            if (i >= newPosition) {
+                targetBlockExercises[i].order_position = i + 1;
+            } else {
+                targetBlockExercises[i].order_position = i;
+            }
         }
 
-        exercise.training_block_id = targetBlockId;
-        exercise.order_position = newPosition;
+        exerciseToMove.training_block_id = targetBlockId;
+        exerciseToMove.order_position = Math.min(
+            newPosition,
+            targetBlockExercises.length,
+        );
 
-        return { exercise, oldBlockId, oldPosition };
+        return true;
     };
 
-    return {
-        updateExercisePosition,
-    };
+    return { updateExercisePosition };
 }

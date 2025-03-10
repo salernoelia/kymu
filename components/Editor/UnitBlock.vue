@@ -18,7 +18,7 @@
         class="drop-zone"
         :class="{
           'drop-zone-active': activeDropZone === 0,
-          'drop-zone-visible': isDropActive || dragInProgress,
+          'drop-zone-visible': shouldShowDropZone(0),
         }"
         @dragover.prevent="activateDropZone(0)"
         @dragleave="deactivateDropZone"
@@ -38,7 +38,7 @@
           class="drop-zone"
           :class="{
             'drop-zone-active': activeDropZone === index + 1,
-            'drop-zone-visible': isDropActive || dragInProgress,
+            'drop-zone-visible': shouldShowDropZone(index + 1, exercise.id),
           }"
           @dragover.prevent="activateDropZone(index + 1)"
           @dragleave="deactivateDropZone"
@@ -71,6 +71,28 @@ const isDropActive = ref(false);
 const isDropHover = ref(false);
 const activeDropZone = ref(-1);
 const dragInProgress = inject("dragInProgress", ref(false));
+const draggingExerciseData = inject("draggingExerciseData", ref(null));
+
+function shouldShowDropZone(position: number, exerciseId?: number) {
+  if (!dragInProgress.value) return false;
+
+  if (
+    draggingExerciseData.value &&
+    draggingExerciseData.value.blockId === props.id
+  ) {
+    if (exerciseId && draggingExerciseData.value.id === exerciseId)
+      return false;
+
+    // Don't show drop zone after the dragged exercise
+    const draggedIndex = props.exercises.findIndex(
+      (e) => e.id === draggingExerciseData.value.id
+    );
+    if (draggedIndex !== -1 && position === draggedIndex) return false;
+  }
+
+  // Show drop zone if block is active or generally during drag
+  return isDropActive.value || dragInProgress.value;
+}
 
 function onDragOver(event: DragEvent) {
   event.preventDefault();
@@ -93,17 +115,20 @@ function deactivateDropZone() {
   }, 100);
 }
 
-function onDrop(event: DragEvent) {
-  event.preventDefault();
+function resetDropState() {
   isDropActive.value = false;
   isDropHover.value = false;
+  activeDropZone.value = -1;
+}
+
+function onDrop(event: DragEvent) {
+  event.preventDefault();
+  resetDropState();
 }
 
 function onDropInZone(event: DragEvent, position: number) {
   event.preventDefault();
-  isDropActive.value = false;
-  isDropHover.value = false;
-  activeDropZone.value = -1;
+  resetDropState();
 
   if (!event.dataTransfer) return;
 
@@ -156,11 +181,13 @@ function onDropInZone(event: DragEvent, position: number) {
   transition: all 0.2s ease;
   background-color: transparent;
   opacity: 0;
+  display: none;
 
   &-visible {
     opacity: 0.3;
     height: 15px;
     background-color: rgba(21, 202, 130, 0.2);
+    display: block;
   }
 
   &-active {
@@ -168,6 +195,7 @@ function onDropInZone(event: DragEvent, position: number) {
     background-color: #15ca82;
     height: 30px;
     margin: 5px 0;
+    display: block;
   }
 }
 </style>

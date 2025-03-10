@@ -48,7 +48,6 @@ function onDragStart(event: DragEvent) {
 
   isDragging.value = true;
 
-  // Store the exercise data
   const data = {
     id: props.id,
     blockId: props.blockId,
@@ -75,7 +74,7 @@ function onDragEnd() {
 #card {
   border: 1px solid #494949;
   padding: 1rem;
-  margin: 0.25rem 0;
+  margin: 0.7rem 0;
   cursor: grab;
   position: relative;
   transition: all 0.2s ease;
