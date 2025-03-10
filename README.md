@@ -32,13 +32,13 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema p
     { title: 'Slide 5', content: 'Content 5' },
   ]"
 />
-<WidgetsThreeModelViewer
+<ThreeModelViewer
   modelPath="/models/box.glb"
   :scale="2"
   @exercise-variant="(v) => console.log('exercise variant', v)"
 />
 
-<WidgetsD3PieChart
+<ChartsPie
   :data="pieChartData"
   title="Budget Allocation"
   :innerRadius="80"
@@ -48,7 +48,7 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema p
   :cornerRadius="8"
   :padAngle="0.02"
 />
-<WidgetsD3BubbleChart
+<ChartsBubble
   :data="bubbleData"
   title="Project Budget Distribution"
   :width="700"
@@ -57,7 +57,7 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema p
   :maxRadius="60"
   :showLegend="true"
 />
-<WidgetsD3BarChart
+<ChartsBar
   :data="barChartData"
   title="Monthly Sales"
   :width="800"

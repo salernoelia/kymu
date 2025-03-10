@@ -25,13 +25,13 @@
     <div v-if="view === 'list'">
       <WidgetsPatientList
         :families
-        @patientClick="(p) => navigateTo(localePath(`/patient/${p.id}`))"
+        @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
       />
     </div>
     <div v-else-if="view === 'grid'">
       <WidgetsPatientGrid
         :families
-        @patientClick="(p) => navigateTo(localePath(`/patient/${p.id}`))"
+        @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
       />
     </div>
 
