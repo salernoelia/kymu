@@ -12,7 +12,7 @@ export function useTrainingUnitMovable() {
         if (!exerciseToMove) return false;
 
         const sourceBlockId = exerciseToMove.training_block_id;
-        const originalPosition = exerciseToMove.order_position;
+        // const originalPosition = exerciseToMove.order_position;
 
         const updatedExercises = unit.training_block_exercises.filter(
             (ex) => ex.id !== exerciseId,
@@ -39,9 +39,9 @@ export function useTrainingUnitMovable() {
 
         for (let i = 0; i < targetBlockExercises.length; i++) {
             if (i >= newPosition) {
-                targetBlockExercises[i].order_position = i + 1;
+                targetBlockExercises[i]!.order_position = i + 1;
             } else {
-                targetBlockExercises[i].order_position = i;
+                targetBlockExercises[i]!.order_position = i;
             }
         }
 

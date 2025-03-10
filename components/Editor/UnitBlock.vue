@@ -83,14 +83,12 @@ function shouldShowDropZone(position: number, exerciseId?: number) {
     if (exerciseId && draggingExerciseData.value.id === exerciseId)
       return false;
 
-    // Don't show drop zone after the dragged exercise
     const draggedIndex = props.exercises.findIndex(
       (e) => e.id === draggingExerciseData.value.id
     );
     if (draggedIndex !== -1 && position === draggedIndex) return false;
   }
 
-  // Show drop zone if block is active or generally during drag
   return isDropActive.value || dragInProgress.value;
 }
 
