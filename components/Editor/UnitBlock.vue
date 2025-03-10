@@ -14,17 +14,31 @@
     </div>
 
     <div class="exercise-container">
-      <slot name="exercises"></slot>
-
       <div
-        v-for="(zone, index) in dropZones"
-        :key="`drop-zone-${index}`"
         class="drop-zone"
-        :class="{ 'drop-zone-active': activeDropZone === index }"
-        @dragover.prevent="activateDropZone(index)"
+        :class="{ 'drop-zone-active': activeDropZone === 0 }"
+        @dragover.prevent="activateDropZone(0)"
         @dragleave="deactivateDropZone"
-        @drop.stop="onDropInZone($event, index)"
+        @drop.stop="onDropInZone($event, 0)"
       ></div>
+
+      <template
+        v-for="(exercise, index) in exercises"
+        :key="exercise.id"
+      >
+        <slot
+          :name="`exercise-${exercise.id}`"
+          :exercise="exercise"
+        ></slot>
+
+        <div
+          class="drop-zone"
+          :class="{ 'drop-zone-active': activeDropZone === index + 1 }"
+          @dragover.prevent="activateDropZone(index + 1)"
+          @dragleave="deactivateDropZone"
+          @drop.stop="onDropInZone($event, index + 1)"
+        ></div>
+      </template>
     </div>
   </div>
 </template>
@@ -32,7 +46,7 @@
 <script setup lang="ts">
 const props = defineProps<{
   id: number;
-  exerciseCount: number;
+  exercises: Array<{ id: number; [key: string]: any }>;
 }>();
 
 const emit = defineEmits<{
@@ -50,12 +64,6 @@ const emit = defineEmits<{
 const isDropActive = ref(false);
 const isDropHover = ref(false);
 const activeDropZone = ref(-1);
-
-// Create drop zones between exercises and at the beginning/end
-const dropZones = computed(() => {
-  // +1 for the beginning and end of the list
-  return Array(props.exerciseCount + 1).fill(null);
-});
 
 function onDragOver(event: DragEvent) {
   event.preventDefault();
@@ -140,6 +148,7 @@ function onDropInZone(event: DragEvent, position: number) {
   margin: 5px 0;
   border-radius: 4px;
   transition: all 0.2s ease;
+  background-color: transparent;
 
   &-active {
     background-color: #15ca82;

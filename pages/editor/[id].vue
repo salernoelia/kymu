@@ -7,7 +7,7 @@
         v-for="block in unit.training_blocks"
         :key="block.id"
         :id="block.id"
-        :exercise-count="getExercisesForBlock(block.id).length"
+        :exercises="getExercisesForBlock(block.id)"
         @drop="handleExerciseDrop"
       >
         <template #header>
@@ -15,10 +15,12 @@
           <p>{{ block.description }}</p>
         </template>
 
-        <template #exercises>
+        <template
+          v-for="exercise in getExercisesForBlock(block.id)"
+          :key="exercise.id"
+          #[`exercise-${exercise.id}`]
+        >
           <EditorUnitExercise
-            v-for="exercise in getExercisesForBlock(block.id)"
-            :key="exercise.id"
             :id="exercise.id"
             :block-id="block.id"
             :order-position="exercise.order_position"
@@ -103,13 +105,13 @@ const loadTrainingUnit = async () => {
 };
 
 // Helper to get exercises for a specific block, sorted by position
-const getExercisesForBlock = (blockId) => {
+const getExercisesForBlock = (blockId: number) => {
   return unit.training_block_exercises
     .filter((ex) => ex.training_block_id === blockId)
     .sort((a, b) => a.order_position - b.order_position);
 };
 
-const handleDragStart = (data) => {
+const handleDragStart = (data: any) => {
   draggingExercise.value = data;
 };
 
@@ -122,6 +124,11 @@ const handleExerciseDrop = async ({
   sourceBlockId,
   targetBlockId,
   newPosition,
+}: {
+  exerciseId: number;
+  sourceBlockId: number;
+  targetBlockId: number;
+  newPosition: number;
 }) => {
   // Update the local UI state
   const result = await updateExercisePosition(
@@ -133,7 +140,6 @@ const handleExerciseDrop = async ({
 
   if (!result) return;
 
-  // Send the update to the server
   try {
     const { error } = await supabase
       .from("training_block_exercises")
@@ -145,7 +151,6 @@ const handleExerciseDrop = async ({
 
     if (error) {
       console.error("Error updating exercise position:", error);
-      // Reload the unit to restore the correct state
       await loadTrainingUnit();
     }
   } catch (err) {
