@@ -26,11 +26,19 @@
             :order-position="exercise.order_position"
             @dragstart="handleDragStart"
             @dragend="handleDragEnd"
+            @click="selectExercise(exercise)"
           >
             <h2>Exercise: {{ exercise.id }}</h2>
           </EditorUnitExercise>
         </template>
       </EditorUnitBlock>
+      <EditorSidebar
+        v-model="sidebarModel"
+        title="Exercise Details"
+        width="400px"
+      >
+        <EditorSidebarExercise :e="selectedExercise" />
+      </EditorSidebar>
     </div>
   </div>
 </template>
@@ -40,11 +48,19 @@ const localePath = useLocalePath();
 const route = useRoute();
 const supabase = useSupabaseClient();
 const { updateExercisePosition } = useTrainingUnitMovable();
+const sidebarModel = ref(false);
+const selectedExercise = ref<TrainingBlockExercise | null>(null);
 
 const selectedUnitID = computed(() => {
   const id = Number(route.params.id);
   return isNaN(id) ? null : id;
 });
+
+const selectExercise = (e: TrainingBlockExercise) => {
+  console.log("Selected exercise:", e.id);
+  sidebarModel.value = true;
+  selectedExercise.value = e;
+};
 
 const unit = reactive<TrainingUnit>({
   id: 0,

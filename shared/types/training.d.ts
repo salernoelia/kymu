@@ -16,7 +16,7 @@ interface TrainingBlockExercise {
   training_block_id: number;
   default_exercise_id: number;
   duration_seconds_goal: number;
-  repetition_goal: number;
+  repetitions_goal: number;
   focus_type: string;
   family_scene_adjustment_access: boolean;
   [key: string]: any;
