@@ -1,23 +1,102 @@
 <template>
-  <div class="flex flex-col">
-    <h1>{{}}</h1>
+  <div
+    class="flex flex-row gap-4"
+    v-if="f"
+  >
+    <div
+      id="patient-info"
+      class="flex flex-col border rounded p-4"
+    >
+      <h2>{{ $t("patient-info") }}</h2>
+      <h3>
+        {{ $t("patient") }}: {{ f.patient_last_name }}
+        {{ f.patient_first_name }}
+      </h3>
+      <h3>
+        {{ $t("caregiver") }}: {{ f.caregiver_last_name }}
+        {{ f.caregiver_first_name }}
+      </h3>
+
+      <h3>{{ $t("patient-description") }}</h3>
+    </div>
+    <div
+      id="units"
+      class="flex flex-col border rounded p-4"
+    >
+      <h2>{{ $t("patient-units") }}</h2>
+
+      <!-- <div
+        v-for="unit in f.training_units"
+        :key="unit.id"
+        class="flex flex-col border rounded p-4 hover:bg-gray-300 transition"
+        @click="() => navigateTo(localePath(`/editor/${unit.id}`))"
+      >
+        <h3>{{ unit.name }}</h3>
+        <p>{{ unit.description }}</p>
+      </div> -->
+
+      <WidgetsVerticalCarousell
+        @current-slide="(i) => console.log('clicke', i)"
+        :initialSlide="0"
+        :slides="f.training_units"
+      />
+    </div>
+
+    <div
+      id="progress"
+      class="flex flex-col border rounded p-4"
+    >
+      <h1>{{ $t("patient-progress") }}</h1>
+      <ChartsPie
+        :data="pieChartData"
+        title="Patient Progress"
+        :innerRadius="80"
+        :width="550"
+        :height="230"
+        :showLegend="false"
+        :cornerRadius="8"
+        :padAngle="0.02"
+      />
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import type { QueryData } from "@supabase/supabase-js";
+
 const route = useRoute();
 const localePath = useLocalePath();
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
+
+if (!route.params.id) {
+  navigateTo(localePath("/patients"));
+  throw new Error("No patient ID provided");
+}
+
+const familiesWithFkeyQuery = supabase
+  .from("families")
+  .select(
+    `
+    *,
+    training_units(*)
+  `
+  )
+  .eq("uid", route.params.id.toString())
+  .single();
+
+const f = ref<QueryData<typeof familiesWithFkeyQuery>>();
 
 const loadPatientData = async () => {
-  const { data, error } = await supabase.from("families").select("*");
+  const { data, error } = await familiesWithFkeyQuery;
+
+  console.log(data, error);
 
   if (error) {
     console.error("Error fetching patient data", error);
     return;
   }
 
-  console.log("Patient data", data);
+  f.value = data;
 };
 
 onMounted(async () => {

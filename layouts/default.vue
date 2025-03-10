@@ -55,7 +55,8 @@ watch(user, (newUser) => {
     <div class="flex flex-col flex-grow bg-gray-100">
       <header class="bg-white shadow-md p-4 flex justify-between items-center">
         <h1 class="text-xl font-semibold">
-          Welcome back, {{ therapist?.first_name }} {{ therapist?.last_name }}
+          {{ $t("welcome-back") }}, {{ therapist?.first_name }}
+          {{ therapist?.last_name }}
         </h1>
         <div class="flex items-center gap-4">
           <WidgetsLanguageSelector />

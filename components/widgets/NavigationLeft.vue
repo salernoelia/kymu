@@ -13,7 +13,7 @@
             ]"
           >
             <!-- <HomeOutlined class="mr-3" /> -->
-            Home
+            {{ $t("home") }}
           </nuxt-link>
           <nuxt-link
             :to="localePath('/viewer')"
@@ -23,7 +23,7 @@
             ]"
           >
             <!-- <HomeOutlined class="mr-3" /> -->
-            VR Viewer
+            {{ $t("vr-viewer") }}
           </nuxt-link>
 
           <nuxt-link
@@ -35,7 +35,7 @@
           >
             <!-- <UsergroupAddOutlined class="mr-3" /> -->
 
-            Editor
+            {{ $t("unit-editor") }}
           </nuxt-link>
 
           <nuxt-link
@@ -46,7 +46,7 @@
             ]"
           >
             <!-- <UsergroupAddOutlined class="mr-3" /> -->
-            Patients
+            {{ $t("patients") }}
           </nuxt-link>
 
           <!-- <nuxt-link
