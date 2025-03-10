@@ -58,7 +58,6 @@ function onDragStart(event: DragEvent) {
   event.dataTransfer.effectAllowed = "move";
   event.dataTransfer.setData("application/json", JSON.stringify(data));
 
-  // Set a ghost image using the current element
   if (event.target instanceof Element) {
     event.dataTransfer.setDragImage(event.target, 20, 20);
   }
@@ -76,7 +75,7 @@ function onDragEnd() {
 #card {
   border: 1px solid #494949;
   padding: 1rem;
-  margin: 1rem 0;
+  margin: 0.25rem 0;
   cursor: grab;
   position: relative;
   transition: all 0.2s ease;

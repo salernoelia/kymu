@@ -16,7 +16,10 @@
     <div class="exercise-container">
       <div
         class="drop-zone"
-        :class="{ 'drop-zone-active': activeDropZone === 0 }"
+        :class="{
+          'drop-zone-active': activeDropZone === 0,
+          'drop-zone-visible': isDropActive || dragInProgress,
+        }"
         @dragover.prevent="activateDropZone(0)"
         @dragleave="deactivateDropZone"
         @drop.stop="onDropInZone($event, 0)"
@@ -33,7 +36,10 @@
 
         <div
           class="drop-zone"
-          :class="{ 'drop-zone-active': activeDropZone === index + 1 }"
+          :class="{
+            'drop-zone-active': activeDropZone === index + 1,
+            'drop-zone-visible': isDropActive || dragInProgress,
+          }"
           @dragover.prevent="activateDropZone(index + 1)"
           @dragleave="deactivateDropZone"
           @drop.stop="onDropInZone($event, index + 1)"
@@ -64,6 +70,7 @@ const emit = defineEmits<{
 const isDropActive = ref(false);
 const isDropHover = ref(false);
 const activeDropZone = ref(-1);
+const dragInProgress = inject("dragInProgress", ref(false));
 
 function onDragOver(event: DragEvent) {
   event.preventDefault();
@@ -87,7 +94,6 @@ function deactivateDropZone() {
 }
 
 function onDrop(event: DragEvent) {
-  // This is a fallback for drops not caught by specific zones
   event.preventDefault();
   isDropActive.value = false;
   isDropHover.value = false;
@@ -144,15 +150,24 @@ function onDropInZone(event: DragEvent, position: number) {
 }
 
 .drop-zone {
-  height: 10px;
-  margin: 5px 0;
+  height: 2px;
+  margin: 1px 0;
   border-radius: 4px;
   transition: all 0.2s ease;
   background-color: transparent;
+  opacity: 0;
+
+  &-visible {
+    opacity: 0.3;
+    height: 15px;
+    background-color: rgba(21, 202, 130, 0.2);
+  }
 
   &-active {
+    opacity: 1;
     background-color: #15ca82;
-    height: 20px;
+    height: 30px;
+    margin: 5px 0;
   }
 }
 </style>

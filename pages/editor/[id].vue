@@ -58,6 +58,8 @@ const unit = reactive<TrainingUnit>({
 });
 
 const draggingExercise = ref(null);
+const dragInProgress = ref(false);
+provide("dragInProgress", dragInProgress);
 
 onMounted(async () => {
   await loadTrainingUnit();
@@ -93,7 +95,6 @@ const loadTrainingUnit = async () => {
   }
 
   if (data) {
-    // Sort exercises by order_position
     if (data.training_block_exercises) {
       data.training_block_exercises.sort(
         (a, b) => a.order_position - b.order_position
@@ -104,7 +105,6 @@ const loadTrainingUnit = async () => {
   }
 };
 
-// Helper to get exercises for a specific block, sorted by position
 const getExercisesForBlock = (blockId: number) => {
   return unit.training_block_exercises
     .filter((ex) => ex.training_block_id === blockId)
@@ -113,10 +113,12 @@ const getExercisesForBlock = (blockId: number) => {
 
 const handleDragStart = (data: any) => {
   draggingExercise.value = data;
+  dragInProgress.value = true;
 };
 
 const handleDragEnd = () => {
   draggingExercise.value = null;
+  dragInProgress.value = false;
 };
 
 const handleExerciseDrop = async ({
@@ -153,9 +155,11 @@ const handleExerciseDrop = async ({
       console.error("Error updating exercise position:", error);
       await loadTrainingUnit();
     }
+    dragInProgress.value = false;
   } catch (err) {
     console.error("Error saving position:", err);
     await loadTrainingUnit();
+    dragInProgress.value = false;
   }
 };
 </script>
