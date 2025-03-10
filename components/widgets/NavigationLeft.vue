@@ -1,5 +1,5 @@
 <template>
-  <aside class="sidebar bg-gray-900 text-white w-64 flex flex-col">
+  <aside class="sidebar bg-gray-900 text-white min-w-64 flex flex-col">
     <div class="p-4 text-xl font-semibold">Kymu</div>
     <!-- nav -->
     <div class="flex flex-col justify-between h-full">
@@ -69,7 +69,7 @@
             ]"
           >
             <!-- <CheckCircleOutlined class="mr-3" /> -->
-            Explore Kymu
+            {{ $t("explore-kymu") }}
           </nuxt-link>
           <!-- <nuxt-link
             :to="localePath('/training-programs')"

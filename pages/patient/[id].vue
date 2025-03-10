@@ -22,6 +22,7 @@
     <div
       id="units"
       class="flex flex-col border rounded p-4"
+      v-if="f.training_units && f.training_units.length > 0"
     >
       <h2>{{ $t("patient-units") }}</h2>
 
@@ -36,9 +37,11 @@
       </div> -->
 
       <WidgetsVerticalCarousell
-        @current-slide="(i) => console.log('clicke', i)"
+        @current-slide="
+          (i) => navigateTo(localePath(`/editor/${f.training_units[i].id}`))
+        "
         :initialSlide="0"
-        :slides="f.training_units"
+        :slides="slidesFromUnits(f.training_units)"
       />
     </div>
 
@@ -47,15 +50,12 @@
       class="flex flex-col border rounded p-4"
     >
       <h1>{{ $t("patient-progress") }}</h1>
-      <ChartsPie
-        :data="pieChartData"
-        title="Patient Progress"
-        :innerRadius="80"
-        :width="550"
-        :height="230"
-        :showLegend="false"
-        :cornerRadius="8"
-        :padAngle="0.02"
+      <ChartsBar
+        :data="barChartData"
+        title="Monthly Sales"
+        :width="400"
+        :height="300"
+        barColor="#3498db"
       />
     </div>
   </div>
@@ -67,6 +67,15 @@ import type { QueryData } from "@supabase/supabase-js";
 const route = useRoute();
 const localePath = useLocalePath();
 const supabase = useSupabaseClient<Database>();
+
+const slidesFromUnits = (units: TrainingUnit[]) => {
+  return units.map((unit) => {
+    return {
+      title: unit.name,
+      description: unit.description,
+    };
+  });
+};
 
 if (!route.params.id) {
   navigateTo(localePath("/patients"));

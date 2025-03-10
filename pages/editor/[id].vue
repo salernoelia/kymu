@@ -2,75 +2,126 @@
   <div>
     <h1>Unit Editor for unit {{ unit.name }}</h1>
     <h3>{{ unit.description }}</h3>
-    <div class="unit-blocks">
-      <EditorUnitBlock
-        v-for="block in unit.training_blocks"
-        :key="block.id"
-        :id="block.id"
-        :exercises="getExercisesForBlock(block.id)"
-        @drop="handleExerciseDrop"
+    <div>
+      <div
+        id="blocks"
+        class="flex flex-row gap-4 overflow-x-auto"
       >
-        <template #header>
-          <h1>{{ block.name }}</h1>
-          <p>{{ block.description }}</p>
-        </template>
-
-        <template
-          v-for="exercise in getExercisesForBlock(block.id)"
-          :key="exercise.id"
-          #[`exercise-${exercise.id}`]
+        <EditorUnitBlock
+          v-for="block in unit.training_blocks"
+          :key="block.id"
+          :id="block.id"
+          :exercises="getExercisesForBlock(block.id)"
+          @drop="handleExerciseDrop"
+          @click="() => selectBlock(block)"
         >
-          <EditorUnitExercise
-            :id="exercise.id"
-            :block-id="block.id"
-            :order-position="exercise.order_position"
-            @dragstart="handleDragStart"
-            @dragend="handleDragEnd"
-            @click="selectExercise(exercise)"
+          <template #header>
+            <h1>{{ block.name }}</h1>
+            <p>{{ block.description }}</p>
+          </template>
+
+          <template
+            v-for="exercise in getExercisesForBlock(block.id)"
+            :key="exercise.id"
+            #[`exercise-${exercise.id}`]
           >
-            <h2>Exercise: {{ exercise.id }}</h2>
-          </EditorUnitExercise>
-        </template>
-      </EditorUnitBlock>
-      <EditorSidebar
-        v-model="sidebarModel"
-        title="Exercise Details"
-        width="400px"
+            <EditorUnitExercise
+              :id="exercise.id"
+              :block-id="block.id"
+              :order-position="exercise.order_position"
+              @dragstart="handleDragStart"
+              @dragend="handleDragEnd"
+              @click.stop="selectExercise(exercise)"
+            >
+              <h2>Exercise: {{ exercise.id }}</h2>
+            </EditorUnitExercise>
+          </template>
+        </EditorUnitBlock>
+      </div>
+
+      <div
+        id="create-block"
+        class="flex flex-col items-center justify-center border rounded p-4 cursor-pointer hover:bg-gray-300"
+        @click="createBlock"
       >
-        <EditorSidebarExercise :e="selectedExercise" />
-      </EditorSidebar>
+        <h2>Create block</h2>
+      </div>
     </div>
+    <EditorSidebar
+      v-model="sidebarModel"
+      :title="sidebarTitle"
+      width="400px"
+    >
+      <template
+        v-if="sidebarVariant === SidebarVariant.Exercise && selectedExercise"
+      >
+        <EditorSidebarExercise
+          :e="selectedExercise"
+          :supabase
+          @update="loadTrainingUnit"
+        />
+      </template>
+      <template
+        v-else-if="sidebarVariant === SidebarVariant.Block && selectedBlock"
+      >
+        <EditorSidebarBlock
+          :b="selectedBlock"
+          :supabase
+          @refresh="loadTrainingUnit"
+        />
+      </template>
+    </EditorSidebar>
   </div>
 </template>
 
 <script setup lang="ts">
+const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
 const route = useRoute();
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 const { updateExercisePosition } = useTrainingUnitMovable();
 const sidebarModel = ref(false);
-const selectedExercise = ref<TrainingBlockExercise | null>(null);
+const selectedExercise = ref<Tables<"training_block_exercises"> | null>(null);
+const selectedBlock = ref<Tables<"training_blocks"> | null>(null);
+
+enum SidebarVariant {
+  Exercise = "exercise",
+  Block = "block",
+}
+const sidebarVariant = ref<SidebarVariant>(SidebarVariant.Exercise);
+
+const sidebarTitle = computed(() => {
+  if (sidebarVariant.value === SidebarVariant.Exercise) {
+    return "Exercise Details";
+  } else if (sidebarVariant.value === SidebarVariant.Block) {
+    return "Block Details";
+  }
+  return "Details";
+});
 
 const selectedUnitID = computed(() => {
   const id = Number(route.params.id);
   return isNaN(id) ? null : id;
 });
 
-const selectExercise = (e: TrainingBlockExercise) => {
+// ============ Exercise ============
+
+const selectExercise = (e: Tables<"training_block_exercises">) => {
   console.log("Selected exercise:", e.id);
-  sidebarModel.value = true;
   selectedExercise.value = e;
+  selectedBlock.value = null;
+  sidebarVariant.value = SidebarVariant.Exercise;
+  sidebarModel.value = true;
 };
 
-const unit = reactive<TrainingUnit>({
+const unit = reactive({
   id: 0,
   name: "",
   description: "",
-  created_at: "",
   patient_uid: "",
   therapist_uid: "",
-  training_blocks: [],
-  training_block_exercises: [],
+  training_blocks: [] as Tables<"training_blocks">[],
+  training_block_exercises: [] as Tables<"training_block_exercises">[],
 });
 
 const draggingExercise = ref(null);
@@ -119,6 +170,20 @@ const loadTrainingUnit = async () => {
     }
 
     Object.assign(unit, data);
+
+    if (selectedExercise.value) {
+      const updatedExercise = unit.training_block_exercises.find(
+        (e) => e.id === selectedExercise.value?.id
+      );
+      selectedExercise.value = updatedExercise || null;
+    }
+
+    if (selectedBlock.value) {
+      const updatedBlock = unit.training_blocks.find(
+        (b) => b.id === selectedBlock.value?.id
+      );
+      selectedBlock.value = updatedBlock || null;
+    }
   }
 };
 
@@ -127,6 +192,40 @@ const getExercisesForBlock = (blockId: number) => {
     .filter((ex) => ex.training_block_id === blockId)
     .sort((a, b) => a.order_position - b.order_position);
 };
+
+// ============ Block ============
+
+const selectBlock = (b: Tables<"training_blocks">) => {
+  console.log("Selected block:", b.id);
+  selectedBlock.value = b;
+  selectedExercise.value = null;
+  sidebarVariant.value = SidebarVariant.Block;
+  sidebarModel.value = true;
+};
+
+const createBlock = async () => {
+  const { data, error } = await supabase
+    .from("training_blocks")
+    .insert([
+      {
+        name: "New Block",
+        description: "New Block Description",
+        training_unit_id: unit.id,
+        order_position: unit.training_blocks.length + 1,
+        therapist_uid: supabaseUser.value?.id || "",
+      },
+    ])
+    .select();
+
+  if (error) {
+    console.error("Error creating block:", error);
+    return;
+  }
+
+  await loadTrainingUnit();
+};
+
+// ============ Drag and Drop ============
 
 const handleDragStart = (data: any) => {
   draggingExercise.value = data;
@@ -149,7 +248,6 @@ const handleExerciseDrop = async ({
   targetBlockId: number;
   newPosition: number;
 }) => {
-  // Update the local UI state
   const result = await updateExercisePosition(
     unit,
     exerciseId,
@@ -182,11 +280,11 @@ const handleExerciseDrop = async ({
 </script>
 
 <style scoped lang="scss">
-.unit-blocks {
+#blocks {
   display: flex;
   flex-direction: row;
   gap: 1rem;
   overflow-x: auto;
-  padding: 1rem 0;
+  max-width: 100%;
 }
 </style>

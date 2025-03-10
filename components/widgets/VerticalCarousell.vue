@@ -26,7 +26,9 @@
         ref="slideElements"
         @click="() => emits('currentSlide', index)"
       >
-        {{ slide.title }}
+        <h2>{{ slide.title }}</h2>
+
+        <p>{{ slide.description }}</p>
       </div>
     </div>
     <div class="controls"></div>
@@ -36,7 +38,7 @@
 <script setup lang="ts">
 interface Slide {
   title: string;
-  content: string;
+  description: string;
 }
 
 const props = defineProps({
@@ -124,7 +126,8 @@ onMounted(async () => {
   justify-content: center;
   align-items: center;
   height: 300px;
-  width: 500px;
+  width: 100%;
+  min-width: 500px;
   // border: 1px solid #ccc;
 
   .carousel {

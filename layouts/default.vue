@@ -69,7 +69,7 @@ watch(user, (newUser) => {
         </div>
       </header>
 
-      <main class="p-4 flex-grow overflow-y-auto">
+      <main class="p-4">
         <slot />
       </main>
     </div>
