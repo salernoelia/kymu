@@ -1,5 +1,6 @@
 <template>
   <div class="flex flex-col">
+    <h1>{{}}</h1>
     <WidgetsVerticalCarousell
       @current-slide="(i) => console.log('clicke', i)"
       :initialSlide="0"
@@ -47,6 +48,25 @@
 </template>
 
 <script setup lang="ts">
+const route = useRoute();
+const localePath = useLocalePath();
+const supabase = useSupabaseClient();
+
+const loadPatientData = async () => {
+  const { data, error } = await supabase.from("families").select("*");
+
+  if (error) {
+    console.error("Error fetching patient data", error);
+    return;
+  }
+
+  console.log("Patient data", data);
+};
+
+onMounted(async () => {
+  await loadPatientData();
+});
+
 const pieChartData = ref([
   { name: "Marketing", value: 300 },
   { name: "Development", value: 500 },
