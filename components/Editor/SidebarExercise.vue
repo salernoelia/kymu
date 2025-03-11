@@ -72,7 +72,6 @@ const props = defineProps<{
 
 const emit = defineEmits(["update"]);
 
-// Create a reactive copy to work with
 const exercise = reactive({ ...props.e });
 
 onMounted(() => {

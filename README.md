@@ -15,7 +15,7 @@ supabase db pull
 **Generate Types of Supabase DB**
 
 ```sh
-npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema public > /shared/types/database.types.ts
+npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema public > shared/types/database.types.ts
 ```
 
 # Widgets usage examples
