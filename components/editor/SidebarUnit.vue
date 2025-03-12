@@ -93,7 +93,6 @@ const loadExercises = async () => {
     return;
   }
 
-  // Sort exercises according to exercises_index
   if (data && unit.exercises_index) {
     exercises.value = [...data].sort((a, b) => {
       const aIndex = unit.exercises_index?.indexOf(a.id) ?? -1;
@@ -138,7 +137,6 @@ const deleteUnit = async () => {
   }
 
   try {
-    // First, delete all exercises in this unit
     const { error: exercisesError } = await props.supabase
       .from("exercises")
       .delete()
@@ -149,7 +147,6 @@ const deleteUnit = async () => {
       return;
     }
 
-    // Then delete the unit
     const { error } = await props.supabase
       .from("units")
       .delete()
@@ -169,12 +166,11 @@ const deleteUnit = async () => {
 
 const addExercise = async () => {
   try {
-    // Create a new exercise
     const { data, error } = await props.supabase
       .from("exercises")
       .insert({
         training_unit_id: unit.id,
-        default_exercise_id: 1, // Default value
+        default_exercise_id: 1,
         name: "New Exercise",
         focus_type: "strength",
         family_scene_adjustment_access: false,
@@ -188,7 +184,6 @@ const addExercise = async () => {
     }
 
     if (data && data[0]) {
-      // Update the unit's exercises_index to include the new exercise
       const newExerciseId = data[0].id;
       const updatedExercisesIndex = [
         ...(unit.exercises_index || []),

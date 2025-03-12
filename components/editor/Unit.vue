@@ -151,7 +151,7 @@ function onDropInZone(event: DragEvent, position: number) {
   padding: 1rem;
   margin: 1rem 0;
   width: 400px;
-  background-color: #f5f5f5;
+  background-color: #ffffff;
   border-radius: 8px;
   transition: all 0.3s ease;
 

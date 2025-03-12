@@ -8,7 +8,7 @@
     </div>
 
     <div class="p-1 flex flex-col justify-between h-full">
-      <div class="flex flex-col">
+      <div class="flex flex-col gap-2">
         <span
           class="padded-line"
           style="margin: 0.25rem 0 1rem"
@@ -72,7 +72,7 @@
           <!-- {{ $t("explore-kymu") }} -->
         </nuxt-link>
       </div>
-      <div class="flex flex-col align-center">
+      <div class="flex flex-col align-center gap-2">
         <span class="padded-line" />
 
         <!-- <WidgetsLanguageSelector /> -->
@@ -163,9 +163,14 @@ const handleLogout = async () => {
   transition: all 0.2s ease;
 }
 
-.icon {
-  width: 1.5rem;
-  height: 1.5rem;
+.link {
+  &:hover {
+    background-color: var(--color-gray-400);
+  }
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
 .router-link-active {

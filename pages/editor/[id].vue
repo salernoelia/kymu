@@ -13,10 +13,24 @@
           :id="unit.id"
           :exercises="getExercisesForUnit(unit.id)"
           @drop="handleExerciseDrop"
-          @click="() => selectUnit(unit)"
         >
           <template #header>
-            <h1>{{ unit.name }}</h1>
+            <div class="flex justify-between items-center">
+              <h2>{{ unit.name }}</h2>
+              <div class="flex flex-row gap-1">
+                <Icon
+                  class="icon-single cursor-pointer"
+                  name="material-symbols-light:add-circle-outline-rounded"
+                  @click="() => selectUnit(unit)"
+                />
+                <Icon
+                  class="icon-single cursor-pointer"
+                  name="material-symbols-light:edit-square-outline"
+                  @click="() => selectUnit(unit)"
+                />
+              </div>
+            </div>
+
             <p>{{ unit.description }}</p>
           </template>
           <template

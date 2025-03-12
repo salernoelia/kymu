@@ -65,8 +65,6 @@
 </template>
 
 <script setup lang="ts">
-import { Tables, Database } from "~/shared/types/database.types";
-
 const props = defineProps<{
   supabase: ReturnType<typeof useSupabaseClient<Database>>;
   e: Tables<"exercises">;
@@ -111,7 +109,6 @@ const deleteExercise = async () => {
   }
 
   try {
-    // First, we need to remove the exercise ID from the unit's exercises_index
     const { data: unitData } = await props.supabase
       .from("units")
       .select("id, exercises_index")
