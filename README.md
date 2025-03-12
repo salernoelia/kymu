@@ -33,7 +33,7 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema p
   ]"
 />
 <ThreeModelViewer
-  modelPath="/models/box.glb"
+  modelPath="/models/exercise.glb"
   :scale="2"
   @exercise-variant="(v) => console.log('exercise variant', v)"
 />

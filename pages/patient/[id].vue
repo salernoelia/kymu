@@ -1,9 +1,4 @@
 <template>
-  <ThreeModelViewer
-    modelPath="/models/exercise.glb"
-    :scale="2"
-    @exercise-variant="(v) => console.log('exercise variant', v)"
-  />
   <div
     class="flex flex-row gap-4"
     v-if="f"
@@ -27,12 +22,12 @@
     <div
       id="units"
       class="flex flex-col border rounded p-4"
-      v-if="f.training_units && f.training_units.length > 0"
+      v-if="f.units && f.units.length > 0"
     >
       <h2>{{ $t("patient-units") }}</h2>
 
       <!-- <div
-        v-for="unit in f.training_units"
+        v-for="unit in f.units"
         :key="unit.id"
         class="flex flex-col border rounded p-4 hover:bg-gray-300 transition"
         @click="() => navigateTo(localePath(`/editor/${unit.id}`))"
@@ -43,10 +38,10 @@
 
       <WidgetsVerticalCarousell
         @current-slide="
-          (i) => navigateTo(localePath(`/editor/${f.training_units[i].id}`))
+          (i) => navigateTo(localePath(`/editor/${f.units[i].id}`))
         "
         :initialSlide="0"
-        :slides="slidesFromUnits(f.training_units)"
+        :slides="slidesFromUnits(f.units)"
       />
     </div>
 
@@ -92,7 +87,7 @@ const familiesWithFkeyQuery = supabase
   .select(
     `
     *,
-    training_units(*)
+    units(*)
   `
   )
   .eq("uid", route.params.id.toString())
