@@ -60,7 +60,7 @@
     <EditorSidebar
       v-model="store.sidebarOpen"
       :title="store.sidebarTitle"
-      width="400px"
+      width="50%"
     >
       <template
         v-if="store.sidebarVariant === 'exercise' && store.selectedExercise"

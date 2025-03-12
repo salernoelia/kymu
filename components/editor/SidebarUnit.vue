@@ -20,13 +20,13 @@
 
     <div class="actions">
       <button
-        @click="saveUnit"
+        @click="store.saveUnit(unit)"
         class="save-btn"
       >
         Save Changes
       </button>
       <button
-        @click="deleteUnit"
+        @click="store.deleteUnit(unit.id)"
         class="delete-btn"
       >
         Delete Unit
@@ -36,7 +36,7 @@
     <div class="exercises-section">
       <h2>Exercises in this unit</h2>
       <button
-        @click="addExercise"
+        @click="store.createExercise(unit.id)"
         class="add-btn"
       >
         Add Exercise
@@ -68,18 +68,6 @@
 const store = useEditorStore();
 const unit = reactive({ ...store.selectedUnit! });
 const exercises = computed(() => store.getExercisesForUnit(unit.id));
-
-function saveUnit() {
-  store.saveUnit(unit);
-}
-
-function deleteUnit() {
-  store.deleteUnit(unit.id);
-}
-
-function addExercise() {
-  store.createExercise(unit.id);
-}
 </script>
 
 <style scoped>

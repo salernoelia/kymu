@@ -49,13 +49,13 @@
 
     <div class="actions">
       <button
-        @click="saveExercise"
+        @click="store.saveExercise(exercise)"
         class="save-btn"
       >
         Save Changes
       </button>
       <button
-        @click="deleteExercise"
+        @click="store.deleteExercise(exercise.id)"
         class="delete-btn"
       >
         Delete Exercise
@@ -67,14 +67,6 @@
 <script setup lang="ts">
 const store = useEditorStore();
 const exercise = reactive({ ...store.selectedExercise! });
-
-function saveExercise() {
-  store.saveExercise(exercise);
-}
-
-function deleteExercise() {
-  store.deleteExercise(exercise.id);
-}
 </script>
 
 <style scoped>

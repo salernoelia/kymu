@@ -197,6 +197,8 @@ export const useEditorStore = defineStore("editor", () => {
             await loadTrainingUnit();
         } catch (err) {
             console.error("Error in saveExercise:", err);
+        } finally {
+            closeSidebar();
         }
     }
 
@@ -268,6 +270,8 @@ export const useEditorStore = defineStore("editor", () => {
             await loadTrainingUnit();
         } catch (err) {
             console.error("Error in saveUnit:", err);
+        } finally {
+            closeSidebar();
         }
     }
 
