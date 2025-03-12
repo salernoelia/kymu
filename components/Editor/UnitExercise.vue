@@ -33,14 +33,7 @@ const props = defineProps<{
   orderPosition: number;
 }>();
 
-const emit = defineEmits<{
-  (
-    e: "dragstart",
-    data: { id: number; unitId: number; position: number }
-  ): void;
-  (e: "dragend"): void;
-}>();
-
+const store = useEditorStore();
 const isDragging = ref(false);
 
 function onDragStart(event: DragEvent) {
@@ -61,12 +54,12 @@ function onDragStart(event: DragEvent) {
     event.dataTransfer.setDragImage(event.target, 20, 20);
   }
 
-  emit("dragstart", data);
+  store.handleDragStart(data);
 }
 
 function onDragEnd() {
   isDragging.value = false;
-  emit("dragend");
+  store.handleDragEnd();
 }
 </script>
 

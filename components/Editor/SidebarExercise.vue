@@ -65,88 +65,16 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{
-  supabase: ReturnType<typeof useSupabaseClient<Database>>;
-  e: Tables<"exercises">;
-}>();
+const store = useEditorStore();
+const exercise = reactive({ ...store.selectedExercise! });
 
-const emit = defineEmits(["update"]);
+function saveExercise() {
+  store.saveExercise(exercise);
+}
 
-const exercise = reactive({ ...props.e });
-
-onMounted(() => {
-  console.log("Exercise", props.e);
-});
-
-const saveExercise = async () => {
-  try {
-    const { error } = await props.supabase
-      .from("exercises")
-      .update({
-        name: exercise.name,
-        focus_type: exercise.focus_type,
-        duration_seconds_goal: exercise.duration_seconds_goal,
-        repetitions_goal: exercise.repetitions_goal,
-        family_scene_adjustment_access: exercise.family_scene_adjustment_access,
-      })
-      .eq("id", exercise.id);
-
-    if (error) {
-      console.error("Error updating exercise:", error);
-      return;
-    }
-
-    console.log("Exercise updated successfully");
-    emit("update");
-  } catch (err) {
-    console.error("Error in saveExercise:", err);
-  }
-};
-
-const deleteExercise = async () => {
-  if (!confirm("Are you sure you want to delete this exercise?")) {
-    return;
-  }
-
-  try {
-    const { data: unitData } = await props.supabase
-      .from("units")
-      .select("id, exercises_index")
-      .eq("id", exercise.training_unit_id)
-      .single();
-
-    if (unitData) {
-      const updatedExercisesIndex = [...(unitData.exercises_index || [])];
-      const indexToRemove = updatedExercisesIndex.indexOf(exercise.id);
-      if (indexToRemove !== -1) {
-        updatedExercisesIndex.splice(indexToRemove, 1);
-
-        await props.supabase
-          .from("units")
-          .update({
-            exercises_index: updatedExercisesIndex,
-          })
-          .eq("id", unitData.id);
-      }
-    }
-
-    // Now delete the exercise
-    const { error } = await props.supabase
-      .from("exercises")
-      .delete()
-      .eq("id", props.e.id);
-
-    if (error) {
-      console.error("Error deleting exercise", error);
-      return;
-    }
-
-    console.log("Exercise deleted");
-    emit("update");
-  } catch (err) {
-    console.error("Error in deleteExercise:", err);
-  }
-};
+function deleteExercise() {
+  store.deleteExercise(exercise.id);
+}
 </script>
 
 <style scoped>
