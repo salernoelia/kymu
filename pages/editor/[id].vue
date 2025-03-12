@@ -1,32 +1,48 @@
 <template>
   <div>
-    <h1>Unit Editor for unit {{ unit.name }}</h1>
-    <h3>{{ unit.description }}</h3>
+    <h1>{{ $t("unit-editor-title") }}</h1>
+    <h3>{{ $t("unit-editor-description") }}</h3>
     <div>
       <div
         id="exercises"
         class="flex flex-row gap-4 overflow-x-auto"
       >
-        <EditorUnitExercise
-          v-for="exercise in unit.exercises"
-          :key="exercise.id"
-          :id="exercise.id"
-          :block-id="unit.id"
-          :order-position="exercise.order_position"
-          @dragstart="handleDragStart"
-          @dragend="handleDragEnd"
-          @click.stop="selectExercise(exercise)"
+        <EditorUnit
+          v-for="unit in units"
+          :key="unit.id"
+          :id="unit.id"
+          :exercises="getExercisesForUnit(unit.id)"
+          @drop="handleExerciseDrop"
+          @click="() => selectunit(unit)"
         >
-          <h2>Exercise: {{ exercise.id }}</h2>
-        </EditorUnitExercise>
-      </div>
-
-      <div
-        id="create-exercise"
-        class="flex flex-col items-center justify-center border rounded p-4 cursor-pointer hover:bg-gray-300"
-        @click="createExercise"
-      >
-        <h2>Create Exercise</h2>
+          <template #header>
+            <h1>{{ unit.name }}</h1>
+            <p>{{ unit.description }}</p>
+          </template>
+          <template
+            v-for="exercise in getExercisesForUnit(unit.id)"
+            :key="exercise.id"
+            #[`exercise-${exercise.id}`]
+          >
+            <EditorUnitExercise
+              :id="exercise.id"
+              :unit-id="unit.id"
+              :order-position="exercise.order_position"
+              @dragstart="handleDragStart"
+              @dragend="handleDragEnd"
+              @click.stop="selectExercise(exercise)"
+            >
+              <h2>Exercise: {{ exercise.id }}</h2>
+            </EditorUnitExercise>
+          </template>
+          <div
+            id="create-exercise"
+            class="flex flex-col items-center justify-center border rounded p-4 cursor-pointer hover:bg-gray-300"
+            @click="createExercise"
+          >
+            <h2>Create Unit</h2>
+          </div>
+        </EditorUnit>
       </div>
     </div>
     <EditorSidebar
@@ -68,10 +84,16 @@ const sidebarTitle = computed(() => {
   return "Details";
 });
 
-const selectedUnitID = computed(() => {
-  const id = Number(route.params.id);
-  return isNaN(id) ? null : id;
+const selectedPatientID = computed(() => {
+  const id = route.params.id?.toString();
+  return id || null;
 });
+
+// ============ Unit ============
+
+const getExercisesForUnit = (unitId: number) => {
+  return units.find((u) => u.id === unitId)?.exercises || [];
+};
 
 // ============ Exercise ============
 
@@ -82,14 +104,31 @@ const selectExercise = (e: Tables<"exercises">) => {
   sidebarModel.value = true;
 };
 
-const unit = reactive({
-  id: 0,
-  name: "",
-  description: "",
-  patient_uid: "",
-  therapist_uid: "",
-  exercises: [] as Tables<"exercises">[],
-});
+interface UnitsWithExercises extends Tables<"units"> {
+  exercises: Tables<"exercises">[];
+}
+
+const units = reactive<UnitsWithExercises[]>([
+  {
+    id: 0,
+    name: "",
+    description: "",
+    patient_uid: "",
+    therapist_uid: "",
+    exercises: [] as Tables<"exercises">[],
+    map: function (
+      arg0: (unit: Tables<"units">) => {
+        title: string;
+        description: string | null;
+      }
+    ): unknown {
+      throw new Error("Function not implemented.");
+    },
+    created_at: "",
+    exercises_index: null,
+    is_template: false,
+  },
+]);
 
 const draggingExercise = ref(null);
 const dragInProgress = ref(false);
@@ -101,7 +140,7 @@ onMounted(async () => {
 });
 
 const loadTrainingUnit = async () => {
-  if (!selectedUnitID.value) {
+  if (!selectedPatientID.value) {
     navigateTo(localePath(`/editor`));
     return;
   }
@@ -116,12 +155,11 @@ const loadTrainingUnit = async () => {
       description, 
       patient_uid, 
       therapist_uid, 
+      exercises_index,
       exercises(*)
     `
     )
-    .eq("id", selectedUnitID.value)
-    .single();
-  console.log(data);
+    .eq("patient_uid", selectedPatientID.value);
 
   if (error) {
     console.error("Error loading training unit:", error);
@@ -130,18 +168,8 @@ const loadTrainingUnit = async () => {
   }
 
   if (data) {
-    if (data.exercises) {
-      data.exercises.sort((a, b) => a.order_position - b.order_position);
-    }
-
-    Object.assign(unit, data);
-
-    if (selectedExercise.value) {
-      const updatedExercise = unit.exercises.find(
-        (e) => e.id === selectedExercise.value?.id
-      );
-      selectedExercise.value = updatedExercise || null;
-    }
+    Object.assign(units, data);
+    console.log("Loaded training unit", units);
   }
 };
 

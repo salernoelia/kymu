@@ -37,8 +37,11 @@
       </div> -->
 
       <WidgetsVerticalCarousell
+        v-if="f.units && f.units.length > 0"
         @current-slide="
-          (i) => navigateTo(localePath(`/editor/${f.units[i].id}`))
+          (i) =>
+            f?.units?.[i]?.id &&
+            navigateTo(localePath(`/editor/${route.params.id}`))
         "
         :initialSlide="0"
         :slides="slidesFromUnits(f.units)"
@@ -68,8 +71,8 @@ const route = useRoute();
 const localePath = useLocalePath();
 const supabase = useSupabaseClient<Database>();
 
-const slidesFromUnits = (units: TrainingUnit[]) => {
-  return units.map((unit) => {
+const slidesFromUnits = (units: Tables<"units">) => {
+  return units.map((unit: Tables<"units">) => {
     return {
       title: unit.name,
       description: unit.description,

@@ -26,18 +26,15 @@ signup: "Registrieren"
 logout: "Ausloggen"
 login: "Einloggen"
 
-# viewer
-viewer: "Viewer"
-viewer-description: "Mit dem Viewer kannst du eine Live-Vorschau der VR-Einheit sehen."
-
 # unit editor
+unit-editor-title: "Unit Editor"
+unit-editor-description: "Erstelle und bearbeite VR-Einheiten."
 unit-name: "Unit Name"
 unit-description: "Unit Beschreibung"
 unit-type: "Unit Typ"
 unit-select-placeholder: "Wähle einen Unit Typ"
 
 # VR viewer
-
 vr-viewer-title: "Viewer"
 vr-viewer-description: "Mit dem Viewer kannst du eien Live-Vorschau der VR-Einheit sehen."
 vr-viewer-select-placeholder: "Wähle einen Viewer Typ"
