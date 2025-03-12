@@ -71,11 +71,11 @@ const route = useRoute();
 const localePath = useLocalePath();
 const supabase = useSupabaseClient<Database>();
 
-const slidesFromUnits = (units: Tables<"units">) => {
+const slidesFromUnits = (units: Tables<"units">[]): Slide[] => {
   return units.map((unit: Tables<"units">) => {
     return {
       title: unit.name,
-      description: unit.description,
+      description: unit.description || "",
     };
   });
 };

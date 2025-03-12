@@ -36,11 +36,6 @@
 </template>
 
 <script setup lang="ts">
-interface Slide {
-  title: string;
-  description: string;
-}
-
 const props = defineProps({
   initialSlide: {
     type: Number,
@@ -128,7 +123,6 @@ onMounted(async () => {
   height: 300px;
   width: 100%;
   min-width: 500px;
-  // border: 1px solid #ccc;
 
   .carousel {
     display: flex;

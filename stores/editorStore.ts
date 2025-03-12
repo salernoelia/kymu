@@ -1,9 +1,4 @@
 import { defineStore } from "pinia";
-import type { Database, Tables } from "~/shared/types/database.types";
-
-interface UnitsWithExercises extends Tables<"units"> {
-    exercises: Tables<"exercises">[];
-}
 
 export const useEditorStore = defineStore("editor", () => {
     const supabase = useSupabaseClient<Database>();

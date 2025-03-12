@@ -4,8 +4,14 @@
     id="sidebar"
   >
     <div class="text-xl font-semibold">
-      <NuxtImg src="logo/logo_kymu_blue 1.png"> </NuxtImg>
+      <NuxtImg
+        style="width: 3rem; margin-top: 0.5rem"
+        src="logo/logo_kymu_blue 1.png"
+      >
+      </NuxtImg>
     </div>
+
+    <!-- ============= UPPER PART =============== -->
 
     <div class="p-1 flex flex-col justify-between h-full">
       <div class="flex flex-col gap-2">
@@ -71,7 +77,19 @@
           />
           <!-- {{ $t("explore-kymu") }} -->
         </nuxt-link>
+        <nuxt-link
+          :to="localePath('/plugins')"
+          class="link"
+        >
+          <!-- <CheckCircleOutlined class="mr-3" /> -->
+          <Icon
+            name="material-symbols-light:power-plug-outline"
+            class="icon"
+          />
+          <!-- {{ $t("explore-kymu") }} -->
+        </nuxt-link>
       </div>
+      <!-- ============= LOWER PART =============== -->
       <div class="flex flex-col align-center gap-2">
         <span class="padded-line" />
 
@@ -108,6 +126,7 @@
           <Icon
             name="material-symbols-light:logout"
             class="icon"
+            style="margin-bottom: 0.5rem"
           />
           <!-- Logout -->
         </NuxtLink>
@@ -176,5 +195,9 @@ const handleLogout = async () => {
 .router-link-active {
   background-color: var(--color-primary);
   color: white;
+
+  &:hover {
+    color: rgb(0, 0, 0);
+  }
 }
 </style>

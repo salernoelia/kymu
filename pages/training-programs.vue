@@ -21,7 +21,7 @@
 //   this.selectedProgram = program;
 // }
 
-const trainingPrograms = ref<TrainingProgram[]>([
+const trainingPrograms = ref<any>([
   {
     id: 1,
     name: "Reach and Place Training",

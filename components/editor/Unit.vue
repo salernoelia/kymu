@@ -71,7 +71,11 @@ const isDropActive = ref(false);
 const isDropHover = ref(false);
 const activeDropZone = ref(-1);
 const dragInProgress = inject("dragInProgress", ref(false));
-const draggingExerciseData = inject("draggingExerciseData", ref(null));
+
+const draggingExerciseData = inject<Ref<DraggingExercise | null>>(
+  "draggingExerciseData",
+  ref(null)
+);
 
 function shouldShowDropZone(position: number, exerciseId?: number) {
   if (!dragInProgress.value) return false;
@@ -85,7 +89,9 @@ function shouldShowDropZone(position: number, exerciseId?: number) {
       return false;
 
     const draggedIndex = props.exercises.findIndex(
-      (e) => e.id === draggingExerciseData.value.id
+      (e) =>
+        draggingExerciseData.value?.id != null &&
+        e.id === draggingExerciseData.value.id
     );
     if (draggedIndex !== -1 && position === draggedIndex) return false;
   }

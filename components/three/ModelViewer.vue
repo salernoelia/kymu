@@ -95,7 +95,6 @@ const hasAnimations = ref(false);
 let camera: THREE.OrthographicCamera;
 let scene: THREE.Scene;
 let renderer: THREE.WebGLRenderer;
-let cube: THREE.Mesh;
 let controls: OrbitControls;
 let animationId: number;
 let model: THREE.Object3D;
@@ -112,7 +111,6 @@ const loadModel = () => {
       model = gltf.scene;
       animations = gltf.animations || [];
 
-      // Configure model positioning
       const box = new THREE.Box3().setFromObject(model);
       const center = box.getCenter(new THREE.Vector3());
       model.position.sub(center);
@@ -126,23 +124,23 @@ const loadModel = () => {
 
       scene.add(model);
 
-      // Set up animation system
       if (animations.length > 0) {
         hasAnimations.value = true;
         mixer = new THREE.AnimationMixer(model);
 
-        // Extract animation names
         animationNames.value = animations.map((clip) => clip.name);
         emit("animationLoaded", animationNames.value);
 
-        // Auto-play animation if configured
         if (props.autoPlayAnimation) {
           if (
             props.defaultAnimationName &&
             animationNames.value.includes(props.defaultAnimationName)
           ) {
             currentAnimationName.value = props.defaultAnimationName;
-          } else if (animations.length > 0) {
+          } else if (
+            animations.length > 0 &&
+            typeof animationNames.value[0] === "string"
+          ) {
             currentAnimationName.value = animationNames.value[0];
           }
 
@@ -172,7 +170,6 @@ const playAnimation = (name: string) => {
     currentAction.fadeOut(0.5);
   }
 
-  // Create and configure new action
   currentAction = mixer.clipAction(clip);
   currentAction.setEffectiveTimeScale(playbackSpeed.value);
   currentAction.setLoop(
@@ -253,10 +250,10 @@ const initScene = () => {
 const animate = () => {
   animationId = requestAnimationFrame(animate);
 
-  if (cube) {
-    cube.rotation.x += 0.01;
-    cube.rotation.y += 0.005;
-  }
+  // if (cube) {
+  //   cube.rotation.x += 0.01;
+  //   cube.rotation.y += 0.005;
+  // }
 
   if (mixer && isPlaying.value) {
     const delta = clock.getDelta();

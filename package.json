@@ -16,6 +16,7 @@
     "@nuxtjs/supabase": "^1.4.6",
     "@pinia/nuxt": "^0.10.0",
     "@types/d3": "^7.4.3",
+    "@types/three": "^0.174.0",
     "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/nuxt": "^12.5.0",
     "nuxt": "^3.8.2",
