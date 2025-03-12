@@ -26,16 +26,6 @@
     >
       <h2>{{ $t("patient-units") }}</h2>
 
-      <!-- <div
-        v-for="unit in f.units"
-        :key="unit.id"
-        class="flex flex-col border rounded p-4 hover:bg-gray-300 transition"
-        @click="() => navigateTo(localePath(`/editor/${unit.id}`))"
-      >
-        <h3>{{ unit.name }}</h3>
-        <p>{{ unit.description }}</p>
-      </div> -->
-
       <WidgetsVerticalCarousell
         v-if="f.units && f.units.length > 0"
         @current-slide="

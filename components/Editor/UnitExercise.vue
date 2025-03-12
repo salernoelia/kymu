@@ -28,8 +28,8 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  id: number;
-  unitId: number;
+  id: string;
+  unitId: string;
   orderPosition: number;
 }>();
 

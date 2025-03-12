@@ -51,17 +51,17 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  id: number;
-  exercises: Array<{ id: number; [key: string]: any }>;
+  id: string;
+  exercises: Array<{ id: string; [key: string]: any }>;
 }>();
 
 const emit = defineEmits<{
   (
     e: "drop",
     data: {
-      exerciseId: number;
-      sourceUnitId: number;
-      targetUnitId: number;
+      exerciseId: string;
+      sourceUnitId: string;
+      targetUnitId: string;
       newPosition: number;
     }
   ): void;
@@ -77,7 +77,7 @@ const draggingExerciseData = inject<Ref<DraggingExercise | null>>(
   ref(null)
 );
 
-function shouldShowDropZone(position: number, exerciseId?: number) {
+function shouldShowDropZone(position: number, exerciseId?: string) {
   if (!dragInProgress.value) return false;
 
   if (
