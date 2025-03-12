@@ -1,7 +1,7 @@
 <template>
-  <div class="container mx-auto p-6">
+  <div class="container mx-auto">
     <div class="flex justify-between items-center mb-6">
-      <h1 class="text-2xl font-semibold">Patients</h1>
+      <h1>Patients</h1>
 
       <div>
         <button

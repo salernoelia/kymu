@@ -1,10 +1,10 @@
 <template>
   <div class="flex-col">
     <h1>
-      {{ $t("viewer") }}
+      {{ $t("vr-viewer") }}
     </h1>
     <h3>
-      {{ $t("viewer-description") }}
+      {{ $t("vr-viewer-description") }}
     </h3>
     <WidgetsPlayer id="player" />
   </div>

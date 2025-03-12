@@ -28,7 +28,7 @@ onMounted(async () => {
 });
 
 const loadTrainingUnits = async () => {
-  let { data, error } = await supabase.from("training_units").select("*");
+  let { data, error } = await supabase.from("units").select("*");
   if (data) {
     units.value = data;
   } else {

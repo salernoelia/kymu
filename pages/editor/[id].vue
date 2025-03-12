@@ -8,7 +8,7 @@
         class="flex flex-row gap-4 overflow-x-auto"
       >
         <EditorUnitBlock
-          v-for="block in unit.training_blocks"
+          v-for="block in unit.blocks"
           :key="block.id"
           :id="block.id"
           :exercises="getExercisesForBlock(block.id)"
@@ -81,8 +81,8 @@ const route = useRoute();
 const supabase = useSupabaseClient<Database>();
 const { updateExercisePosition } = useTrainingUnitMovable();
 const sidebarModel = ref(false);
-const selectedExercise = ref<Tables<"training_block_exercises"> | null>(null);
-const selectedBlock = ref<Tables<"training_blocks"> | null>(null);
+const selectedExercise = ref<Tables<"block_exercises"> | null>(null);
+const selectedBlock = ref<Tables<"blocks"> | null>(null);
 
 enum SidebarVariant {
   Exercise = "exercise",
@@ -106,7 +106,7 @@ const selectedUnitID = computed(() => {
 
 // ============ Exercise ============
 
-const selectExercise = (e: Tables<"training_block_exercises">) => {
+const selectExercise = (e: Tables<"block_exercises">) => {
   console.log("Selected exercise:", e.id);
   selectedExercise.value = e;
   selectedBlock.value = null;
@@ -120,8 +120,8 @@ const unit = reactive({
   description: "",
   patient_uid: "",
   therapist_uid: "",
-  training_blocks: [] as Tables<"training_blocks">[],
-  training_block_exercises: [] as Tables<"training_block_exercises">[],
+  blocks: [] as Tables<"blocks">[],
+  block_exercises: [] as Tables<"block_exercises">[],
 });
 
 const draggingExercise = ref(null);
@@ -140,7 +140,7 @@ const loadTrainingUnit = async () => {
   }
 
   const { data, error } = await supabase
-    .from("training_units")
+    .from("units")
     .select(
       `
       id, 
@@ -149,8 +149,8 @@ const loadTrainingUnit = async () => {
       description, 
       patient_uid, 
       therapist_uid, 
-      training_blocks(*),
-      training_block_exercises(*)
+      blocks(*),
+      block_exercises(*)
     `
     )
     .eq("id", selectedUnitID.value)
@@ -163,23 +163,21 @@ const loadTrainingUnit = async () => {
   }
 
   if (data) {
-    if (data.training_block_exercises) {
-      data.training_block_exercises.sort(
-        (a, b) => a.order_position - b.order_position
-      );
+    if (data.block_exercises) {
+      data.block_exercises.sort((a, b) => a.order_position - b.order_position);
     }
 
     Object.assign(unit, data);
 
     if (selectedExercise.value) {
-      const updatedExercise = unit.training_block_exercises.find(
+      const updatedExercise = unit.block_exercises.find(
         (e) => e.id === selectedExercise.value?.id
       );
       selectedExercise.value = updatedExercise || null;
     }
 
     if (selectedBlock.value) {
-      const updatedBlock = unit.training_blocks.find(
+      const updatedBlock = unit.blocks.find(
         (b) => b.id === selectedBlock.value?.id
       );
       selectedBlock.value = updatedBlock || null;
@@ -188,14 +186,14 @@ const loadTrainingUnit = async () => {
 };
 
 const getExercisesForBlock = (blockId: number) => {
-  return unit.training_block_exercises
-    .filter((ex) => ex.training_block_id === blockId)
+  return unit.block_exercises
+    .filter((ex) => ex.block_id === blockId)
     .sort((a, b) => a.order_position - b.order_position);
 };
 
 // ============ Block ============
 
-const selectBlock = (b: Tables<"training_blocks">) => {
+const selectBlock = (b: Tables<"blocks">) => {
   console.log("Selected block:", b.id);
   selectedBlock.value = b;
   selectedExercise.value = null;
@@ -205,13 +203,13 @@ const selectBlock = (b: Tables<"training_blocks">) => {
 
 const createBlock = async () => {
   const { data, error } = await supabase
-    .from("training_blocks")
+    .from("blocks")
     .insert([
       {
         name: "New Block",
         description: "New Block Description",
-        training_unit_id: unit.id,
-        order_position: unit.training_blocks.length + 1,
+        unit_id: unit.id,
+        order_position: unit.blocks.length + 1,
         therapist_uid: supabaseUser.value?.id || "",
       },
     ])
@@ -259,9 +257,9 @@ const handleExerciseDrop = async ({
 
   try {
     const { error } = await supabase
-      .from("training_block_exercises")
+      .from("block_exercises")
       .update({
-        training_block_id: targetBlockId,
+        block_id: targetBlockId,
         order_position: newPosition,
       })
       .eq("id", exerciseId);

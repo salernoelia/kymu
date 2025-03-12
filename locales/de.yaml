@@ -26,6 +26,10 @@ signup: "Registrieren"
 logout: "Ausloggen"
 login: "Einloggen"
 
+# viewer
+viewer: "Viewer"
+viewer-description: "Mit dem Viewer kannst du eine Live-Vorschau der VR-Einheit sehen."
+
 # unit editor
 unit-name: "Unit Name"
 unit-description: "Unit Beschreibung"
