@@ -1,10 +1,6 @@
-interface UnitWithExercises extends Tables<"units"> {
-    exercises: Tables<"exercises">[];
-}
-
 export function useTrainingUnitMovable() {
     const updateExercisePosition = async (
-        unit: UnitWithExercises,
+        unit: UnitsWithExercises,
         exerciseId: number,
         newPosition: number,
     ) => {

@@ -4,9 +4,14 @@ interface Slide {
 }
 
 interface DraggingExercise {
-  id: number;
-  unitId: number;
+  id: string;
+  unitId: string;
+  position: number;
 }
+
+interface ExerciseTemplate extends Tables<"default_exercises"> {}
+
+interface UnitTemplate extends Tables<"default_units"> {}
 
 interface UnitsWithExercises extends Tables<"units"> {
   exercises: Tables<"exercises">[];

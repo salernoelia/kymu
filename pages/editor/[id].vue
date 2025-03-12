@@ -5,7 +5,7 @@
     <div>
       <div
         id="exercises"
-        class="flex flex-row gap-4 overflow-x-auto"
+        class="flex flex-row gap-4 h-full overflow-x-auto"
       >
         <EditorUnit
           v-for="unit in store.units"
@@ -99,11 +99,9 @@
 const route = useRoute();
 const store = useEditorStore();
 
-// Local sidebar state to avoid the reactivity issue
 const sidebarOpen = ref(false);
 const sidebarTitle = ref("Details");
 
-// Watch the store's sidebar state to sync with our local state
 watch(
   () => store.sidebarOpen,
   (val) => {
@@ -111,7 +109,6 @@ watch(
   }
 );
 
-// Update store state when local state changes
 watch(sidebarOpen, (val) => {
   store.sidebarOpen = val;
 });
@@ -128,13 +125,11 @@ provide("dragInProgress", toRef(store, "dragInProgress"));
 provide("draggingExerciseData", toRef(store, "draggingExercise"));
 
 onMounted(async () => {
-  // Ensure templates are loaded first
   await store.loadTemplates();
 
   store.setSelectedPatientId(selectedPatientID.value);
   await store.loadTrainingUnit();
 
-  // Check if there's a request to create a unit directly
   if (route.query.create === "unit") {
     onAddUnitClick();
   }
@@ -154,11 +149,9 @@ const onAddExerciseClick = (unitId: string) => {
   templateSelectorType.value = "exercise";
   templateSelectorUnitId.value = unitId;
 
-  // Set the variant first
   store.sidebarVariant = "template-selector";
   store.sidebarMode = "create";
 
-  // Update local title and open state
   sidebarTitle.value = "Create New Exercise";
   sidebarOpen.value = true;
 };
@@ -166,11 +159,9 @@ const onAddExerciseClick = (unitId: string) => {
 const onAddUnitClick = () => {
   templateSelectorType.value = "unit";
 
-  // Set the variant first
   store.sidebarVariant = "template-selector";
   store.sidebarMode = "create";
 
-  // Update local title and open state
   sidebarTitle.value = "Create New Unit";
   sidebarOpen.value = true;
 };
@@ -189,27 +180,22 @@ const onTemplateSelected = (data: {
 
   if (data.type === "exercise" && templateSelectorUnitId.value) {
     if (data.templateId) {
-      // Use template
       store.createExerciseFromTemplate(
         templateSelectorUnitId.value,
         data.templateId
       );
     } else {
-      // Create from scratch
       store.initializeNewExercise(templateSelectorUnitId.value);
     }
   } else if (data.type === "unit") {
     if (data.templateId) {
-      // Use template
       store.initializeNewUnitFromTemplate(data.templateId);
     } else {
-      // Create from scratch
       store.initializeNewUnit();
     }
   }
 };
 
-// Expose these methods to child components
 defineExpose({
   openCreateExerciseModal: onAddExerciseClick,
   openCreateUnitModal: onAddUnitClick,
@@ -223,6 +209,7 @@ defineExpose({
   gap: 1rem;
   overflow-x: auto;
   max-width: 100%;
+  height: 100%;
 }
 
 #create-unit {

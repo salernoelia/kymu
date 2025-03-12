@@ -6,7 +6,502 @@ export type Json =
   | { [key: string]: Json | undefined }
   | Json[];
 
-export type Database = {};
+export type Database = {
+  public: {
+    Tables: {
+      connection_families_and_therapists: {
+        Row: {
+          created_at: string;
+          family_id: string;
+          id: string | null;
+          therapist_id: string;
+        };
+        Insert: {
+          created_at?: string;
+          family_id: string;
+          id?: string | null;
+          therapist_id: string;
+        };
+        Update: {
+          created_at?: string;
+          family_id?: string;
+          id?: string | null;
+          therapist_id?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName:
+              "public_connection_families_and_therapists_family_id_fkey";
+            columns: ["family_id"];
+            isOneToOne: false;
+            referencedRelation: "families";
+            referencedColumns: ["uid"];
+          },
+          {
+            foreignKeyName:
+              "public_connection_families_and_therapists_therapist_id_fkey";
+            columns: ["therapist_id"];
+            isOneToOne: false;
+            referencedRelation: "therapists";
+            referencedColumns: ["uid"];
+          },
+        ];
+      };
+      default_exercise_instructions: {
+        Row: {
+          "3d_animation": string | null;
+          created_at: string;
+          id: number;
+          images_urls: string[] | null;
+          name: string | null;
+          videos_urls: string[] | null;
+        };
+        Insert: {
+          "3d_animation"?: string | null;
+          created_at?: string;
+          id?: number;
+          images_urls?: string[] | null;
+          name?: string | null;
+          videos_urls?: string[] | null;
+        };
+        Update: {
+          "3d_animation"?: string | null;
+          created_at?: string;
+          id?: number;
+          images_urls?: string[] | null;
+          name?: string | null;
+          videos_urls?: string[] | null;
+        };
+        Relationships: [];
+      };
+      default_exercises: {
+        Row: {
+          created_at: string;
+          default_exercise_instructions: number[];
+          default_scene_id: number;
+          description: string;
+          duration_seconds_goal: number | null;
+          focus_type: Database["public"]["Enums"]["focus_types"] | null;
+          id: string;
+          name: string;
+          repetitions_goal: number | null;
+          thumbnail_url: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          default_exercise_instructions: number[];
+          default_scene_id: number;
+          description: string;
+          duration_seconds_goal?: number | null;
+          focus_type?: Database["public"]["Enums"]["focus_types"] | null;
+          id?: string;
+          name: string;
+          repetitions_goal?: number | null;
+          thumbnail_url?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          default_exercise_instructions?: number[];
+          default_scene_id?: number;
+          description?: string;
+          duration_seconds_goal?: number | null;
+          focus_type?: Database["public"]["Enums"]["focus_types"] | null;
+          id?: string;
+          name?: string;
+          repetitions_goal?: number | null;
+          thumbnail_url?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_default_exercises_default_scene_id_fkey";
+            columns: ["default_scene_id"];
+            isOneToOne: false;
+            referencedRelation: "default_scenes";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      default_scenes: {
+        Row: {
+          created_at: string;
+          id: number;
+          images_urls: string[] | null;
+          name: string;
+          videos_urls: string[] | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          images_urls?: string[] | null;
+          name: string;
+          videos_urls?: string[] | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          images_urls?: string[] | null;
+          name?: string;
+          videos_urls?: string[] | null;
+        };
+        Relationships: [];
+      };
+      default_units: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          exercises_index: string[];
+          id: string;
+          name: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          exercises_index: string[];
+          id?: string;
+          name: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          exercises_index?: string[];
+          id?: string;
+          name?: string;
+        };
+        Relationships: [];
+      };
+      exercises: {
+        Row: {
+          created_at: string;
+          duration_seconds_goal: number | null;
+          family_scene_adjustment_access: boolean;
+          focus_type: Database["public"]["Enums"]["focus_types"];
+          id: string;
+          inherited_default_exercise: string | null;
+          is_template: boolean | null;
+          name: string | null;
+          repetitions_goal: number | null;
+          therapist_uid: string;
+        };
+        Insert: {
+          created_at?: string;
+          duration_seconds_goal?: number | null;
+          family_scene_adjustment_access?: boolean;
+          focus_type?: Database["public"]["Enums"]["focus_types"];
+          id?: string;
+          inherited_default_exercise?: string | null;
+          is_template?: boolean | null;
+          name?: string | null;
+          repetitions_goal?: number | null;
+          therapist_uid: string;
+        };
+        Update: {
+          created_at?: string;
+          duration_seconds_goal?: number | null;
+          family_scene_adjustment_access?: boolean;
+          focus_type?: Database["public"]["Enums"]["focus_types"];
+          id?: string;
+          inherited_default_exercise?: string | null;
+          is_template?: boolean | null;
+          name?: string | null;
+          repetitions_goal?: number | null;
+          therapist_uid?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_exercises_inherited_default_exercise_fkey";
+            columns: ["inherited_default_exercise"];
+            isOneToOne: false;
+            referencedRelation: "default_exercises";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName:
+              "public_training_block_exercises_therapist_uid_fkey";
+            columns: ["therapist_uid"];
+            isOneToOne: false;
+            referencedRelation: "therapists";
+            referencedColumns: ["uid"];
+          },
+        ];
+      };
+      families: {
+        Row: {
+          caregiver_first_name: string | null;
+          caregiver_last_name: string | null;
+          created_at: string;
+          patient_first_name: string;
+          patient_last_name: string;
+          therapist_uid: string;
+          uid: string;
+        };
+        Insert: {
+          caregiver_first_name?: string | null;
+          caregiver_last_name?: string | null;
+          created_at?: string;
+          patient_first_name: string;
+          patient_last_name: string;
+          therapist_uid: string;
+          uid: string;
+        };
+        Update: {
+          caregiver_first_name?: string | null;
+          caregiver_last_name?: string | null;
+          created_at?: string;
+          patient_first_name?: string;
+          patient_last_name?: string;
+          therapist_uid?: string;
+          uid?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_families_therapist_uid_fkey";
+            columns: ["therapist_uid"];
+            isOneToOne: false;
+            referencedRelation: "therapists";
+            referencedColumns: ["uid"];
+          },
+        ];
+      };
+      patient_achievements: {
+        Row: {
+          created_at: string;
+          exercise_id: number;
+          id: number;
+          minutes: number | null;
+          patient_uid: string;
+          repetitions: number | null;
+          vr_session_id: number;
+        };
+        Insert: {
+          created_at?: string;
+          exercise_id: number;
+          id?: number;
+          minutes?: number | null;
+          patient_uid: string;
+          repetitions?: number | null;
+          vr_session_id: number;
+        };
+        Update: {
+          created_at?: string;
+          exercise_id?: number;
+          id?: number;
+          minutes?: number | null;
+          patient_uid?: string;
+          repetitions?: number | null;
+          vr_session_id?: number;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "patient_achievements_patient_uid_fkey";
+            columns: ["patient_uid"];
+            isOneToOne: false;
+            referencedRelation: "families";
+            referencedColumns: ["uid"];
+          },
+          {
+            foreignKeyName: "patient_achievements_vr_session_id_fkey";
+            columns: ["vr_session_id"];
+            isOneToOne: false;
+            referencedRelation: "vr_sessions";
+            referencedColumns: ["id"];
+          },
+        ];
+      };
+      test: {
+        Row: {
+          created_at: string;
+          id: number;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+        };
+        Relationships: [];
+      };
+      therapists: {
+        Row: {
+          avatar_url: string | null;
+          city: string | null;
+          country: string | null;
+          created_at: string;
+          first_name: string;
+          language: string | null;
+          last_name: string;
+          phone_number: string | null;
+          postal_code: string | null;
+          prefix_phone_number: string | null;
+          street: string | null;
+          street_number: string | null;
+          therapist_type: Database["public"]["Enums"]["therapist_types"];
+          uid: string;
+        };
+        Insert: {
+          avatar_url?: string | null;
+          city?: string | null;
+          country?: string | null;
+          created_at?: string;
+          first_name: string;
+          language?: string | null;
+          last_name: string;
+          phone_number?: string | null;
+          postal_code?: string | null;
+          prefix_phone_number?: string | null;
+          street?: string | null;
+          street_number?: string | null;
+          therapist_type: Database["public"]["Enums"]["therapist_types"];
+          uid: string;
+        };
+        Update: {
+          avatar_url?: string | null;
+          city?: string | null;
+          country?: string | null;
+          created_at?: string;
+          first_name?: string;
+          language?: string | null;
+          last_name?: string;
+          phone_number?: string | null;
+          postal_code?: string | null;
+          prefix_phone_number?: string | null;
+          street?: string | null;
+          street_number?: string | null;
+          therapist_type?: Database["public"]["Enums"]["therapist_types"];
+          uid?: string;
+        };
+        Relationships: [];
+      };
+      units: {
+        Row: {
+          created_at: string;
+          description: string | null;
+          exercises_index: string[] | null;
+          id: number;
+          inherited_default_unit: string | null;
+          is_template: boolean;
+          name: string;
+          patient_uid: string;
+          therapist_uid: string;
+        };
+        Insert: {
+          created_at?: string;
+          description?: string | null;
+          exercises_index?: string[] | null;
+          id?: number;
+          inherited_default_unit?: string | null;
+          is_template?: boolean;
+          name: string;
+          patient_uid: string;
+          therapist_uid: string;
+        };
+        Update: {
+          created_at?: string;
+          description?: string | null;
+          exercises_index?: string[] | null;
+          id?: number;
+          inherited_default_unit?: string | null;
+          is_template?: boolean;
+          name?: string;
+          patient_uid?: string;
+          therapist_uid?: string;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "public_units_inherited_default_unit_fkey";
+            columns: ["inherited_default_unit"];
+            isOneToOne: false;
+            referencedRelation: "default_units";
+            referencedColumns: ["id"];
+          },
+          {
+            foreignKeyName: "training_plans_patient_id_fkey";
+            columns: ["patient_uid"];
+            isOneToOne: false;
+            referencedRelation: "families";
+            referencedColumns: ["uid"];
+          },
+          {
+            foreignKeyName: "training_plans_therapist_id_fkey";
+            columns: ["therapist_uid"];
+            isOneToOne: false;
+            referencedRelation: "therapists";
+            referencedColumns: ["uid"];
+          },
+        ];
+      };
+      user_profiles: {
+        Row: {
+          first_name: string | null;
+          id: string;
+          language: string | null;
+          last_name: string | null;
+          user_type: string | null;
+        };
+        Insert: {
+          first_name?: string | null;
+          id: string;
+          language?: string | null;
+          last_name?: string | null;
+          user_type?: string | null;
+        };
+        Update: {
+          first_name?: string | null;
+          id?: string;
+          language?: string | null;
+          last_name?: string | null;
+          user_type?: string | null;
+        };
+        Relationships: [];
+      };
+      vr_sessions: {
+        Row: {
+          created_at: string;
+          id: number;
+          patient_uid: string | null;
+        };
+        Insert: {
+          created_at?: string;
+          id?: number;
+          patient_uid?: string | null;
+        };
+        Update: {
+          created_at?: string;
+          id?: number;
+          patient_uid?: string | null;
+        };
+        Relationships: [
+          {
+            foreignKeyName: "vr_sessions_patient_id_fkey";
+            columns: ["patient_uid"];
+            isOneToOne: false;
+            referencedRelation: "families";
+            referencedColumns: ["uid"];
+          },
+        ];
+      };
+    };
+    Views: {
+      [_ in never]: never;
+    };
+    Functions: {
+      [_ in never]: never;
+    };
+    Enums: {
+      focus_types:
+        | "strength"
+        | "balance"
+        | "endurance"
+        | "coordination"
+        | "motor function";
+      therapist_types: "physio" | "occupational" | "speech" | "other";
+    };
+    CompositeTypes: {
+      [_ in never]: never;
+    };
+  };
+};
 
 type PublicSchema = Database[Extract<keyof Database, "public">];
 
@@ -96,7 +591,8 @@ export type CompositeTypes<
     | { schema: keyof Database },
   CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
     schema: keyof Database;
-  } ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]][
+  }
+    ? keyof Database[PublicCompositeTypeNameOrOptions["schema"]][
       "CompositeTypes"
     ]
     : never = never,
