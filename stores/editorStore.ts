@@ -120,7 +120,7 @@ export const useEditorStore = defineStore("editor", () => {
         }
 
         if (data) {
-            units.value = data;
+            units.value = data as UnitsWithExercises[];
         }
     }
 

@@ -78,6 +78,7 @@ function shouldShowDropZone(position: number, exerciseId?: number) {
 
   if (
     draggingExerciseData.value &&
+    draggingExerciseData.value.unitId &&
     draggingExerciseData.value.unitId === props.id
   ) {
     if (exerciseId && draggingExerciseData.value.id === exerciseId)
