@@ -96,22 +96,13 @@ const loadTemplates = async () => {
   loading.value = true;
 
   try {
-    // Force refresh of templates
     await store.loadTemplates();
 
-    console.log("Templates loaded", {
-      exercises: store.exerciseTemplates.length,
-      units: store.unitTemplates.length,
-    });
-
-    // Copy template arrays to avoid reactivity issues
     if (props.type === "exercise") {
       templates.value = [...store.exerciseTemplates];
     } else {
       templates.value = [...store.unitTemplates];
     }
-
-    console.log(`Loaded ${templates.value.length} ${props.type} templates`);
   } catch (error) {
     console.error(`Error loading ${props.type} templates:`, error);
   } finally {

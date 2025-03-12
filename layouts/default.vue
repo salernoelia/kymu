@@ -26,7 +26,6 @@ const fetchTherapist = async () => {
 
 watch(user, (newUser) => {
   authReady.value = true;
-  console.log("user", newUser);
 });
 </script>
 

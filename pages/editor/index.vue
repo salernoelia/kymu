@@ -49,7 +49,6 @@ const loadTrainingUnits = async () => {
 
 const navigateToUnitEditor = () => {
   if (selectedUnit.value && selectedUnit.value !== null) {
-    console.log("selected", selectedUnit.value);
     navigateTo(localePath(`/editor/${selectedUnit.value}`));
   }
 };

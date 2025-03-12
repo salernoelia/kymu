@@ -203,10 +203,6 @@ export const useEditorStore = defineStore("editor", () => {
                 exerciseTemplates.value = exerciseData.map((item) => ({
                     ...item,
                 }));
-                console.log(
-                    "Loaded default exercise templates:",
-                    exerciseTemplates.value.length,
-                );
             }
 
             const { data: customExerciseData, error: customExerciseError } =
@@ -233,10 +229,6 @@ export const useEditorStore = defineStore("editor", () => {
                         name: item.name || "", // Provide a default value for name
                     })),
                 ];
-                console.log(
-                    "Added custom exercise templates:",
-                    customExerciseData.length,
-                );
             }
 
             const { data: unitData, error: unitError } = await supabase
@@ -253,10 +245,6 @@ export const useEditorStore = defineStore("editor", () => {
                     ...item,
                     exercises_index: item.exercises_index || [],
                 }));
-                console.log(
-                    "Loaded default unit templates:",
-                    unitTemplates.value.length,
-                );
             }
 
             const { data: customUnitData, error: customUnitError } =
@@ -277,20 +265,10 @@ export const useEditorStore = defineStore("editor", () => {
                     ...customUnitData.map((item) => ({
                         ...item,
                         exercises_index: item.exercises_index || [],
-                        id: String(item.id), // Convert number id to string
+                        id: String(item.id),
                     })),
                 ];
-                console.log(
-                    "Added custom unit templates:",
-                    customUnitData.length,
-                );
             }
-
-            console.log(
-                "Total exercise templates:",
-                exerciseTemplates.value.length,
-            );
-            console.log("Total unit templates:", unitTemplates.value.length);
         } catch (error) {
             console.error("Error loading templates:", error);
         }
@@ -381,11 +359,6 @@ export const useEditorStore = defineStore("editor", () => {
                     };
                 }
             }
-
-            console.log(
-                "Attempting to create exercise with data:",
-                exerciseData,
-            );
 
             const { data, error } = await supabase
                 .from("exercises")
@@ -886,8 +859,6 @@ export const useEditorStore = defineStore("editor", () => {
                 is_template: false,
             };
 
-            console.log("Creating unit from template:", newUnit);
-
             const { data, error: insertError } = await supabase
                 .from("units")
                 .insert([newUnit])
@@ -1050,8 +1021,6 @@ export const useEditorStore = defineStore("editor", () => {
                 duration_seconds_goal: templateData.duration_seconds_goal || 30,
                 is_template: false,
             };
-
-            console.log("Creating exercise from template:", newExerciseData);
 
             const { data, error: createError } = await supabase
                 .from("exercises")

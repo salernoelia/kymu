@@ -176,8 +176,6 @@ const onTemplateSelected = (data: {
   templateId?: string;
   type: "exercise" | "unit";
 }) => {
-  console.log("Template selected:", data);
-
   if (data.type === "exercise" && templateSelectorUnitId.value) {
     if (data.templateId) {
       store.createExerciseFromTemplate(

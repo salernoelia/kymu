@@ -18,8 +18,6 @@ const profiles = ref([]);
 onMounted(async () => {
   let { data, error } = await supabase.from("default_scenes").select("*");
 
-  console.log(data, error);
-
   if (data) {
     profiles.value = data;
   }

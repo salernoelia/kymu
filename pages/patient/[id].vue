@@ -91,8 +91,6 @@ const f = ref<QueryData<typeof familiesWithFkeyQuery>>();
 const loadPatientData = async () => {
   const { data, error } = await familiesWithFkeyQuery;
 
-  console.log(data, error);
-
   if (error) {
     console.error("Error fetching patient data", error);
     return;

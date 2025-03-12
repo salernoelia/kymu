@@ -33,8 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import type { Settings } from "~/shared/types/settings";
-
 const settings = ref<Settings>({
   username: "",
   email: "",

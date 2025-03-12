@@ -85,8 +85,6 @@ const loadFamilyData = async () => {
   }
 
   families.value = data;
-
-  console.log("Patient data", data);
 };
 
 onMounted(async () => {
