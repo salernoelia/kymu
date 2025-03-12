@@ -123,9 +123,10 @@ const getIconForTemplate = (template: any) => {
   if (props.type === "exercise") {
     const focusType = template.focus_type;
     if (focusType === "strength") return "material-symbols:fitness-center";
-    if (focusType === "mobility") return "material-symbols:directions-run";
     if (focusType === "balance") return "material-symbols:balance";
+    if (focusType === "endurance") return "material-symbols:directions-run";
     if (focusType === "coordination") return "material-symbols:psychology";
+    if (focusType === "motor function") return "material-symbols:accessible";
     return "material-symbols:description";
   } else {
     return "material-symbols:playlist-add-check";
