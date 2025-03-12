@@ -18,6 +18,16 @@
       ></textarea>
     </div>
 
+    <div class="field">
+      <label>
+        <input
+          type="checkbox"
+          v-model="unit.is_template"
+        />
+        Save as template for future use
+      </label>
+    </div>
+
     <div class="actions">
       <button
         @click="store.saveUnit(unit)"
@@ -36,7 +46,7 @@
     <div class="exercises-section">
       <h2>Exercises in this unit</h2>
       <button
-        @click="store.createExercise(unit.id)"
+        @click="openCreateExerciseModal"
         class="add-btn"
       >
         Add Exercise
@@ -68,6 +78,17 @@
 const store = useEditorStore();
 const unit = reactive({ ...store.selectedUnit! });
 const exercises = computed(() => store.getExercisesForUnit(unit.id));
+const emit = defineEmits(["create-exercise"]);
+
+const openCreateExerciseModal = () => {
+  // Close the sidebar first
+  store.closeSidebar();
+
+  // Then emit the event with the unit ID
+  nextTick(() => {
+    emit("create-exercise", unit.id);
+  });
+};
 </script>
 
 <style scoped>
@@ -164,5 +185,18 @@ button {
   margin-top: 1rem;
   color: #666;
   font-style: italic;
+}
+
+/* Add checkbox style */
+input[type="checkbox"] {
+  width: auto;
+  margin-right: 8px;
+  padding: 0;
+}
+
+.field label:has(input[type="checkbox"]) {
+  display: flex;
+  align-items: center;
+  font-weight: normal;
 }
 </style>

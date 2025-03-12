@@ -11,8 +11,11 @@ export const useEditorStore = defineStore("editor", () => {
     const selectedUnit = ref<UnitsWithExercises | null>(null);
     const selectedPatientId = ref<string | null>(null);
     const sidebarOpen = ref(false);
-    const sidebarVariant = ref<"exercise" | "unit">("exercise");
+    const sidebarVariant = ref<"exercise" | "unit" | "template-selector">(
+        "exercise",
+    );
     const sidebarMode = ref<"edit" | "create">("edit");
+    const sidebarTitle = ref("Details");
     const draggingExercise = ref<
         null | { id: string; unitId: string; position: number }
     >(null);
@@ -20,15 +23,17 @@ export const useEditorStore = defineStore("editor", () => {
     const exerciseTemplates = ref<ExerciseTemplate[]>([]);
     const unitTemplates = ref<UnitTemplate[]>([]);
 
-    const sidebarTitle = computed(() => {
+    watch([sidebarVariant, sidebarMode], () => {
         const mode = sidebarMode.value === "create" ? "Create" : "Edit";
         if (sidebarVariant.value === "exercise") {
-            return `${mode} Exercise`;
+            sidebarTitle.value = `${mode} Exercise`;
+        } else if (sidebarVariant.value === "unit") {
+            sidebarTitle.value = `${mode} Unit`;
+        } else if (sidebarVariant.value === "template-selector") {
+            sidebarTitle.value = "Select Template";
+        } else {
+            sidebarTitle.value = "Details";
         }
-        if (sidebarVariant.value === "unit") {
-            return `${mode} Unit`;
-        }
-        return "Details";
     });
 
     function setSelectedPatientId(id: string | null) {
@@ -118,7 +123,7 @@ export const useEditorStore = defineStore("editor", () => {
                 is_template
             `)
                 .eq("patient_uid", selectedPatientId.value)
-                .order("created_at", { ascending: true }); // Add this line to sort by creation date
+                .order("created_at", { ascending: true });
 
             if (unitsError) {
                 console.error(
@@ -179,17 +184,24 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function loadTemplates() {
         try {
+            exerciseTemplates.value = [];
+            unitTemplates.value = [];
+
             const { data: exerciseData, error: exerciseError } = await supabase
                 .from("default_exercises")
                 .select("*");
 
             if (exerciseError) {
                 console.error(
-                    "Error loading exercise templates:",
+                    "Error loading default exercise templates:",
                     exerciseError,
                 );
             } else if (exerciseData) {
-                exerciseTemplates.value = exerciseData;
+                exerciseTemplates.value = [...exerciseData];
+                console.log(
+                    "Loaded default exercise templates:",
+                    exerciseTemplates.value.length,
+                );
             }
 
             const { data: customExerciseData, error: customExerciseError } =
@@ -204,11 +216,15 @@ export const useEditorStore = defineStore("editor", () => {
                     "Error loading custom exercise templates:",
                     customExerciseError,
                 );
-            } else if (customExerciseData) {
+            } else if (customExerciseData && customExerciseData.length > 0) {
                 exerciseTemplates.value = [
                     ...exerciseTemplates.value,
                     ...customExerciseData,
                 ];
+                console.log(
+                    "Added custom exercise templates:",
+                    customExerciseData.length,
+                );
             }
 
             const { data: unitData, error: unitError } = await supabase
@@ -216,9 +232,16 @@ export const useEditorStore = defineStore("editor", () => {
                 .select("*");
 
             if (unitError) {
-                console.error("Error loading unit templates:", unitError);
+                console.error(
+                    "Error loading default unit templates:",
+                    unitError,
+                );
             } else if (unitData) {
-                unitTemplates.value = unitData;
+                unitTemplates.value = [...unitData];
+                console.log(
+                    "Loaded default unit templates:",
+                    unitTemplates.value.length,
+                );
             }
 
             const { data: customUnitData, error: customUnitError } =
@@ -233,25 +256,33 @@ export const useEditorStore = defineStore("editor", () => {
                     "Error loading custom unit templates:",
                     customUnitError,
                 );
-            } else if (customUnitData) {
+            } else if (customUnitData && customUnitData.length > 0) {
                 unitTemplates.value = [
                     ...unitTemplates.value,
                     ...customUnitData,
                 ];
+                console.log(
+                    "Added custom unit templates:",
+                    customUnitData.length,
+                );
             }
+
+            console.log(
+                "Total exercise templates:",
+                exerciseTemplates.value.length,
+            );
+            console.log("Total unit templates:", unitTemplates.value.length);
         } catch (error) {
             console.error("Error loading templates:", error);
         }
     }
 
     async function initializeNewExercise(unitId: string) {
-        // Check which fields actually exist in the database schema
         const newExercise = {
             name: "",
             focus_type: "strength",
             family_scene_adjustment_access: false,
             therapist_uid: supabaseUser.value?.id || "",
-            // Replace training_unit_id with unit_id if that's what's in the schema
             unit_id: unitId,
             repetitions_goal: 10,
             duration_seconds_goal: 30,
@@ -278,7 +309,7 @@ export const useEditorStore = defineStore("editor", () => {
         try {
             let exerciseData: any = {
                 name: "New Exercise",
-                unit_id: unitId, // Changed from unit_id to training_unit_id
+                unit_id: unitId,
                 therapist_uid: supabaseUser.value?.id || "",
                 is_template: false,
                 repetitions_goal: 10,
@@ -287,7 +318,6 @@ export const useEditorStore = defineStore("editor", () => {
                 family_scene_adjustment_access: false,
             };
 
-            // If using a template, fetch and apply template data
             if (fromTemplateId) {
                 const { data: templateData, error } = await supabase
                     .from("default_exercises")
@@ -298,10 +328,9 @@ export const useEditorStore = defineStore("editor", () => {
                 if (error) {
                     console.error("Error loading exercise template:", error);
                 } else if (templateData) {
-                    // Preserve training_unit_id and other required fields while taking properties from template
                     exerciseData = {
                         ...templateData,
-                        training_unit_id: unitId, // Changed from unit_id to training_unit_id
+                        training_unit_id: unitId,
                         therapist_uid: supabaseUser.value?.id || "",
                         is_template: false,
                     };
@@ -313,7 +342,6 @@ export const useEditorStore = defineStore("editor", () => {
                 exerciseData,
             );
 
-            // Insert the properly formatted exercise
             const { data, error } = await supabase
                 .from("exercises")
                 .insert([exerciseData])
@@ -327,7 +355,6 @@ export const useEditorStore = defineStore("editor", () => {
             if (data && data[0]) {
                 const newExerciseId = data[0].id;
 
-                // Update the unit's exercises_index
                 const unit = units.value.find((u) => u.id === unitId);
                 if (unit) {
                     const updatedExercisesIndex = [
@@ -470,7 +497,7 @@ export const useEditorStore = defineStore("editor", () => {
             if (data && data[0]) {
                 const newExerciseId = data[0].id;
                 const unit = units.value.find((u) =>
-                    u.id === exerciseToCreate.unit_id // Updated from training_unit_id
+                    u.id === exerciseToCreate.unit_id
                 );
 
                 if (unit) {
@@ -484,7 +511,7 @@ export const useEditorStore = defineStore("editor", () => {
                         .update({
                             exercises_index: updatedExercisesIndex,
                         })
-                        .eq("id", exerciseToCreate.unit_id); // Updated from training_unit_id
+                        .eq("id", exerciseToCreate.unit_id);
                 }
             }
 
@@ -506,7 +533,7 @@ export const useEditorStore = defineStore("editor", () => {
             const { data: unitData } = await supabase
                 .from("units")
                 .select("id, exercises_index")
-                .eq("id", exercise.unit_id) // Updated from training_unit_id
+                .eq("id", exercise.unit_id)
                 .single();
 
             if (unitData) {
@@ -570,7 +597,6 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function duplicateUnit(unitId: string) {
         try {
-            // Get unit data without trying to join with exercises
             const { data: unitData, error: fetchError } = await supabase
                 .from("units")
                 .select("*")
@@ -582,10 +608,9 @@ export const useEditorStore = defineStore("editor", () => {
                 return;
             }
 
-            // Create a duplicate unit without the ID
             const { id, created_at, ...unitToCreate } = unitData;
             unitToCreate.name = `${unitToCreate.name} (Copy)`;
-            unitToCreate.exercises_index = []; // Will be populated after exercise creation
+            unitToCreate.exercises_index = [];
 
             const { data: newUnitData, error } = await supabase
                 .from("units")
@@ -600,7 +625,6 @@ export const useEditorStore = defineStore("editor", () => {
             const newUnit = newUnitData[0];
             const newExercisesIndex: string[] = [];
 
-            // Separately fetch exercises for this unit
             if (
                 unitData.exercises_index && unitData.exercises_index.length > 0
             ) {
@@ -618,7 +642,6 @@ export const useEditorStore = defineStore("editor", () => {
                     return;
                 }
 
-                // Duplicate all exercises for this unit
                 if (exercises && exercises.length > 0) {
                     for (const exercise of exercises) {
                         const {
@@ -626,7 +649,6 @@ export const useEditorStore = defineStore("editor", () => {
                             created_at: exCreatedAt,
                             ...exerciseToCreate
                         } = exercise;
-                        exerciseToCreate.unit_id = newUnit.id; // Updated from training_unit_id
 
                         const { data: newExData } = await supabase
                             .from("exercises")
@@ -640,7 +662,6 @@ export const useEditorStore = defineStore("editor", () => {
                 }
             }
 
-            // Update the new unit with the exercise index
             await supabase
                 .from("units")
                 .update({
@@ -666,8 +687,7 @@ export const useEditorStore = defineStore("editor", () => {
         try {
             const { error: exercisesError } = await supabase
                 .from("exercises")
-                .delete()
-                .eq("unit_id", unitId); // Updated from training_unit_id
+                .delete();
 
             if (exercisesError) {
                 console.error("Error deleting exercises:", exercisesError);
@@ -734,9 +754,7 @@ export const useEditorStore = defineStore("editor", () => {
 
                 await supabase
                     .from("exercises")
-                    .update({
-                        unit_id: targetUnitId, // Updated from training_unit_id
-                    })
+                    .update({})
                     .eq("id", exerciseId);
             }
 
@@ -753,6 +771,236 @@ export const useEditorStore = defineStore("editor", () => {
             await loadTrainingUnit();
         } finally {
             dragInProgress.value = false;
+        }
+    }
+
+    async function initializeNewUnitFromTemplate(templateId: string) {
+        try {
+            let { data: templateData, error } = await supabase
+                .from("default_units")
+                .select("*")
+                .eq("id", templateId)
+                .single();
+
+            if (error || !templateData) {
+                const { data: customTemplateData, error: customError } =
+                    await supabase
+                        .from("units")
+                        .select("*")
+                        .eq("id", templateId)
+                        .single();
+
+                if (customError || !customTemplateData) {
+                    console.error("Template not found:", error || customError);
+                    return;
+                }
+
+                templateData = customTemplateData;
+            }
+
+            const newUnit = {
+                name: templateData.name || "New Unit",
+                description: templateData.description || "",
+                patient_uid: selectedPatientId.value || "",
+                therapist_uid: supabaseUser.value?.id || "",
+                exercises_index: [],
+                is_template: false,
+            };
+
+            console.log("Creating unit from template:", newUnit);
+
+            const { data, error: insertError } = await supabase
+                .from("units")
+                .insert([newUnit])
+                .select();
+
+            if (insertError) {
+                console.error(
+                    "Error creating unit from template:",
+                    insertError,
+                );
+                return;
+            }
+
+            if (data && data[0]) {
+                if (
+                    templateData.exercises_index &&
+                    templateData.exercises_index.length > 0
+                ) {
+                    await copyExercisesFromTemplate(templateData, data[0]);
+                }
+
+                await loadTrainingUnit();
+
+                const createdUnit = units.value.find((u) =>
+                    u.id === data[0].id
+                );
+                if (createdUnit) {
+                    selectUnit(createdUnit);
+                }
+            }
+        } catch (error) {
+            console.error("Error initializing unit from template:", error);
+        }
+    }
+
+    async function copyExercisesFromTemplate(templateUnit: any, newUnit: any) {
+        try {
+            if (
+                !templateUnit.exercises_index ||
+                !templateUnit.exercises_index.length
+            ) {
+                return;
+            }
+
+            const { data: templateExercises, error: exerciseError } =
+                await supabase
+                    .from("exercises")
+                    .select("*")
+                    .in("id", templateUnit.exercises_index);
+
+            if (exerciseError || !templateExercises) {
+                console.error(
+                    "Error fetching template exercises:",
+                    exerciseError,
+                );
+                return;
+            }
+
+            const newExercisesIndex: string[] = [];
+
+            for (const exercise of templateExercises) {
+                const newExerciseData = {
+                    name: exercise.name,
+                    focus_type: exercise.focus_type || "strength",
+                    family_scene_adjustment_access:
+                        exercise.family_scene_adjustment_access || false,
+                    therapist_uid: supabaseUser.value?.id || "",
+                    unit_id: newUnit.id,
+                    repetitions_goal: exercise.repetitions_goal || 10,
+                    duration_seconds_goal: exercise.duration_seconds_goal || 30,
+                    is_template: false,
+                };
+
+                const { data, error } = await supabase
+                    .from("exercises")
+                    .insert([newExerciseData])
+                    .select();
+
+                if (error) {
+                    console.error(
+                        "Error creating exercise from template:",
+                        error,
+                    );
+                } else if (data && data[0]) {
+                    newExercisesIndex.push(data[0].id);
+                }
+            }
+
+            if (newExercisesIndex.length > 0) {
+                const { error } = await supabase
+                    .from("units")
+                    .update({
+                        exercises_index: newExercisesIndex,
+                    })
+                    .eq("id", newUnit.id);
+
+                if (error) {
+                    console.error(
+                        "Error updating new unit's exercises_index:",
+                        error,
+                    );
+                }
+            }
+        } catch (error) {
+            console.error("Error copying exercises from template:", error);
+        }
+    }
+
+    async function createExerciseFromTemplate(
+        unitId: string,
+        templateId: string,
+    ) {
+        try {
+            let { data: templateData, error } = await supabase
+                .from("default_exercises")
+                .select("*")
+                .eq("id", templateId)
+                .single();
+
+            if (error || !templateData) {
+                const { data: customTemplateData, error: customError } =
+                    await supabase
+                        .from("exercises")
+                        .select("*")
+                        .eq("id", templateId)
+                        .single();
+
+                if (customError || !customTemplateData) {
+                    console.error("Template not found:", error || customError);
+                    return;
+                }
+
+                templateData = customTemplateData;
+            }
+
+            const newExerciseData = {
+                name: templateData.name || "New Exercise",
+                focus_type: templateData.focus_type || "strength",
+                family_scene_adjustment_access:
+                    templateData.family_scene_adjustment_access || false,
+                therapist_uid: supabaseUser.value?.id || "",
+                unit_id: unitId,
+                repetitions_goal: templateData.repetitions_goal || 10,
+                duration_seconds_goal: templateData.duration_seconds_goal || 30,
+                is_template: false,
+            };
+
+            console.log("Creating exercise from template:", newExerciseData);
+
+            const { data, error: createError } = await supabase
+                .from("exercises")
+                .insert([newExerciseData])
+                .select();
+
+            if (createError) {
+                console.error(
+                    "Error creating exercise from template:",
+                    createError,
+                );
+                return;
+            }
+
+            if (data && data[0]) {
+                const newExerciseId = data[0].id;
+
+                const unit = units.value.find((u) => u.id === unitId);
+                if (unit) {
+                    const updatedExercisesIndex = [
+                        ...(unit.exercises_index || []),
+                        newExerciseId,
+                    ];
+
+                    const { error: updateError } = await supabase
+                        .from("units")
+                        .update({
+                            exercises_index: updatedExercisesIndex,
+                        })
+                        .eq("id", unitId);
+
+                    if (updateError) {
+                        console.error(
+                            "Error updating unit's exercises_index:",
+                            updateError,
+                        );
+                    }
+                }
+
+                await loadTrainingUnit();
+                selectExercise(data[0]);
+            }
+        } catch (error) {
+            console.error("Error creating exercise from template:", error);
         }
     }
 
@@ -797,5 +1045,7 @@ export const useEditorStore = defineStore("editor", () => {
         duplicateUnit,
         deleteUnit,
         handleExerciseDrop,
+        initializeNewUnitFromTemplate,
+        createExerciseFromTemplate,
     };
 });

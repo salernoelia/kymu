@@ -47,6 +47,16 @@
       </label>
     </div>
 
+    <div class="field">
+      <label>
+        <input
+          type="checkbox"
+          v-model="exercise.is_template"
+        />
+        Save as template for future use
+      </label>
+    </div>
+
     <div class="actions">
       <button
         @click="store.saveExercise(exercise)"

@@ -1,6 +1,7 @@
 <template>
   <div
     class="unit-block"
+    :data-unit-id="id"
     @dragover="onDragOver"
     @dragleave="onDragLeave"
     @drop="onDrop"
