@@ -121,7 +121,6 @@ const loadTemplates = async () => {
 
 const getIconForTemplate = (template: any) => {
   if (props.type === "exercise") {
-    // Different icons based on focus type
     const focusType = template.focus_type;
     if (focusType === "strength") return "material-symbols:fitness-center";
     if (focusType === "mobility") return "material-symbols:directions-run";

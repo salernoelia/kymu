@@ -10,9 +10,9 @@
         <EditorUnit
           v-for="unit in store.units"
           :key="unit.id"
-          :id="unit.id"
+          :id="unit.id.toString()"
           :data-unit-id="unit.id"
-          :exercises="store.getExercisesForUnit(unit.id)"
+          :exercises="store.getExercisesForUnit(unit.id.toString())"
           @drop="store.handleExerciseDrop"
         >
           <template #header>
@@ -22,7 +22,7 @@
                 <Icon
                   class="icon-single cursor-pointer"
                   name="material-symbols-light:add-circle-outline-rounded"
-                  @click="() => onAddExerciseClick(unit.id)"
+                  @click="() => onAddExerciseClick(unit.id.toString())"
                 />
                 <Icon
                   class="icon-single cursor-pointer"
@@ -35,13 +35,13 @@
             <p>{{ unit.description }}</p>
           </template>
           <template
-            v-for="exercise in store.getExercisesForUnit(unit.id)"
+            v-for="exercise in store.getExercisesForUnit(unit.id.toString())"
             :key="exercise.id"
             #[`exercise-${exercise.id}`]
           >
             <EditorUnitExercise
               :id="exercise.id"
-              :unit-id="unit.id"
+              :unit-id="unit.id.toString()"
               :order-position="store.getExercisePosition(unit, exercise.id)"
               @click.stop="store.selectExercise(exercise)"
             >
@@ -51,7 +51,7 @@
           <div
             id="create-exercise"
             class="flex flex-col items-center justify-center border rounded p-4 cursor-pointer hover:bg-gray-300"
-            @click="() => onAddExerciseClick(unit.id)"
+            @click="() => onAddExerciseClick(unit.id.toString())"
           >
             <h2>Create Exercise</h2>
           </div>

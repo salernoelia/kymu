@@ -40,8 +40,10 @@ export const useEditorStore = defineStore("editor", () => {
         selectedPatientId.value = id;
     }
 
-    function getExercisesForUnit(unitId: string) {
-        const unit = units.value.find((u) => u.id === unitId);
+    function getExercisesForUnit(unitId: string): Tables<"exercises">[] {
+        const unit = units.value.find((u) =>
+            u.id.toString() === unitId.toString()
+        );
         if (!unit || !unit.exercises) return [];
 
         if (unit.exercises_index) {
@@ -287,7 +289,7 @@ export const useEditorStore = defineStore("editor", () => {
             repetitions_goal: 10,
             duration_seconds_goal: 30,
             is_template: false,
-        } as Tables<"exercises">;
+        } as unknown as Tables<"exercises">;
 
         selectExercise(newExercise, "create");
     }
@@ -300,7 +302,7 @@ export const useEditorStore = defineStore("editor", () => {
             therapist_uid: supabaseUser.value?.id || "",
             exercises_index: [],
             is_template: false,
-        } as UnitsWithExercises;
+        } as unknown as UnitsWithExercises;
 
         selectUnit(newUnit, "create");
     }
