@@ -1,55 +1,36 @@
+interface UnitWithExercises extends Tables<"units"> {
+    exercises: Tables<"exercises">[];
+}
+
 export function useTrainingUnitMovable() {
     const updateExercisePosition = async (
-        unit: TrainingUnit,
+        unit: UnitWithExercises,
         exerciseId: number,
-        targetBlockId: number,
         newPosition: number,
     ) => {
-        const exerciseToMove = unit.training_block_exercises.find(
-            (ex) => ex.id === exerciseId,
-        );
-
-        if (!exerciseToMove) return false;
-
-        const sourceBlockId = exerciseToMove.training_block_id;
-        // const originalPosition = exerciseToMove.order_position;
-
-        const updatedExercises = unit.training_block_exercises.filter(
-            (ex) => ex.id !== exerciseId,
-        );
-
-        const sourceBlockExercises = updatedExercises.filter(
-            (ex) => ex.training_block_id === sourceBlockId,
-        );
-
-        sourceBlockExercises.sort((a, b) =>
-            a.order_position - b.order_position
-        );
-        sourceBlockExercises.forEach((ex, index) => {
-            ex.order_position = index;
-        });
-
-        const targetBlockExercises = updatedExercises.filter(
-            (ex) => ex.training_block_id === targetBlockId,
-        );
-
-        targetBlockExercises.sort((a, b) =>
-            a.order_position - b.order_position
-        );
-
-        for (let i = 0; i < targetBlockExercises.length; i++) {
-            if (i >= newPosition) {
-                targetBlockExercises[i]!.order_position = i + 1;
-            } else {
-                targetBlockExercises[i]!.order_position = i;
-            }
+        if (!unit.exercises_index) {
+            unit.exercises_index = [];
         }
 
-        exerciseToMove.training_block_id = targetBlockId;
-        exerciseToMove.order_position = Math.min(
-            newPosition,
-            targetBlockExercises.length,
-        );
+        // Find the current position of the exercise in the index
+        const currentPosition = unit.exercises_index.indexOf(exerciseId);
+
+        // If not found, add it
+        if (currentPosition === -1) {
+            unit.exercises_index.push(exerciseId);
+            return true;
+        }
+
+        // If the position is the same, do nothing
+        if (currentPosition === newPosition) {
+            return false;
+        }
+
+        // Remove from current position
+        unit.exercises_index.splice(currentPosition, 1);
+
+        // Insert at new position
+        unit.exercises_index.splice(newPosition, 0, exerciseId);
 
         return true;
     };

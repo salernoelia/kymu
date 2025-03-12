@@ -1,42 +1,40 @@
 <template>
   <div id="container">
     <div class="field">
-      <label>Block Name</label>
+      <label>Unit Name</label>
       <input
         type="text"
-        v-model="block.name"
-        placeholder="Block name"
+        v-model="unit.name"
+        placeholder="Unit name"
       />
     </div>
 
     <div class="field">
       <label>Description</label>
       <textarea
-        v-model="block.description"
-        placeholder="Block description"
+        v-model="unit.description"
+        placeholder="Unit description"
         rows="3"
       ></textarea>
     </div>
 
-    <div class="field"></div>
-
     <div class="actions">
       <button
-        @click="saveBlock"
+        @click="saveUnit"
         class="save-btn"
       >
         Save Changes
       </button>
       <button
-        @click="deleteBlock"
+        @click="deleteUnit"
         class="delete-btn"
       >
-        Delete Block
+        Delete Unit
       </button>
     </div>
 
     <div class="exercises-section">
-      <h2>Exercises in this block</h2>
+      <h2>Exercises in this unit</h2>
       <button
         @click="addExercise"
         class="add-btn"
@@ -60,127 +58,153 @@
         v-else
         class="no-exercises"
       >
-        No exercises in this block
+        No exercises in this unit
       </div>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { Tables, Database } from "~/shared/types/database.types";
+
 const props = defineProps<{
-  supabase: ReturnType<typeof useSupabaseClient>;
-  b: Tables<"training_blocks">;
+  supabase: ReturnType<typeof useSupabaseClient<Database>>;
+  u: Tables<"units"> & { exercises?: Tables<"exercises">[] };
 }>();
 
-const emit = defineEmits(["update:block", "refresh"]);
+const emit = defineEmits(["update:unit", "refresh"]);
 
-const block = reactive({ ...props.b });
-const exercises = ref<Tables<"training_block_exercises">[]>([]);
+const unit = reactive({ ...props.u });
+const exercises = ref<Tables<"exercises">[]>([]);
 
 onMounted(async () => {
-  console.log("Block", props.b);
+  console.log("Unit", props.u);
   await loadExercises();
 });
 
 const loadExercises = async () => {
   const { data, error } = await props.supabase
-    .from("training_block_exercises")
+    .from("exercises")
     .select("*")
-    .eq("training_block_id", props.b.id)
-    .order("order_position");
+    .eq("training_unit_id", props.u.id);
 
   if (error) {
     console.error("Error loading exercises:", error);
     return;
   }
 
-  exercises.value = data || [];
-};
-
-const saveBlock = async () => {
-  try {
-    const { error } = await props.supabase
-      .from("training_blocks")
-      .update({
-        name: block.name,
-        description: block.description,
-      })
-      .eq("id", block.id);
-
-    if (error) {
-      console.error("Error updating block:", error);
-      return;
-    }
-
-    console.log("Block updated successfully");
-    emit("update:block", block);
-    emit("refresh");
-  } catch (err) {
-    console.error("Error in saveBlock:", err);
+  // Sort exercises according to exercises_index
+  if (data && unit.exercises_index) {
+    exercises.value = [...data].sort((a, b) => {
+      const aIndex = unit.exercises_index?.indexOf(a.id) ?? -1;
+      const bIndex = unit.exercises_index?.indexOf(b.id) ?? -1;
+      return aIndex - bIndex;
+    });
+  } else {
+    exercises.value = data || [];
   }
 };
 
-const deleteBlock = async () => {
+const saveUnit = async () => {
+  try {
+    const { error } = await props.supabase
+      .from("units")
+      .update({
+        name: unit.name,
+        description: unit.description,
+      })
+      .eq("id", unit.id);
+
+    if (error) {
+      console.error("Error updating unit:", error);
+      return;
+    }
+
+    console.log("Unit updated successfully");
+    emit("update:unit", unit);
+    emit("refresh");
+  } catch (err) {
+    console.error("Error in saveUnit:", err);
+  }
+};
+
+const deleteUnit = async () => {
   if (
     !confirm(
-      "Are you sure you want to delete this block? This will also delete all exercises in this block."
+      "Are you sure you want to delete this unit? This will also delete all exercises in this unit."
     )
   ) {
     return;
   }
 
   try {
+    // First, delete all exercises in this unit
     const { error: exercisesError } = await props.supabase
-      .from("training_block_exercises")
+      .from("exercises")
       .delete()
-      .eq("training_block_id", block.id);
+      .eq("training_unit_id", unit.id);
 
     if (exercisesError) {
       console.error("Error deleting exercises:", exercisesError);
       return;
     }
 
+    // Then delete the unit
     const { error } = await props.supabase
-      .from("training_blocks")
+      .from("units")
       .delete()
-      .eq("id", block.id);
+      .eq("id", unit.id);
 
     if (error) {
-      console.error("Error deleting block:", error);
+      console.error("Error deleting unit:", error);
       return;
     }
 
-    console.log("Block deleted successfully");
+    console.log("Unit deleted successfully");
     emit("refresh");
   } catch (err) {
-    console.error("Error in deleteBlock:", err);
+    console.error("Error in deleteUnit:", err);
   }
 };
 
 const addExercise = async () => {
   try {
-    const nextPosition =
-      exercises.value.length > 0
-        ? Math.max(...exercises.value.map((e) => e.order_position)) + 1
-        : 1;
-
+    // Create a new exercise
     const { data, error } = await props.supabase
-      .from("training_block_exercises")
+      .from("exercises")
       .insert({
-        training_block_id: block.id,
-        training_unit_id: block.training_unit_id,
-        default_exercise_id: 1, // Default value - you may want to have this as a parameter
+        training_unit_id: unit.id,
+        default_exercise_id: 1, // Default value
         name: "New Exercise",
-        order_position: nextPosition,
         focus_type: "strength",
         family_scene_adjustment_access: false,
-        therapist_uid: block.therapist_uid,
+        therapist_uid: unit.therapist_uid,
       })
       .select();
 
     if (error) {
       console.error("Error adding exercise:", error);
       return;
+    }
+
+    if (data && data[0]) {
+      // Update the unit's exercises_index to include the new exercise
+      const newExerciseId = data[0].id;
+      const updatedExercisesIndex = [
+        ...(unit.exercises_index || []),
+        newExerciseId,
+      ];
+
+      const { error: updateError } = await props.supabase
+        .from("units")
+        .update({
+          exercises_index: updatedExercisesIndex,
+        })
+        .eq("id", unit.id);
+
+      if (updateError) {
+        console.error("Error updating unit's exercises_index:", updateError);
+      }
     }
 
     await loadExercises();

@@ -65,9 +65,11 @@
 </template>
 
 <script setup lang="ts">
+import { Tables, Database } from "~/shared/types/database.types";
+
 const props = defineProps<{
-  supabase: ReturnType<typeof useSupabaseClient>;
-  e: Tables<"training_block_exercises">;
+  supabase: ReturnType<typeof useSupabaseClient<Database>>;
+  e: Tables<"exercises">;
 }>();
 
 const emit = defineEmits(["update"]);
@@ -81,7 +83,7 @@ onMounted(() => {
 const saveExercise = async () => {
   try {
     const { error } = await props.supabase
-      .from("training_block_exercises")
+      .from("exercises")
       .update({
         name: exercise.name,
         focus_type: exercise.focus_type,
@@ -109,8 +111,31 @@ const deleteExercise = async () => {
   }
 
   try {
+    // First, we need to remove the exercise ID from the unit's exercises_index
+    const { data: unitData } = await props.supabase
+      .from("units")
+      .select("id, exercises_index")
+      .eq("id", exercise.training_unit_id)
+      .single();
+
+    if (unitData) {
+      const updatedExercisesIndex = [...(unitData.exercises_index || [])];
+      const indexToRemove = updatedExercisesIndex.indexOf(exercise.id);
+      if (indexToRemove !== -1) {
+        updatedExercisesIndex.splice(indexToRemove, 1);
+
+        await props.supabase
+          .from("units")
+          .update({
+            exercises_index: updatedExercisesIndex,
+          })
+          .eq("id", unitData.id);
+      }
+    }
+
+    // Now delete the exercise
     const { error } = await props.supabase
-      .from("training_block_exercises")
+      .from("exercises")
       .delete()
       .eq("id", props.e.id);
 

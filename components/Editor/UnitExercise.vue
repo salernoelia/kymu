@@ -29,14 +29,14 @@
 <script setup lang="ts">
 const props = defineProps<{
   id: number;
-  blockId: number;
+  unitId: number;
   orderPosition: number;
 }>();
 
 const emit = defineEmits<{
   (
     e: "dragstart",
-    data: { id: number; blockId: number; position: number }
+    data: { id: number; unitId: number; position: number }
   ): void;
   (e: "dragend"): void;
 }>();
@@ -50,7 +50,7 @@ function onDragStart(event: DragEvent) {
 
   const data = {
     id: props.id,
-    blockId: props.blockId,
+    unitId: props.unitId,
     position: props.orderPosition,
   };
 

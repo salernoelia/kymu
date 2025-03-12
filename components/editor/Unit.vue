@@ -60,8 +60,8 @@ const emit = defineEmits<{
     e: "drop",
     data: {
       exerciseId: number;
-      sourceBlockId: number;
-      targetBlockId: number;
+      sourceUnitId: number;
+      targetUnitId: number;
       newPosition: number;
     }
   ): void;
@@ -78,7 +78,7 @@ function shouldShowDropZone(position: number, exerciseId?: number) {
 
   if (
     draggingExerciseData.value &&
-    draggingExerciseData.value.blockId === props.id
+    draggingExerciseData.value.unitId === props.id
   ) {
     if (exerciseId && draggingExerciseData.value.id === exerciseId)
       return false;
@@ -135,8 +135,8 @@ function onDropInZone(event: DragEvent, position: number) {
 
     emit("drop", {
       exerciseId: data.id,
-      sourceBlockId: data.blockId,
-      targetBlockId: props.id,
+      sourceUnitId: data.unitId,
+      targetUnitId: props.id,
       newPosition: position,
     });
   } catch (e) {
