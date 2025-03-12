@@ -1,4 +1,9 @@
 <template>
+  <ThreeModelViewer
+    modelPath="/models/exercise.glb"
+    :scale="2"
+    @exercise-variant="(v) => console.log('exercise variant', v)"
+  />
   <div
     class="flex flex-row gap-4"
     v-if="f"

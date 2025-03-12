@@ -20,7 +20,6 @@ h4 {
 body {
   font-family: "Roboto", sans-serif;
   font-weight: 300;
-  color: #000;
   margin: 0;
   padding: 1em;
   word-break: break-word;
@@ -58,6 +57,10 @@ section:last-child {
   border-bottom: none;
   margin: 0;
   padding: 0;
+}
+
+option {
+  color: black;
 }
 
 div#container {

@@ -9,22 +9,8 @@ const authReady = ref(false);
 const therapist = ref(null);
 
 onMounted(async () => {
-  if (!user.value) {
-    navigateTo(localePath("/login"));
-  }
-
   await fetchTherapist();
 });
-
-const handleLogout = async () => {
-  try {
-    const { error } = await client.auth.signOut();
-    if (error) throw error;
-    navigateTo(localePath("/login"));
-  } catch (error) {
-    console.log(error.message);
-  }
-};
 
 const fetchTherapist = async () => {
   const { data, error } = await client
@@ -45,33 +31,29 @@ watch(user, (newUser) => {
 </script>
 
 <template>
-  <div class="flex h-screen">
+  <div class="parent">
     <WidgetsNavigationLeft
       :isActive="isActive"
       icon="HomeOutlined"
       text="Home"
       :path="localePath('/')"
     />
-    <div class="flex flex-col flex-grow bg-gray-100">
-      <header class="bg-white shadow-md p-4 flex justify-between items-center">
-        <h1 class="text-xl font-semibold">
-          {{ $t("welcome-back") }}, {{ therapist?.first_name }}
-          {{ therapist?.last_name }}
-        </h1>
-        <div class="flex items-center gap-4">
-          <WidgetsLanguageSelector />
-          <NuxtLink
-            @click="handleLogout"
-            class="hover:underline cursor-pointer text-gray-500 hover:text-black py-2 px-4 rounded h-[42px]"
-          >
-            Logout
-          </NuxtLink>
-        </div>
-      </header>
 
-      <main class="p-4">
-        <slot />
-      </main>
-    </div>
+    <main class="p-4">
+      <slot />
+    </main>
   </div>
 </template>
+
+<style scoped lang="scss">
+body {
+  overflow: hidden;
+}
+.parent {
+  display: flex;
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+  background: linear-gradient(118deg, #f7f9ff 16.96%, #fbf5f5 75.42%);
+}
+</style>

@@ -1,152 +1,124 @@
 <template>
-  <aside class="sidebar bg-gray-900 text-white min-w-64 flex flex-col">
-    <div class="p-4 text-xl font-semibold">Kymu</div>
-    <!-- nav -->
-    <div class="flex flex-col justify-between h-full">
-      <div>
-        <nav class="flex flex-col pt-4">
-          <nuxt-link
-            :to="localePath('/')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <!-- <HomeOutlined class="mr-3" /> -->
-            {{ $t("home") }}
-          </nuxt-link>
-          <nuxt-link
-            :to="localePath('/viewer')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/viewer') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <!-- <HomeOutlined class="mr-3" /> -->
-            {{ $t("vr-viewer") }}
-          </nuxt-link>
+  <div
+    class="flex flex-col"
+    id="sidebar"
+  >
+    <div class="text-xl font-semibold">
+      <NuxtImg src="logo/logo_kymu_blue 1.png"> </NuxtImg>
+    </div>
 
-          <nuxt-link
-            :to="localePath('/editor')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/editor') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <!-- <UsergroupAddOutlined class="mr-3" /> -->
+    <div class="p-1 flex flex-col justify-between h-full">
+      <div class="flex flex-col">
+        <span
+          class="padded-line"
+          style="margin: 0.25rem 0 1rem"
+        />
+        <nuxt-link
+          :to="localePath('/')"
+          class="link"
+        >
+          <!-- <HomeOutlined class="mr-3" /> -->
+          <Icon
+            name="material-symbols-light:dashboard-2-outline"
+            class="icon"
+          />
+          <!-- {{ $t("home") }} -->
+        </nuxt-link>
+        <nuxt-link
+          :to="localePath('/viewer')"
+          class="link"
+        >
+          <!-- <HomeOutlined class="mr-3" /> -->
+          <!-- {{ $t("vr-viewer") }} -->
+          <Icon
+            name="material-symbols-light:ar-on-you-outline-sharp"
+            class="icon"
+          />
+        </nuxt-link>
 
-            {{ $t("unit-editor") }}
-          </nuxt-link>
+        <nuxt-link
+          :to="localePath('/editor')"
+          class="link"
+        >
+          <!-- <UsergroupAddOutlined class="mr-3" /> -->
+          <Icon
+            name="material-symbols-light:edit-document-outline-rounded"
+            class="icon"
+          />
+          <!-- {{ $t("unit-editor") }} -->
+        </nuxt-link>
 
-          <nuxt-link
-            :to="localePath('/patients')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/patients') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <!-- <UsergroupAddOutlined class="mr-3" /> -->
-            {{ $t("patients") }}
-          </nuxt-link>
+        <nuxt-link
+          :to="localePath('/patients')"
+          class="link"
+        >
+          <!-- <UsergroupAddOutlined class="mr-3" /> -->
+          <!-- {{ $t("patients") }} -->
+          <Icon
+            name="material-symbols-light:patient-list"
+            class="icon"
+          />
+        </nuxt-link>
 
-          <!-- <nuxt-link
-            :to="localePath('/exercisesAlt')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/exercisesAlt') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <PlusCircleOutlined class="mr-3" />
-            Create Exercises
-          </nuxt-link> -->
-          <nuxt-link
-            :to="localePath('/training-programs')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/training-programs')
-                ? 'bg-blue-700'
-                : 'hover:bg-gray-700',
-            ]"
-          >
-            <!-- <CheckCircleOutlined class="mr-3" /> -->
-            {{ $t("explore-kymu") }}
-          </nuxt-link>
-          <!-- <nuxt-link
-            :to="localePath('/training-programs')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/training-programs')
-                ? 'bg-blue-700'
-                : 'hover:bg-gray-700',
-            ]"
-          >
-            <CheckCircleOutlined class="mr-3" />
-            Training Programs
-          </nuxt-link> -->
-          <!-- 
-          <nuxt-link
-            :to="localePath('/reports')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/reports') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <BarChartOutlined class="mr-3" />
-            Progress Reports
-          </nuxt-link> -->
-          <!-- 
-          <nuxt-link
-            :to="localePath('/library')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/library') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <FolderOpenOutlined class="mr-3" />
-            Exercise Library
-          </nuxt-link> -->
-
-          <!-- <nuxt-link
-            :to="localePath('/documentation')"
-            :class="[
-              'flex items-center p-4 rounded transition',
-              isActive('/documentation') ? 'bg-blue-700' : 'hover:bg-gray-700',
-            ]"
-          >
-            <FileTextOutlined class="mr-3" />
-            Documentation
-          </nuxt-link> -->
-        </nav>
+        <nuxt-link
+          :to="localePath('/training-programs')"
+          class="link"
+        >
+          <!-- <CheckCircleOutlined class="mr-3" /> -->
+          <Icon
+            name="material-symbols-light:explore-outline"
+            class="icon"
+          />
+          <!-- {{ $t("explore-kymu") }} -->
+        </nuxt-link>
       </div>
-      <div>
+      <div class="flex flex-col align-center">
+        <span class="padded-line" />
+
+        <!-- <WidgetsLanguageSelector /> -->
+
         <nuxt-link
           to="/settings"
-          :class="[
-            'flex items-center p-4 rounded transition',
-            isActive('/settings') ? 'bg-blue-700' : 'hover:bg-gray-700',
-          ]"
+          class="link"
         >
           <!-- <SettingOutlined class="mr-3" /> -->
-          Settings
+
+          <Icon
+            name="material-symbols-light:settings"
+            class="icon"
+          />
+          <!-- Settings -->
         </nuxt-link>
 
         <nuxt-link
           to="/profile"
-          :class="[
-            'flex items-center p-4 rounded transition',
-            isActive('/profile') ? 'bg-blue-700' : 'hover:bg-gray-700',
-          ]"
+          class="link"
         >
           <!-- <UserOutlined class="mr-3" /> -->
-          Profile
+          <Icon
+            name="material-symbols-light:account-circle"
+            class="icon"
+          />
+          <!-- Profile -->
         </nuxt-link>
+        <NuxtLink
+          @click="handleLogout"
+          class="link"
+        >
+          <Icon
+            name="material-symbols-light:logout"
+            class="icon"
+          />
+          <!-- Logout -->
+        </NuxtLink>
       </div>
     </div>
-  </aside>
+  </div>
 </template>
 
 <script setup lang="ts">
 const localePath = useLocalePath();
+const supabase = useSupabaseClient();
 
 defineProps({
   isActive: {
@@ -154,6 +126,50 @@ defineProps({
     required: true,
   },
 });
+
+const handleLogout = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    navigateTo(localePath("/login"));
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
 </script>
 
-<style scoped></style>
+<style scoped lang="scss">
+#sidebar {
+  background-color: #fff;
+  color: black;
+  border-right: var(--color-gray-400) 1px solid;
+  border-radius: 0 0.4rem 0.4rem 0;
+  align-items: center;
+
+  .padded-line {
+    height: 1px;
+    width: 100%;
+    background-color: var(--color-gray-400);
+    margin: 0.5rem 0;
+  }
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.router-link-active {
+  background-color: var(--color-primary);
+  color: white;
+}
+</style>

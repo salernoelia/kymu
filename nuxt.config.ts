@@ -20,16 +20,21 @@ export default defineNuxtConfig({
     compatibilityVersion: 4,
   },
 
-  css: ["~/assets/css/main.css", "~/assets/css/reset.css"],
+  css: [
+    "~/assets/css/main.css",
+    "~/assets/css/reset.css",
+    "~/assets/css/primitives.css",
+  ],
   modules: [
-    "@nuxt/ui",
     "@nuxtjs/tailwindcss",
-    "@nuxtjs/google-fonts",
+    "@nuxt/fonts",
+    "@nuxt/icon",
     "@pinia/nuxt",
     "@vueuse/nuxt",
     "@nuxtjs/i18n",
     "@nuxtjs/supabase",
     "@vite-pwa/nuxt",
+    "@nuxt/image",
   ],
 
   i18n: {
@@ -60,20 +65,7 @@ export default defineNuxtConfig({
     },
   },
 
-  googleFonts: {
-    families: {
-      Inter: [300, 500, 700],
-    },
-  },
-
   pinia: {
     storesDirs: ["./stores/**"],
-  },
-
-  colorMode: {
-    preference: "light",
-    fallback: "light",
-    classPrefix: "",
-    classSuffix: "",
   },
 });
