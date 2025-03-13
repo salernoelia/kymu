@@ -1,7 +1,7 @@
 export function useTrainingUnitMovable() {
     const updateExercisePosition = async (
         unit: UnitsWithExercises,
-        exerciseId: number,
+        exerciseId: string,
         newPosition: number,
     ) => {
         if (!unit.exercises_index) {

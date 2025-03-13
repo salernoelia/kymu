@@ -1,6 +1,7 @@
 <template>
   <div
-    id="card"
+    class="card"
+    :id="`exercise-${id}`"
     :draggable="true"
     @dragstart="onDragStart"
     @dragend="onDragEnd"
@@ -43,6 +44,7 @@ const isDragging = ref(false);
 function onDragStart(event: DragEvent) {
   if (!event.dataTransfer) return;
 
+  event.stopPropagation();
   isDragging.value = true;
 
   const data = {
@@ -68,7 +70,7 @@ function onDragEnd() {
 </script>
 
 <style scoped lang="scss">
-#card {
+.card {
   border: 1px solid var(--color-gray-400);
   background-color: #fff;
   filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));

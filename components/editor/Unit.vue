@@ -139,7 +139,15 @@ function onDropInZone(event: DragEvent, position: number) {
   if (!event.dataTransfer) return;
 
   try {
-    const data = JSON.parse(event.dataTransfer.getData("application/json"));
+    const dataString = event.dataTransfer.getData("application/json");
+    console.log("Drop data:", dataString); // Debug the actual data
+
+    if (!dataString) {
+      console.error("No data found in drop event");
+      return;
+    }
+
+    const data = JSON.parse(dataString);
 
     emit("drop", {
       exerciseId: data.id,
