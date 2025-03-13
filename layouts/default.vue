@@ -38,7 +38,7 @@ watch(user, (newUser) => {
       :path="localePath('/')"
     />
 
-    <main class="p-4 w-full">
+    <main class="w-full h-full overflow-hidden">
       <slot />
     </main>
   </div>

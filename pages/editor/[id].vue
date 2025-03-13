@@ -1,8 +1,18 @@
 <template>
-  <div class="h-full">
-    <h1>{{ $t("unit-editor-title") }}</h1>
-    <h3>{{ $t("unit-editor-description") }}</h3>
-    <div id="exercises">
+  <div class="editor-container">
+    <div class="header p-4">
+      <Icon
+        name="ic:baseline-arrow-back"
+        @click="() => $router.back()"
+        size="1.5rem"
+      />
+      <h1>{{ $t("unit-editor-title") }}</h1>
+      <h3>{{ $t("unit-editor-description") }}</h3>
+    </div>
+    <div
+      id="exercises"
+      class="exercises-container"
+    >
       <EditorUnit
         v-for="unit in store.units"
         :key="unit.id"
@@ -197,15 +207,27 @@ defineExpose({
 </script>
 
 <style scoped lang="scss">
-#exercises {
+.editor-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+}
+
+.header {
+  flex-shrink: 0;
+}
+
+.exercises-container {
   display: flex;
   flex-direction: row;
   gap: 1rem;
   overflow-x: auto;
-  overflow-y: auto;
-
-  max-width: 100%;
-  padding-right: 5rem;
+  overflow-y: hidden;
+  flex: 1;
+  padding: 0 1rem 1rem;
+  margin-bottom: 1rem;
 
   & > *:not(:last-child) {
     position: relative;
@@ -238,7 +260,7 @@ defineExpose({
 
 .vertical-divider {
   width: 100px;
-  background-color: #613232;
+  opacity: 0;
   align-self: stretch;
 }
 </style>

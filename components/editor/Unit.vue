@@ -155,11 +155,17 @@ function onDropInZone(event: DragEvent, position: number) {
 
 <style scoped lang="scss">
 .unit-block {
-  padding: 0.5rem;
+  padding: 1rem;
   margin: 1rem 0;
   min-width: 400px;
+  max-height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  height: fit-content;
   transition: all 0.3s ease;
   filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
+  border-radius: 8px;
+  border-right: 1px solid var(--color-gray-300);
 
   &.drop-active {
     border-color: #15ca82;
@@ -169,7 +175,6 @@ function onDropInZone(event: DragEvent, position: number) {
     background-color: rgba(21, 202, 130, 0.05);
   }
 }
-
 .block-header {
   margin-bottom: 1rem;
   border: 1px solid #ccc;

@@ -15,7 +15,13 @@
     </div>
 
     <Icon
-      class="edit"
+      class="douplicate icon-single cursor-pointer"
+      size="1.25rem"
+      name="ic:round-control-point-duplicate"
+      @click="() => store.duplicateExercise(exercise.id)"
+    />
+    <Icon
+      class="edit icon-single cursor-pointer"
       size="1.25rem"
       name="material-symbols-light:edit-square-outline"
       @click="() => store.selectExercise(exercise)"
@@ -100,6 +106,13 @@ function onDragEnd() {
 .edit {
   position: absolute;
   right: 0.5rem;
+  top: 0.5rem;
+  cursor: pointer;
+}
+
+.douplicate {
+  position: absolute;
+  right: 2.5rem;
   top: 0.5rem;
   cursor: pointer;
 }
