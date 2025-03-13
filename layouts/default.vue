@@ -42,6 +42,9 @@ watch(user, (newUser) => {
       <slot />
     </main>
   </div>
+  <Toaster class="z-50">
+    <template #toast="{ toast }"> </template>
+  </Toaster  />
 </template>
 
 <style scoped lang="scss">

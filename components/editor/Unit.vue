@@ -155,13 +155,11 @@ function onDropInZone(event: DragEvent, position: number) {
 
 <style scoped lang="scss">
 .unit-block {
-  border: 1px solid #ccc;
-  padding: 1rem;
+  padding: 0.5rem;
   margin: 1rem 0;
   min-width: 400px;
-  background-color: #ffffff;
-  border-radius: 8px;
   transition: all 0.3s ease;
+  filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
 
   &.drop-active {
     border-color: #15ca82;
@@ -174,6 +172,10 @@ function onDropInZone(event: DragEvent, position: number) {
 
 .block-header {
   margin-bottom: 1rem;
+  border: 1px solid #ccc;
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 1rem;
 }
 
 .exercise-container {

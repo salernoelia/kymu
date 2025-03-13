@@ -58,16 +58,8 @@
     </div>
 
     <div class="actions">
-      <button
-        @click="store.saveExercise(exercise)"
-        class="save-btn"
-      >
-        Save Changes
-      </button>
-      <button
-        @click="store.deleteExercise(exercise.id)"
-        class="delete-btn"
-      >
+      <button @click="store.saveExercise(exercise)">Save Changes</button>
+      <button @click="store.deleteExercise(exercise.id)">
         Delete Exercise
       </button>
     </div>

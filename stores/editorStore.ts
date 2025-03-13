@@ -1,10 +1,11 @@
-import { defineStore } from "pinia";
+import { useToast } from "@/components/ui/toast/use-toast";
 
 export const useEditorStore = defineStore("editor", () => {
     const supabase = useSupabaseClient<Database>();
     const supabaseUser = useSupabaseUser();
     const localePath = useLocalePath();
     const router = useRouter();
+    const { toast } = useToast();
 
     const units = ref<UnitsWithExercises[]>([]);
     const selectedExercise = ref<Tables<"exercises"> | null>(null);
@@ -274,6 +275,23 @@ export const useEditorStore = defineStore("editor", () => {
         }
     }
 
+    async function getExerciseById(
+        exerciseId: string,
+    ): Promise<Tables<"exercises"> | null> {
+        const { data, error } = await supabase
+            .from("exercises")
+            .select("*")
+            .eq("id", exerciseId)
+            .single();
+
+        if (error) {
+            console.error("Error fetching exercise:", error);
+            return null;
+        }
+
+        return data;
+    }
+
     async function initializeNewExercise(unitId: string) {
         const newExercise: TablesInsert<"exercises"> = {
             name: "",
@@ -487,6 +505,11 @@ export const useEditorStore = defineStore("editor", () => {
             }
 
             await loadTrainingUnit();
+            toast({
+                title: "Exercise saved",
+                description: "The exercise has been saved successfully.",
+                variant: "default",
+            });
         } catch (err) {
             console.error("Error in saveExercise:", err);
         } finally {
@@ -717,15 +740,6 @@ export const useEditorStore = defineStore("editor", () => {
         }
 
         try {
-            const { error: exercisesError } = await supabase
-                .from("exercises")
-                .delete();
-
-            if (exercisesError) {
-                console.error("Error deleting exercises:", exercisesError);
-                return;
-            }
-
             const { error } = await supabase
                 .from("units")
                 .delete()

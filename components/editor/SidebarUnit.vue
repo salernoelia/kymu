@@ -42,35 +42,6 @@
         Delete Unit
       </button>
     </div>
-
-    <div class="exercises-section">
-      <h2>Exercises in this unit</h2>
-      <button
-        @click="openCreateExerciseModal"
-        class="add-btn"
-      >
-        Add Exercise
-      </button>
-
-      <div
-        v-if="exercises.length > 0"
-        class="exercises-list"
-      >
-        <div
-          v-for="exercise in exercises"
-          :key="exercise.id"
-          class="exercise-item"
-        >
-          {{ exercise.name || `Exercise ${exercise.id}` }}
-        </div>
-      </div>
-      <div
-        v-else
-        class="no-exercises"
-      >
-        No exercises in this unit
-      </div>
-    </div>
   </div>
 </template>
 
@@ -81,10 +52,8 @@ const exercises = computed(() => store.getExercisesForUnit(unit.id));
 const emit = defineEmits(["create-exercise"]);
 
 const openCreateExerciseModal = () => {
-  // Close the sidebar first
   store.closeSidebar();
 
-  // Then emit the event with the unit ID
   nextTick(() => {
     emit("create-exercise", unit.id);
   });

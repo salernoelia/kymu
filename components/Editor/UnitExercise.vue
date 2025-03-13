@@ -6,29 +6,27 @@
     @dragend="onDragEnd"
     :class="{ dragging: isDragging }"
   >
-    <div class="handle">
-      <svg
-        width="16"
-        height="16"
-        viewBox="0 0 24 24"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <path
-          d="M8 6H16M8 12H16M8 18H16"
-          stroke="currentColor"
-          stroke-width="2"
-          stroke-linecap="round"
-        />
-      </svg>
+    <Icon
+      name="ic:baseline-drag-handle"
+      size="1.5rem"
+    />
+    <div class="flex flex-col">
+      <slot></slot>
     </div>
-    <slot></slot>
+
+    <Icon
+      class="edit"
+      size="1.25rem"
+      name="material-symbols-light:edit-square-outline"
+      @click="() => store.selectExercise(exercise)"
+    />
   </div>
 </template>
 
 <script setup lang="ts">
 const props = defineProps<{
   id: string;
+  exercise: Tables<"exercises">;
   unitId: string;
   orderPosition: number;
 }>();
@@ -65,12 +63,20 @@ function onDragEnd() {
 
 <style scoped lang="scss">
 #card {
-  border: 1px solid #494949;
+  border: 1px solid var(--color-gray-400);
+  background-color: #fff;
+  filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
+
   padding: 1rem;
   margin: 0.7rem 0;
   cursor: grab;
   position: relative;
   transition: all 0.2s ease;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  border-radius: 0.5rem;
+  gap: 0.5rem;
 
   &.dragging {
     opacity: 0.5;
@@ -83,14 +89,18 @@ function onDragEnd() {
 }
 
 .handle {
-  position: absolute;
-  top: 10px;
-  right: 10px;
   cursor: grab;
   color: #666;
 
   &:hover {
     color: #15ca82;
   }
+}
+
+.edit {
+  position: absolute;
+  right: 0.5rem;
+  top: 0.5rem;
+  cursor: pointer;
 }
 </style>
