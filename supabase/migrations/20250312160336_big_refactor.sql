@@ -94,7 +94,7 @@ alter table "public"."exercises" drop constraint "public_training_block_exercise
 
 alter table "public"."patient_achievements" drop constraint "patient_achievements_exercise_id_fkey";
 
-alter table "public"."specialist_types" drop constraint "specialist_types_name_key";
+-- alter table "public"."specialist_types" drop constraint "specialist_types_name_key";
 
 
 
@@ -108,7 +108,7 @@ alter table "public"."specialist_types" drop constraint "specialist_types_pkey";
 
 alter table "public"."units" drop constraint "training_plans_pkey";
 
-drop index if exists "public"."specialist_types_name_key";
+-- drop index if exists "public"."specialist_types_name_key";
 
 drop index if exists "public"."specialist_types_pkey";
 
@@ -122,7 +122,7 @@ drop index if exists "public"."exercises_pkey";
 
 drop table "public"."default_unit_templates";
 
-drop table "public"."specialist_types";
+-- drop table "public"."specialist_types";
 
 create table "public"."default_units" (
     "created_at" timestamp with time zone not null default now(),
