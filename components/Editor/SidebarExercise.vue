@@ -13,9 +13,10 @@
       <label>Focus Type</label>
       <select v-model="exercise.focus_type">
         <option value="strength">Strength</option>
-        <option value="mobility">Mobility</option>
         <option value="balance">Balance</option>
+        <option value="endurance">Endurance</option>
         <option value="coordination">Coordination</option>
+        <option value="motor function">Motor Function</option>
       </select>
     </div>
 

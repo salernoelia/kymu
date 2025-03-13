@@ -303,7 +303,6 @@ export const useEditorStore = defineStore("editor", () => {
             is_template: false,
         };
 
-        // Find the unit to get the inherited_default_exercise
         const unit = units.value.find((u) =>
             u.id.toString() === unitId.toString()
         );
@@ -335,7 +334,7 @@ export const useEditorStore = defineStore("editor", () => {
         selectUnit(
             {
                 ...newUnit,
-                id: 0, // temporary id
+                id: "new",
                 created_at: new Date().toISOString(),
                 inherited_default_unit: null,
             } as any,
@@ -486,9 +485,8 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function saveExercise(exercise: Tables<"exercises">) {
         try {
-            const { error } = await supabase
-                .from("exercises")
-                .update({
+            if (exercise.id === "new") {
+                const exerciseToCreate: TablesInsert<"exercises"> = {
                     name: exercise.name,
                     focus_type: exercise.focus_type,
                     duration_seconds_goal: exercise.duration_seconds_goal,
@@ -496,12 +494,102 @@ export const useEditorStore = defineStore("editor", () => {
                     family_scene_adjustment_access:
                         exercise.family_scene_adjustment_access,
                     is_template: exercise.is_template,
-                })
-                .eq("id", exercise.id);
+                    therapist_uid: supabaseUser.value?.id || "",
+                };
 
-            if (error) {
-                console.error("Error updating exercise:", error);
-                return;
+                const { data, error } = await supabase
+                    .from("exercises")
+                    .insert([exerciseToCreate])
+                    .select();
+
+                if (error) {
+                    console.error("Error creating new exercise:", error);
+                    toast({
+                        title: "Error",
+                        description:
+                            "Failed to create exercise. Please try again.",
+                        variant: "destructive",
+                    });
+                    return;
+                }
+
+                if (data && data[0]) {
+                    // Get unitId from URL parameters if selectedUnit is not available
+                    let unitId = selectedUnit.value?.id?.toString();
+
+                    // Find this unit from our units array
+                    let unit;
+                    if (unitId) {
+                        unit = units.value.find((u) =>
+                            u.id.toString() === unitId
+                        );
+                    }
+
+                    // If we still don't have a unit, check if there's any unit
+                    if (!unit && units.value.length > 0) {
+                        unitId = units.value[0].id.toString();
+                        unit = units.value[0];
+                    }
+
+                    if (unitId && unit) {
+                        const updatedExercisesIndex = [
+                            ...(unit.exercises_index || []),
+                            data[0].id,
+                        ];
+
+                        const { error: updateError } = await supabase
+                            .from("units")
+                            .update({
+                                exercises_index: updatedExercisesIndex,
+                            })
+                            .eq("id", unitId);
+
+                        if (updateError) {
+                            console.error(
+                                "Error updating unit's exercises_index:",
+                                updateError,
+                            );
+                            toast({
+                                title: "Warning",
+                                description:
+                                    "Exercise created but not added to unit. Please reload.",
+                                variant: "warning",
+                            });
+                        }
+                    } else {
+                        console.error("No unit found to add exercise to");
+                        toast({
+                            title: "Warning",
+                            description:
+                                "Exercise created but no unit found to add it to.",
+                            variant: "warning",
+                        });
+                    }
+                }
+            } else {
+                const { error } = await supabase
+                    .from("exercises")
+                    .update({
+                        name: exercise.name,
+                        focus_type: exercise.focus_type,
+                        duration_seconds_goal: exercise.duration_seconds_goal,
+                        repetitions_goal: exercise.repetitions_goal,
+                        family_scene_adjustment_access:
+                            exercise.family_scene_adjustment_access,
+                        is_template: exercise.is_template,
+                    })
+                    .eq("id", exercise.id);
+
+                if (error) {
+                    console.error("Error updating exercise:", error);
+                    toast({
+                        title: "Error",
+                        description:
+                            "Failed to update exercise. Please try again.",
+                        variant: "destructive",
+                    });
+                    return;
+                }
             }
 
             await loadTrainingUnit();
@@ -512,6 +600,11 @@ export const useEditorStore = defineStore("editor", () => {
             });
         } catch (err) {
             console.error("Error in saveExercise:", err);
+            toast({
+                title: "Error",
+                description: "An unexpected error occurred. Please try again.",
+                variant: "destructive",
+            });
         } finally {
             closeSidebar();
         }
@@ -551,7 +644,6 @@ export const useEditorStore = defineStore("editor", () => {
             if (data && data[0]) {
                 const newExerciseId = data[0].id;
 
-                // Find the current unit containing the exercise
                 const currentUnit = units.value.find((u) =>
                     u.exercises_index?.includes(exerciseId)
                 );
@@ -640,24 +732,77 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function saveUnit(unit: UnitsWithExercises) {
         try {
-            const { error } = await supabase
-                .from("units")
-                .update({
+            console.log("unit", unit);
+
+            if (unit.id === "new") {
+                const unitToCreate: TablesInsert<"units"> = {
                     name: unit.name,
                     description: unit.description,
-                    is_template: unit.is_template,
-                })
-                .eq("id", unit.id);
+                    patient_uid: selectedPatientId.value || "",
+                    therapist_uid: supabaseUser.value?.id || "",
+                    exercises_index: [],
+                    is_template: unit.is_template || false,
+                };
 
-            if (error) {
-                console.error("Error updating unit:", error);
-                return;
+                const { data, error } = await supabase
+                    .from("units")
+                    .insert([unitToCreate])
+                    .select();
+
+                if (error) {
+                    console.error("Error creating unit:", error);
+                    toast({
+                        title: "Error",
+                        description: "Failed to create unit. Please try again.",
+                        variant: "destructive",
+                    });
+                    return;
+                }
+
+                if (data && data[0]) {
+                    toast({
+                        title: "Unit created",
+                        description: "The unit has been created successfully.",
+                        variant: "default",
+                    });
+                }
+            } else {
+                // This is an existing unit - update it
+                const { error } = await supabase
+                    .from("units")
+                    .update({
+                        name: unit.name,
+                        description: unit.description,
+                        is_template: unit.is_template,
+                    })
+                    .eq("id", unit.id);
+
+                if (error) {
+                    console.error("Error updating unit:", error);
+                    toast({
+                        title: "Error",
+                        description: "Failed to update unit. Please try again.",
+                        variant: "destructive",
+                    });
+                    return;
+                }
+
+                handleUnitUpdate(unit);
+                toast({
+                    title: "Unit updated",
+                    description: "The unit has been updated successfully.",
+                    variant: "default",
+                });
             }
 
-            handleUnitUpdate(unit);
             await loadTrainingUnit();
         } catch (err) {
             console.error("Error in saveUnit:", err);
+            toast({
+                title: "Error",
+                description: "An unexpected error occurred. Please try again.",
+                variant: "destructive",
+            });
         } finally {
             closeSidebar();
         }
