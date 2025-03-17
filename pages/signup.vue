@@ -172,7 +172,7 @@
         </NuxtLink>
       </div>
 
-      <UAlert
+      <p
         v-if="errorMessage"
         icon="i-heroicons-information-circle-20-solid"
         :title="errorMessage"

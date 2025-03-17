@@ -23,6 +23,7 @@ export const useEditorStore = defineStore("editor", () => {
     const dragInProgress = ref(false);
     const exerciseTemplates = ref<ExerciseTemplate[]>([]);
     const unitTemplates = ref<UnitTemplate[]>([]);
+    const targetUnitId = ref<string | null>(null);
 
     watch([sidebarVariant, sidebarMode], () => {
         const mode = sidebarMode.value === "create" ? "Create" : "Edit";
@@ -293,6 +294,7 @@ export const useEditorStore = defineStore("editor", () => {
     }
 
     async function initializeNewExercise(unitId: string) {
+        targetUnitId.value = unitId;
         const newExercise: TablesInsert<"exercises"> = {
             name: "",
             focus_type: "strength",
@@ -483,7 +485,9 @@ export const useEditorStore = defineStore("editor", () => {
         }
     }
 
-    async function saveExercise(exercise: Tables<"exercises">) {
+    async function saveExercise(
+        exercise: Tables<"exercises">,
+    ) {
         try {
             if (exercise.id === "new") {
                 const exerciseToCreate: TablesInsert<"exercises"> = {
@@ -514,10 +518,8 @@ export const useEditorStore = defineStore("editor", () => {
                 }
 
                 if (data && data[0]) {
-                    // Get unitId from URL parameters if selectedUnit is not available
-                    let unitId = selectedUnit.value?.id?.toString();
-
-                    // Find this unit from our units array
+                    let unitId = targetUnitId.value ||
+                        selectedUnit.value?.id?.toString();
                     let unit;
                     if (unitId) {
                         unit = units.value.find((u) =>
@@ -525,24 +527,27 @@ export const useEditorStore = defineStore("editor", () => {
                         );
                     }
 
-                    // If we still don't have a unit, check if there's any unit
                     if (!unit && units.value.length > 0) {
                         unitId = units.value[0].id.toString();
                         unit = units.value[0];
                     }
 
                     if (unitId && unit) {
+                        console.log("unit", unit.exercises_index);
                         const updatedExercisesIndex = [
                             ...(unit.exercises_index || []),
                             data[0].id,
                         ];
 
-                        const { error: updateError } = await supabase
+                        const {
+                            data: updatedExercisesIndexData,
+                            error: updateError,
+                        } = await supabase
                             .from("units")
                             .update({
                                 exercises_index: updatedExercisesIndex,
                             })
-                            .eq("id", unitId);
+                            .eq("id", unit.id);
 
                         if (updateError) {
                             console.error(
@@ -553,16 +558,22 @@ export const useEditorStore = defineStore("editor", () => {
                                 title: "Warning",
                                 description:
                                     "Exercise created but not added to unit. Please reload.",
-                                variant: "warning",
+                                variant: "destructive",
                             });
                         }
+                        toast({
+                            title: "Exercise created",
+                            description:
+                                "The exercise has been created successfully.",
+                            variant: "default",
+                        });
                     } else {
                         console.error("No unit found to add exercise to");
                         toast({
                             title: "Warning",
                             description:
                                 "Exercise created but no unit found to add it to.",
-                            variant: "warning",
+                            variant: "destructive",
                         });
                     }
                 }
