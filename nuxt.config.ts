@@ -36,6 +36,7 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     "@nuxt/image",
     "shadcn-nuxt",
+    "@nuxt/test-utils",
   ],
 
   shadcn: {
