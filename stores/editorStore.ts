@@ -1,4 +1,4 @@
-import { useToast } from "~/components/shadcn/toast/use-toast";
+import { useToast } from "~/components/ui/toast/use-toast";
 
 export const useEditorStore = defineStore("editor", () => {
     const supabase = useSupabaseClient<Database>();
@@ -109,7 +109,7 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function loadTrainingUnit() {
         if (!selectedPatientId.value) {
-            navigateTo(localePath(`/editor`));
+            navigateTo(localePath(`/patient/editor`));
             return;
         }
 
@@ -136,7 +136,7 @@ export const useEditorStore = defineStore("editor", () => {
                     unitsError,
                     selectedPatientId.value,
                 );
-                navigateTo(localePath(`/editor`));
+                navigateTo(localePath(`/patient/editor`));
                 return;
             }
 
@@ -183,7 +183,7 @@ export const useEditorStore = defineStore("editor", () => {
             units.value = unitsWithExercises;
         } catch (error) {
             console.error("Error in loadTrainingUnit:", error);
-            navigateTo(localePath(`/editor`));
+            navigateTo(localePath(`/patient/editor`));
         }
     }
 

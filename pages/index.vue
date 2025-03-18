@@ -1,8 +1,6 @@
 <template>
-  <div class="flex-col">
-    <h1>
-      {{ $t("home") }}
-    </h1>
+  <div>
+    <h1>Dashboard Typa</h1>
   </div>
 </template>
 

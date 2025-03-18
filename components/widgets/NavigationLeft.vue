@@ -42,17 +42,15 @@
           />
         </nuxt-link>
 
-        <nuxt-link
+        <!-- <nuxt-link
           :to="localePath('/editor')"
           class="link"
         >
-          <!-- <UsergroupAddOutlined class="mr-3" /> -->
           <Icon
             name="material-symbols-light:edit-document-outline-rounded"
             class="icon"
           />
-          <!-- {{ $t("unit-editor") }} -->
-        </nuxt-link>
+        </nuxt-link> -->
 
         <nuxt-link
           :to="localePath('/patients')"

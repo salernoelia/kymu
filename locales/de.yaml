@@ -18,6 +18,7 @@ loading-error-retry: "Erneut versuchen"
 
 # nav
 home: "Home"
+dashboard: "Dashboard"
 vr-viewer: "VR Viewer"
 unit-editor: "Unit Editor"
 explore-kymu: "Erkunde Kymu"
@@ -27,7 +28,7 @@ logout: "Ausloggen"
 login: "Einloggen"
 
 # unit editor
-unit-editor-title: "Unit Editor"
+unit-editor-title: "Trainingsplan Editor"
 unit-editor-description: "Erstelle und bearbeite VR-Einheiten."
 unit-name: "Unit Name"
 unit-description: "Unit Beschreibung"
@@ -39,13 +40,23 @@ vr-viewer-title: "Viewer"
 vr-viewer-description: "Mit dem Viewer kannst du eien Live-Vorschau der VR-Einheit sehen."
 vr-viewer-select-placeholder: "Wähle einen Viewer Typ"
 
-# patient
+# patient overview
+patient-overview-title: "Patientenübersicht"
 patient: "Patient"
 patient-info: "Patienteninformationen"
 patient-name: "Patientenname"
 patient-units: "Trainingspläne"
 patient-description: "Patientenbeschreibung"
 patient-progress: "Fortschritt"
+activity: "Aktivität"
+monthly-acitivty: "Monatliche Aktivität"
+activity-details: "Aktivitätsdetails"
+trained-today: "Heute trainiert"
+
+# activity overview
+activity-overview-title: "Aktivitätsübersicht"
+activity-overview-description: "Hier kannst du die Aktivitäten des Patienten sehen."
+activity-name: "Aktivitätsname"
 
 # caregiver
 caregiver: "Betreuer"
