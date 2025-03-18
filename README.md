@@ -1,24 +1,38 @@
-# thesis-telerehab-app
+# Kymu
 
-**Link Database**
+## Supabase Commands
+
+### Link Database
 
 ```sh
 supabase link --project-ref whbtmepowglwmocqunyw
 ```
 
-**Pull migrations of Supabase DB for backup**
+````
+
+### Pull Migrations of Supabase DB for Backup
 
 ```sh
 supabase db pull
 ```
 
-**Generate Types of Supabase DB**
+### Generate Types of Supabase DB
+
+Local:
 
 ```sh
-npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema cccpublic > shared/types/database.types.ts
+supabase gen types typescript --local >./src/schema.ts
 ```
 
-# Widgets usage examples
+External:
+
+```sh
+npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema cccpublic > database.types.ts
+```
+
+## Widgets Usage Examples
+
+### Vertical Carousel
 
 ```vue
 <WidgetsVerticalCarousell
@@ -32,12 +46,21 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema c
     { title: 'Slide 5', content: 'Content 5' },
   ]"
 />
+```
+
+### 3D Model Viewer
+
+```vue
 <ThreeModelViewer
   modelPath="/models/exercise.glb"
   :scale="2"
   @exercise-variant="(v) => console.log('exercise variant', v)"
 />
+```
 
+### Pie Chart
+
+```vue
 <ChartsPie
   :data="pieChartData"
   title="Budget Allocation"
@@ -48,6 +71,11 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema c
   :cornerRadius="8"
   :padAngle="0.02"
 />
+```
+
+### Bubble Chart
+
+```vue
 <ChartsBubble
   :data="bubbleData"
   title="Project Budget Distribution"
@@ -57,6 +85,11 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema c
   :maxRadius="60"
   :showLegend="true"
 />
+```
+
+### Bar Chart
+
+```vue
 <ChartsBar
   :data="barChartData"
   title="Monthly Sales"
@@ -65,6 +98,26 @@ npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema c
   barColor="#3498db"
 />
 ```
+
+### Breadcrumbs
+
+```vue
+<WidgetsBreadcumbs
+  :breadcrumbs="[
+    { path: '/patients', translationKey: 'patient-overview-title' },
+    {
+      path: `/patient/${route.params.id}`,
+      translationKey: 'activity-overview-title',
+    },
+    {
+      path: `/editor/${route.params.id}`,
+      translationKey: 'unit-editor-title',
+    },
+  ]"
+/>
+```
+
+## Chart Data
 
 ```ts
 const barChartData = ref([
@@ -93,21 +146,4 @@ const bubbleData = ref([
   { name: "Support", value: 25, category: "Operations" },
 ]);
 ```
-
-Breadcrumbs
-
-```vue
-<WidgetsBreadcumbs
-  :breadcrumbs="[
-    { path: '/patients', translationKey: 'patient-overview-title' },
-    {
-      path: `/patient/${route.params.id}`,
-      translationKey: 'activity-overview-title',
-    },
-    {
-      path: `/editor/${route.params.id}`,
-      translationKey: 'unit-editor-title',
-    },
-  ]"
-/>
-```
+````
