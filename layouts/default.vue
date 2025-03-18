@@ -1,4 +1,6 @@
 <script setup>
+import Toaster from '@/components/ui/toast/Toaster.vue'
+
 const user = useSupabaseUser();
 const route = useRoute();
 const isActive = (path) => route.path === path;
@@ -38,7 +40,7 @@ watch(user, (newUser) => {
       :path="localePath('/')"
     />
 
-    <main class="w-full h-full overflow-hidden">
+    <main class="w-full h-full overflow-hidden p-6">
       <slot />
     </main>
   </div>

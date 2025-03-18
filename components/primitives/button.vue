@@ -50,7 +50,10 @@ const buttonClasses = computed(() => {
   >
     <slot></slot>
 
-    <span v-if="iconRight" class="ml-2">
+    <span
+      v-if="iconRight"
+      class="ml-2"
+    >
       <component :is="iconRight" />
     </span>
   </button>
