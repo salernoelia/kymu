@@ -18,6 +18,8 @@ logs
 .fleet
 .idea
 
+lib/utils.ts
+
 # Local env files
 .env
 .env.*
