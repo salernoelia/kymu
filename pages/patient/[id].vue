@@ -45,7 +45,9 @@
             <h2>{{ $t("patient-units") }}</h2>
             <PrimitivesButton
               variant="primary"
-              @click="navigateTo(localePath(`/editor/${route.params.id}`))"
+              @click="
+                navigateTo(localePath(`/patient/editor/${route.params.id}`))
+              "
             >
               {{ $t("unit-editor-title") }}
             </PrimitivesButton>
@@ -56,7 +58,7 @@
             @current-slide="
               (i) =>
                 f?.units?.[i]?.id &&
-                navigateTo(localePath(`/editor/${route.params.id}`))
+                navigateTo(localePath(`/patient/editor/${route.params.id}`))
             "
             :initialSlide="0"
             :slides="slidesFromUnits(f.units)"
@@ -69,6 +71,7 @@
       <div
         class="flex flex-col w-full h-full border rounded p-4 bg-white gap-4"
       >
+        <!-- right-top -->
         <div
           class="container-header flex flex-row justify-between align-center"
         >
@@ -85,7 +88,7 @@
 
         <div class="flex flex-row justify-between border rounded p-4 bg-white">
           <div class="flex flex-col gap-2">
-            <h3>{{ $t("monthly-activity") }}</h3>
+            <h3>{{ $t("monthly-acitivty") }}</h3>
             <div class="flex flex-col">
               <h3>14 min.</h3>
               <p>{{ $t("trained-today") }}</p>
@@ -109,6 +112,10 @@
             class="rounded-md border"
           />
         </div>
+        <!-- right-bottom -->
+        <PrimitivesDivider orientation="horizontal" />
+
+        <h2>Undefined</h2>
       </div>
     </div>
   </div>
@@ -124,6 +131,7 @@ import {
 const route = useRoute();
 const localePath = useLocalePath();
 const supabase = useSupabaseClient<Database>();
+import type { QueryData } from "@supabase/supabase-js";
 
 const date = ref(today(getLocalTimeZone())) as Ref<DateValue>;
 

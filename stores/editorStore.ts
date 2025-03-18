@@ -109,7 +109,7 @@ export const useEditorStore = defineStore("editor", () => {
 
     async function loadTrainingUnit() {
         if (!selectedPatientId.value) {
-            navigateTo(localePath(`/editor`));
+            navigateTo(localePath(`/patient/editor`));
             return;
         }
 
@@ -136,7 +136,7 @@ export const useEditorStore = defineStore("editor", () => {
                     unitsError,
                     selectedPatientId.value,
                 );
-                navigateTo(localePath(`/editor`));
+                navigateTo(localePath(`/patient/editor`));
                 return;
             }
 
@@ -183,7 +183,7 @@ export const useEditorStore = defineStore("editor", () => {
             units.value = unitsWithExercises;
         } catch (error) {
             console.error("Error in loadTrainingUnit:", error);
-            navigateTo(localePath(`/editor`));
+            navigateTo(localePath(`/patient/editor`));
         }
     }
 

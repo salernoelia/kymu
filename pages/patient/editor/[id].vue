@@ -284,12 +284,6 @@ defineExpose({
   }
 }
 
-.vertical-divider {
-  width: 100px;
-  opacity: 0;
-  align-self: stretch;
-}
-
 :deep(.highlight-new) {
   animation: highlight-pulse 2s ease-in-out;
   border: 2px solid #3b82f6 !important;

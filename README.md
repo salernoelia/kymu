@@ -151,3 +151,16 @@ const barChartData = ref([
   ]"
 />
 ```
+
+---
+
+## Divider
+
+```vue
+<PrimitivesDivider
+  orientation="horizontal"
+  color="gray-200"
+  :marginTop="4"
+  :marginBottom="4"
+/>
+```

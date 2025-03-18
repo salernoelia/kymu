@@ -215,3 +215,9 @@ video {
   animation: highlight-pulse 2s ease-in-out;
   border: 2px solid #3b82f6;
 }
+
+.vertical-divider {
+  width: 100px;
+  opacity: 0;
+  align-self: stretch;
+}
