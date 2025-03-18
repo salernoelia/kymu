@@ -3,10 +3,10 @@
     <table class="min-w-full bg-white border-collapse">
       <thead class="bg-gray-50 text-gray-500">
         <tr>
-          <th class="py-3 px-4 text-left">Patient Name</th>
-          <th class="py-3 px-4 text-left">Condition</th>
-          <th class="py-3 px-4 text-left">Caregiver Name</th>
-          <th class="py-3 px-4 text-left">Date Added</th>
+          <th class="py-3 px-4 text-left">{{ $t("patient-name") }}</th>
+          <th class="py-3 px-4 text-left">{{ $t("patient-diagnosis") }}</th>
+          <th class="py-3 px-4 text-left">{{ $t("caregiver") }}</th>
+          <th class="py-3 px-4 text-left">{{ $t("patient-created-at") }}</th>
         </tr>
       </thead>
 
