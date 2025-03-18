@@ -1,0 +1,98 @@
+OVRBodyFromPose:
+  debug_full_body:
+    body_mesh: {}
+    Root:
+      Hips:
+        LeftLegUpper:
+          LeftLegLower:
+            LeftFootTwist: {}
+            LeftLegLowerTwist0_jnt: {}
+            LeftLegLowerTwist1_jnt: {}
+            LeftLegLowerTwist2_jnt: {}
+            LeftLegLowerTwist3_jnt: {}
+            LeftLegLowerTwist4_jnt: {}
+        RightLegUpper:
+          RightLegLower:
+            RightFootTwist: {}
+            RightLegLowerTwist0_jnt: {}
+            RightLegLowerTwist1_jnt: {}
+            RightLegLowerTwist2_jnt: {}
+            RightLegLowerTwist3_jnt: {}
+            RightLegLowerTwist4_jnt: {}
+      SpineLower:
+        SpineMiddle:
+          SpineUpper:
+            Chest:
+              LeftShoulder:
+                LeftArmUpper:
+                  LeftArmLower:
+                    LeftArmLowerTwist1_jnt: {}
+                    LeftArmLowerTwist2_jnt: {}
+                    LeftArmLowerTwist3_jnt: {}
+                    LeftHandWrist: {}
+                    LeftForearmStub_DELETE: {}
+                    LeftHandIndexProximal:
+                      LeftHandIndexIntermediate:
+                        LeftHandIndexDistal:
+                          LeftHandIndexTip: {}
+                    LeftHandMiddleProximal:
+                      LeftHandMiddleIntermediate:
+                        LeftHandMiddleDistal:
+                          LeftHandMiddleTip: {}
+                    LeftHandPinkyMeta:
+                      LeftHandPinkyProximal:
+                        LeftHandPinkyIntermediate:
+                          LeftHandPinkyDistal:
+                            LeftHandPinkyTip: {}
+                    LeftHandRingProximal:
+                      LeftHandRingIntermediate:
+                        LeftHandRingDistal:
+                          LeftHandRingTip: {}
+                    LeftHandThumbTrapezium:
+                      LeftHandThumbMeta:
+                        LeftHandThumbProximal:
+                          LeftHandThumbDistal:
+                            LeftHandThumbTip: {}
+                  LeftArmUpperTwist1: {}
+                  LeftArmUpperTwist2: {}
+                  LeftArmUpperTwist3: {}
+              RightShoulder:
+                RightArmUpper:
+                  RightArmLower:
+                    RightArmLowerTwist1_jnt: {}
+                    RightArmLowerTwist2_jnt: {}
+                    RightArmLowerTwist3_jnt: {}
+                    RightHandWrist: {}
+                    RightForearmStub_DELETE: {}
+                    RightHandIndexProximal:
+                      RightHandIndexIntermediate:
+                        RightHandIndexDistal:
+                          RightHandIndexTip: {}
+                    RightHandMiddleProximal:
+                      RightHandMiddleIntermediate:
+                        RightHandMiddleDistal:
+                          RightHandMiddleTip: {}
+                    RightHandPinkyMeta:
+                      RightHandPinkyProximal:
+                        RightHandPinkyIntermediate:
+                          RightHandPinkyDistal:
+                            RightHandPinkyTip: {}
+                    RightHandRingProximal:
+                      RightHandRingIntermediate:
+                        RightHandRingDistal:
+                          RightHandRingTip: {}
+                    RightHandThumbTrapezium:
+                      RightHandThumbMeta:
+                        RightHandThumbProximal:
+                          RightHandThumbDistal:
+                            RightHandThumbTip: {}
+                  RightArmUpperTwist1: {}
+                  RightArmUpperTwist2: {}
+                  RightArmUpperTwist3: {}
+      Neck:
+        Head:
+          Jaw: {}
+          Tongue: {}
+          LeftEye: {}
+          RightEye: {}
+          Viewpoint: {}
