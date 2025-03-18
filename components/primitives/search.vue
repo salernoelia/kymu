@@ -1,10 +1,7 @@
 <script setup lang="ts">
-import type { HTMLAttributes } from "vue";
-
 const props = defineProps<{
   modelValue?: string | number;
   placeholder?: string;
-  class?: HTMLAttributes["class"];
   disabled?: boolean;
 }>();
 
