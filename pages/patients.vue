@@ -1,6 +1,6 @@
 <template>
-  <div class="container mx-auto">
-    <div class="flex justify-between my-6 space-x-4">
+  <div>
+    <div class="flex justify-between space-x-4">
       <div class="flex flex-col align-top basis-1/4">
         <h1 class="text-2xl font-bold">Patientenübersicht</h1>
         <div
@@ -75,12 +75,12 @@
 </template>
 
 <script setup lang="ts">
-const supabase = useSupabaseClient();
+const supabase = useSupabaseClient<Database>();
 const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
 
 const searchQuery = ref("");
-const families = ref([]);
+const families = ref<Tables<"families">[]>([]);
 const view = ref("list");
 const selectedPatient = ref(null);
 
@@ -127,6 +127,11 @@ const loadFamilyData = async () => {
 
   if (error) {
     console.error("Error fetching patient data", error);
+    return;
+  }
+
+  if (!data) {
+    console.error("No data found");
     return;
   }
 

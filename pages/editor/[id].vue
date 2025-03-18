@@ -5,15 +5,19 @@
   >
     <div class="editor-container">
       <div class="editor-container">
-        <div class="header p-4">
-          <Icon
-            name="ic:baseline-arrow-back"
-            @click="() => $router.back()"
-            size="1.5rem"
-          />
-          <h1>{{ $t("unit-editor-title") }}</h1>
-          <h3>{{ $t("unit-editor-description") }}</h3>
-        </div>
+        <WidgetsBreadcumbs
+          :breadcrumbs="[
+            { path: '/patients', translationKey: 'patient-overview-title' },
+            {
+              path: `/patient/${route.params.id}`,
+              translationKey: 'patient-info',
+            },
+            {
+              path: `/editor/${route.params.id}`,
+              translationKey: 'unit-editor-title',
+            },
+          ]"
+        />
         <div
           id="exercises"
           class="exercises-container"
@@ -121,6 +125,8 @@
 <script setup lang="ts">
 const route = useRoute();
 const store = useEditorStore();
+const localePath = useLocalePath();
+
 const isLoadingPage = ref(true);
 
 const sidebarOpen = ref(false);

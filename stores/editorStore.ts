@@ -1,4 +1,4 @@
-import { useToast } from "~/components/shadcn/toast/use-toast";
+import { useToast } from "~/components/ui/toast/use-toast";
 
 export const useEditorStore = defineStore("editor", () => {
     const supabase = useSupabaseClient<Database>();

@@ -120,7 +120,7 @@ onMounted(async () => {
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 300px;
+  min-height: 300px;
   width: 100%;
   min-width: 500px;
 
@@ -128,7 +128,7 @@ onMounted(async () => {
     display: flex;
     flex-direction: column;
     height: 100%;
-    width: 80%;
+    width: 90%;
     align-items: center;
     overflow-y: auto;
     scroll-snap-type: y mandatory;
