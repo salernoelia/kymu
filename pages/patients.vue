@@ -2,7 +2,7 @@
   <div class="container mx-auto">
     <div class="flex justify-between my-6 space-x-4">
       <div class="flex flex-col align-top basis-1/4">
-        <h1 class="text-2xl font-bold">Patientenübersicht</h1>
+        <h1 class="text-2xl font-bold">{{ $t("patient-overview") }}</h1>
         <div
           class="border border-gray-200 mt-2 h-64 flex align-center justify-center rounded-md"
         >
@@ -18,7 +18,7 @@
           <div class="w-72">
             <PrimitivesSearch
               v-model="searchQuery"
-              placeholder="Patient suchen..."
+              :placeholder="$t('patient-search-placeholder')"
               size="md"
             />
           </div>
@@ -28,19 +28,19 @@
               variant="primary"
               @click="navigateTo(localePath('/patient/new'))"
             >
-              Hinzufügen
+              {{ $t("add") }}
             </PrimitivesButton>
             <PrimitivesButton
               variant="secondary"
               @click="navigateTo(localePath('/patient/new'))"
             >
-              Patientenregister PDF
+              {{ $t("download-register") }}
             </PrimitivesButton>
 
             <PrimitivesTab
               :tabs="[
-                { label: 'List View', value: 'list' },
-                { label: 'Grid View', value: 'grid' },
+                { label: $t('list-view'), value: 'list' },
+                { label: $t('grid-view'), value: 'grid' },
               ]"
               v-model="view"
               variant="default"
@@ -75,6 +75,8 @@
 </template>
 
 <script setup lang="ts">
+import { ShadcnCalendar } from "#components";
+
 const supabase = useSupabaseClient();
 const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();

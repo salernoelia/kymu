@@ -42,10 +42,20 @@ vr-viewer-select-placeholder: "Wähle einen Viewer Typ"
 # patient
 patient: "Patient"
 patient-info: "Patienteninformationen"
+patient-overview: "Patientenübersicht"
 patient-name: "Patientenname"
+patient-diagnosis: "Diagnose"
+patient-diagnosis-details: "Details"
+patient-created-at: "Hinzugefügt"
+patient-search-placeholder: "Suche nach Patienten"
 patient-units: "Trainingspläne"
 patient-description: "Patientenbeschreibung"
 patient-progress: "Fortschritt"
 
 # caregiver
 caregiver: "Betreuer"
+
+#CTA
+download-register: "Patientenregister PDF"
+list-view: "Liste"
+grid-view: "Raster"
