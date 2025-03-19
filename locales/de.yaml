@@ -15,6 +15,7 @@ no-results: "Keine Ergebnisse"
 loading: "Laden..."
 loading-error: "Fehler beim Laden"
 loading-error-retry: "Erneut versuchen"
+details: "Details"
 
 # nav
 home: "Home"
@@ -62,6 +63,11 @@ trained-today: "Heute trainiert"
 activity-overview-title: "Aktivitätsübersicht"
 activity-overview-description: "Hier kannst du die Aktivitäten des Patienten sehen."
 activity-name: "Aktivitätsname"
+
+# training data
+training-data-title: "Übungsdaten"
+feedback: "Feedback"
+progress: "Fortschritt"
 
 # caregiver
 caregiver: "Betreuer"

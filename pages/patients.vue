@@ -75,6 +75,7 @@
 </template>
 
 <script setup lang="ts">
+const supabase = useSupabaseClient();
 const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
 

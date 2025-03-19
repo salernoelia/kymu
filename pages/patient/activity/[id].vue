@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-4 w-full h-full">
     <WidgetsBreadcumbs
       :breadcrumbs="[
         { path: '/patients', translationKey: 'patient-overview-title' },
@@ -13,11 +13,156 @@
         },
       ]"
     />
+    <!-- Header -->
+    <div id="patient-info" class="flex justify-between w-full p-4">
+      <h2>{{ $t("training-data-title") }}</h2>
+      <PrimitivesButton
+        variant="secondary"
+        @click="navigateTo(localePath('/patient/new'))"
+      >
+        {{ $t("download-register") }}
+      </PrimitivesButton>
+    </div>
+
+    <!-- Content container -->
+    <div class="flex flex-row gap-4 w-full h-full">
+      <!-- Entire left side: Activity Data -->
+      <div class="flex-1 flex flex-col gap-4 border rounded p-4 bg-white">
+        <div
+          class="container-header flex flex-row justify-between align-center"
+        >
+          <h2>{{ $t("activity") }}</h2>
+          <PrimitivesButton
+            variant="primary"
+            @click="
+              navigateTo(localePath(`/patient/activity/${route.params.id}`))
+            "
+          >
+            {{ $t("activity-details") }}
+          </PrimitivesButton>
+        </div>
+
+        <div class="flex flex-row justify-between border rounded p-4 bg-white">
+          <div class="flex flex-col gap-2">
+            <h3>{{ $t("monthly-acitivty") }}</h3>
+            <div class="flex flex-col">
+              <h3>14 min.</h3>
+              <p>{{ $t("trained-today") }}</p>
+            </div>
+            <div class="flex flex-col">
+              <h3>14 min.</h3>
+              <p>{{ $t("trained-today") }}</p>
+            </div>
+            <div class="flex flex-col">
+              <h3>14 min.</h3>
+              <p>{{ $t("trained-today") }}</p>
+            </div>
+            <div class="flex flex-col">
+              <h3>14 min.</h3>
+              <p>{{ $t("trained-today") }}</p>
+            </div>
+          </div>
+          <div class="px-4">
+            <UiCalendar
+              v-model="date"
+              :weekday-format="'short'"
+              class="rounded-md"
+            />
+          </div>
+        </div>
+        <!-- left-bottom -->
+        <PrimitivesDivider orientation="horizontal" />
+
+        <h2>Undefined</h2>
+      </div>
+
+      <!-- Entire right side: Training Data -->
+      <div class="flex-grow flex flex-col gap-4 h-full">
+        <!-- Graph Component-->
+        <PrimitivesContainer
+          variant="white"
+          :interactive="false"
+          class="flex-grow"
+        >
+          <!-- Header with title and buttonsw -->
+          <div class="flex justify-between mb-4">
+            <h2>{{ $t("progress") }}</h2>
+            <div class="flex gap-4">
+              <WidgetsTimeSelector v-model="timeView" />
+              <PrimitivesButton
+                variant="primary"
+                @click="
+                  navigateTo(localePath(`/patient/activity/${route.params.id}`))
+                "
+              >
+                {{ $t("details") }}
+              </PrimitivesButton>
+            </div>
+          </div>
+
+          <!-- Content area with stats and graph -->
+          <div class="flex flex-1 gap-4">
+            <!-- left -->
+            <div class="w-1/3 pr-4">
+              <h3>{{ $t("monthly-acitivty") }}</h3>
+              <div class="flex flex-col gap-2 mt-2">
+                <div class="flex flex-col">
+                  <h3>14 min.</h3>
+                  <p>{{ $t("trained-today") }}</p>
+                </div>
+              </div>
+            </div>
+
+            <!-- graph placeholder -->
+            <div class="flex-grow">
+              <PrimitivesContainer
+                variant="white"
+                :interactive="false"
+                class="w-full flex items-center justify-center text-gray-400"
+              >
+                <WidgetsActivityGraph :time-period="timeView" />
+              </PrimitivesContainer>
+            </div>
+          </div>
+        </PrimitivesContainer>
+
+        <!-- Feedback Component -->
+        <PrimitivesContainer
+          variant="white"
+          :interactive="false"
+          class="basis-1/3"
+        >
+          <!-- Header with title and button -->
+          <div class="flex justify-between mb-4">
+            <h2>{{ $t("feedback") }}</h2>
+            <PrimitivesButton
+              variant="primary"
+              @click="
+                navigateTo(localePath(`/patient/activity/${route.params.id}`))
+              "
+            >
+              {{ $t("details") }}
+            </PrimitivesButton>
+          </div>
+
+          <!-- Content area with stats and scale -->
+          <div class="flex flex-1 gap-4">
+            <div>
+              <p>Wohlbefinden</p>
+            </div>
+            <div>
+              <p>Schmerzempfinden</p>
+            </div>
+          </div>
+        </PrimitivesContainer>
+      </div>
+    </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const route = useRoute();
+const timeView = ref("month");
 </script>
 
 <style scoped></style>
