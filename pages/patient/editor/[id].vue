@@ -19,6 +19,12 @@
           ]"
         />
         <div
+          id="patient-info"
+          class="flex justify-between w-full p-4"
+        >
+          <h2>{{ $t("unit-editor-title") }}</h2>
+        </div>
+        <div
           id="exercises"
           class="exercises-container"
         >

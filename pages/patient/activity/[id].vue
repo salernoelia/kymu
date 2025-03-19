@@ -14,12 +14,12 @@
       ]"
     />
     <!-- Header -->
-    <div id="patient-info" class="flex justify-between w-full p-4">
+    <div
+      id="patient-info"
+      class="flex justify-between w-full p-4"
+    >
       <h2>{{ $t("training-data-title") }}</h2>
-      <PrimitivesButton
-        variant="secondary"
-        @click="navigateTo(localePath('/patient/new'))"
-      >
+      <PrimitivesButton variant="secondary">
         {{ $t("download-register") }}
       </PrimitivesButton>
     </div>
@@ -163,6 +163,16 @@
 <script setup lang="ts">
 const route = useRoute();
 const timeView = ref("month");
+const localePath = useLocalePath();
+
+import {
+  type DateValue,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+import { type Ref, ref } from "vue";
+
+const date = ref(today(getLocalTimeZone())) as Ref<DateValue>;
 </script>
 
 <style scoped></style>

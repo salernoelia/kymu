@@ -9,6 +9,12 @@
         },
       ]"
     />
+    <div
+      id="patient-info"
+      class="flex justify-between w-full p-4"
+    >
+      <h2>{{ $t("patient-overview-title") }}</h2>
+    </div>
     <div class="w-full h-full flex flex-row gap-4 overflow-hidden">
       <!-- left -->
       <div
