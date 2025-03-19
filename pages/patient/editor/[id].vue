@@ -13,7 +13,7 @@
               translationKey: 'patient-info',
             },
             {
-              path: `/editor/${route.params.id}`,
+              path: `/patient/editor/${route.params.id}`,
               translationKey: 'unit-editor-title',
             },
           ]"
