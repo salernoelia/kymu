@@ -77,6 +77,7 @@
 <script setup lang="ts">
 const supabase = useSupabaseClient();
 const supabaseUser = useSupabaseUser();
+const supabase = useSupabaseClient();
 const localePath = useLocalePath();
 
 const searchQuery = ref("");
