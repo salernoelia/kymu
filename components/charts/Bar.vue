@@ -1,10 +1,7 @@
 <template>
   <div>
     <h3 class="chart-title">{{ title }}</h3>
-    <div
-      ref="chartContainer"
-      class="chart-container"
-    ></div>
+    <div ref="chartContainer" class="chart-container"></div>
   </div>
 </template>
 
@@ -17,24 +14,24 @@ const props = defineProps({
   data: {
     type: Array as () => { name: string; value: number }[],
     default: () => [
-      { name: "A", value: 10 },
-      { name: "B", value: 20 },
-      { name: "C", value: 15 },
-      { name: "D", value: 25 },
-      { name: "E", value: 18 },
+      { name: "Mo", value: 4 },
+      { name: "Di", value: 5 },
+      { name: "Mi", value: 4.5 },
+      { name: "Do", value: 4 },
+      { name: "Fr", value: 7 },
     ],
   },
   title: {
     type: String,
-    default: "Animated Bar Chart",
+    default: "",
   },
   width: {
     type: Number,
-    default: 600,
+    default: 400,
   },
   height: {
     type: Number,
-    default: 400,
+    default: 200,
   },
   margin: {
     type: Object,
@@ -42,7 +39,7 @@ const props = defineProps({
   },
   barColor: {
     type: String,
-    default: "#4CAF50",
+    default: "#283C7E",
   },
   animationDuration: {
     type: Number,
@@ -74,11 +71,7 @@ const renderChart = () => {
     .range([0, width])
     .padding(0.2);
 
-  const y = d3
-    .scaleLinear()
-    .domain([0, d3.max(props.data, (d: any) => d.value) || 0])
-    .nice()
-    .range([height, 0]);
+  const y = d3.scaleLinear().domain([0, 10]).nice().range([height, 0]);
 
   svg
     .append("g")

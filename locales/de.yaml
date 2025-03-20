@@ -68,6 +68,9 @@ activity-name: "Aktivitätsname"
 training-data-title: "Übungsdaten"
 feedback: "Feedback"
 progress: "Fortschritt"
+fun-feedback: "Wohlbefinden"
+pain-feedback: "Schmerzempfinden"
+delta: "Delta"
 
 # caregiver
 caregiver: "Betreuer"
