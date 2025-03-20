@@ -27,7 +27,7 @@
     <!-- Content container -->
     <div class="w-full h-full flex flex-row gap-4 overflow-hidden">
       <!-- Entire left side: Activity Data -->
-      <div class="flex-1 flex flex-col gap-4 border rounded p-4 bg-white">
+      <div class="flex flex-col w-2/5 gap-4 border rounded p-4 bg-white">
         <div
           class="container-header flex flex-row justify-between align-center"
         >
@@ -77,7 +77,7 @@
       </div>
 
       <!-- Entire right side: Training Data -->
-      <div class="flex-grow flex flex-col gap-4 h-full">
+      <div class="flex flex-col w-3/5 gap-4 h-full">
         <!-- Graph Component-->
         <PrimitivesContainer
           variant="white"
@@ -127,7 +127,10 @@
         </PrimitivesContainer>
 
         <!-- Feedback Component -->
-        <PrimitivesContainer variant="white" :interactive="false">
+        <PrimitivesContainer
+          variant="white"
+          :interactive="false"
+        >
           <!-- Header with title and button -->
           <div class="flex justify-between mb-4">
             <h2>{{ $t("feedback") }}</h2>
