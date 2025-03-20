@@ -527,7 +527,7 @@ export const useEditorStore = defineStore("editor", () => {
                         );
                     }
 
-                    if (!unit && units.value.length > 0) {
+                    if (!unit && units.value.length > 0 && units.value[0]) {
                         unitId = units.value[0].id.toString();
                         unit = units.value[0];
                     }
