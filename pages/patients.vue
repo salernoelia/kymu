@@ -1,13 +1,31 @@
 <template>
-  <div>
+  <div v-if="isLoadingPage">
     <div class="flex justify-between space-x-4 p-4">
       <div class="flex flex-col align-top gap-4 w-1/4">
         <h1 class="text-2xl font-bold">{{ $t("patient-overview") }}</h1>
         <div
-          class="border border-gray-200 mt-2 h-64 flex align-center justify-center rounded-md"
+          class="border border-gray-200 h-64 flex flex-col align-start justify-start gap-2 rounded-md p-4"
         >
           <!-- filtering component -->
-          <p>Filter</p>
+          <h3>Filters</h3>
+          <div class="flex flex-col gap-4">
+            <p>Age {{ sliderAgeValue }}</p>
+            <UiSlider
+              v-model="sliderAgeValue"
+              :min="8"
+              :max="45"
+              :step="1"
+              :class="['w-full']"
+            />
+          </div>
+        </div>
+        <div>
+          <!-- filtering component -->
+          <UiCalendar
+            v-model="date"
+            :weekday-format="'short'"
+            class="rounded-md border w-full"
+          />
         </div>
         <div>
           <!-- sync calendar -->
@@ -15,7 +33,7 @@
       </div>
       <div class="flex flex-col gap-4 w-3/4">
         <div class="flex gap-4 justify-between">
-          <div class="w-72">
+          <div class="max-w-96">
             <PrimitivesSearch
               v-model="searchQuery"
               :placeholder="$t('patient-search-placeholder')"
@@ -72,9 +90,24 @@
       @close="closeDetails"
     />
   </div>
+  <div
+    v-else
+    class="flex items-center justify-center h-full"
+  >
+    <Icon
+      name="svg-spinners:180-ring"
+      size="3rem"
+    />
+  </div>
 </template>
 
 <script setup lang="ts">
+import {
+  type DateValue,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+
 const supabase = useSupabaseClient();
 const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
@@ -83,6 +116,9 @@ const searchQuery = ref("");
 const families = ref<Tables<"families">[]>([]);
 const view = ref("list");
 const selectedPatient = ref(null);
+const date = ref(today(getLocalTimeZone())) as Ref<DateValue>;
+const sliderAgeValue = ref([17]);
+const isLoadingPage = ref(false);
 
 // Filtering basedon query
 const filteredFamilies = computed(() => {
@@ -140,5 +176,6 @@ const loadFamilyData = async () => {
 
 onMounted(async () => {
   await loadFamilyData();
+  isLoadingPage.value = true;
 });
 </script>
