@@ -25,7 +25,7 @@
     </div>
 
     <!-- Content container -->
-    <div class="flex flex-row gap-4 w-full h-full">
+    <div class="w-full h-full flex flex-row gap-4 overflow-hidden">
       <!-- Entire left side: Activity Data -->
       <div class="flex-1 flex flex-col gap-4 border rounded p-4 bg-white">
         <div
@@ -103,7 +103,7 @@
           <!-- Content area with stats and graph -->
           <div class="flex flex-1 gap-4">
             <!-- left -->
-            <div class="w-1/3 pr-4">
+            <div class="pr-4">
               <h3>{{ $t("monthly-acitivty") }}</h3>
               <div class="flex flex-col gap-2 mt-2">
                 <div class="flex flex-col">
@@ -127,11 +127,7 @@
         </PrimitivesContainer>
 
         <!-- Feedback Component -->
-        <PrimitivesContainer
-          variant="white"
-          :interactive="false"
-          class="basis-1/3"
-        >
+        <PrimitivesContainer variant="white" :interactive="false">
           <!-- Header with title and button -->
           <div class="flex justify-between mb-4">
             <h2>{{ $t("feedback") }}</h2>
@@ -146,12 +142,36 @@
           </div>
 
           <!-- Content area with stats and scale -->
-          <div class="flex flex-1 gap-4">
+          <div class="flex justify-between gap-4">
             <div>
-              <p>Wohlbefinden</p>
+              <div class="flex justify-between">
+                <div>
+                  <h3>Chart placeholder</h3>
+                  <p class="opacity-50 font-extralight">
+                    {{ $t("fun-feedback") }}
+                  </p>
+                </div>
+                <div>
+                  <h3>+1.2</h3>
+                  <p class="opacity-50 font-extralight">{{ $t("delta") }}</p>
+                </div>
+              </div>
+              <ChartsBar />
             </div>
             <div>
-              <p>Schmerzempfinden</p>
+              <div class="flex justify-between">
+                <div>
+                  <h3>Chart placeholder</h3>
+                  <p class="opacity-50 font-extralight">
+                    {{ $t("pain-feedback") }}
+                  </p>
+                </div>
+                <div>
+                  <h3>-0.2</h3>
+                  <p class="opacity-50 font-extralight">{{ $t("delta") }}</p>
+                </div>
+              </div>
+              <ChartsBar />
             </div>
           </div>
         </PrimitivesContainer>

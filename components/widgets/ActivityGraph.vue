@@ -21,7 +21,7 @@ const graphData = computed(() => {
 </script>
 
 <template>
-  <div class="w-full h-full">
+  <div class="w-full">
     <div class="text-center">Graph for: {{ timePeriod }}</div>
   </div>
 </template>
