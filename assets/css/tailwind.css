@@ -1,3 +1,52 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+:root {
+  --color-primary: #283c7e;
+  --color-primary-dark: #1f2d5e;
+  --color-primary-light: #3a4f9e;
+
+  --color-secondary: #e0e0e0;
+  --color-secondary-dark: #b0b0b0;
+  --color-secondary-light: #f0f0f0;
+
+  --color-tertiary: #d0d0d0;
+  --color-tertiary-dark: #a0a0a0;
+  --color-tertiary-light: #e0e0e0;
+
+  --color-header: #f0f0f0;
+  --color-header-dark: #d0d0d0;
+  --color-header-light: #f8f8f8;
+
+  --color-text: #333;
+  --color-text-dark: #222;
+  --color-text-light: #444;
+
+  --color-gray-100: #f8f9fa;
+  --color-gray-200: #e9ecef;
+  --color-gray-300: #dee2e6;
+  --color-gray-400: #ced4da;
+  --color-gray-500: #adb5bd;
+  --color-gray-600: #868e96;
+  --color-gray-700: #495057;
+  --color-gray-800: #343a40;
+  --color-gray-900: #212529;
+}
+
+@layer base {
+  :root {
+    /* ... */
+    --vis-tooltip-background-color: none !important;
+    --vis-tooltip-border-color: none !important;
+    --vis-tooltip-text-color: none !important;
+    --vis-tooltip-shadow-color: none !important;
+    --vis-tooltip-backdrop-filter: none !important;
+    --vis-tooltip-padding: none !important;
+
+    --vis-primary-color: var(--primary);
+    /* change to any hsl value you want */
+    --vis-secondary-color: 226 81% 40%;
+    --vis-text-color: var(--muted-foreground);
+  }
+}

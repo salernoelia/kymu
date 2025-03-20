@@ -20,7 +20,7 @@
         />
         <div
           id="patient-info"
-          class="flex justify-between w-full p-4"
+          class="flex justify-between w-full p-1"
         >
           <h2>{{ $t("unit-editor-title") }}</h2>
         </div>

@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="flex justify-between space-x-4">
-      <div class="flex flex-col align-top basis-1/4">
+    <div class="flex justify-between space-x-4 p-4">
+      <div class="flex flex-col align-top gap-4 w-1/4">
         <h1 class="text-2xl font-bold">{{ $t("patient-overview") }}</h1>
         <div
           class="border border-gray-200 mt-2 h-64 flex align-center justify-center rounded-md"
@@ -13,8 +13,8 @@
           <!-- sync calendar -->
         </div>
       </div>
-      <div class="basis-3/4">
-        <div class="flex space-x-4 justify-between">
+      <div class="flex flex-col gap-4 w-3/4">
+        <div class="flex gap-4 justify-between">
           <div class="w-72">
             <PrimitivesSearch
               v-model="searchQuery"
@@ -23,7 +23,7 @@
             />
           </div>
 
-          <div class="flex space-x-4">
+          <div class="flex gap-4">
             <PrimitivesButton
               variant="primary"
               @click="navigateTo(localePath('/patient/new'))"
@@ -47,7 +47,7 @@
             />
           </div>
         </div>
-        <div class="mt-4">
+        <div>
           <!-- views -->
           <div v-if="view === 'list'">
             <WidgetsPatientList

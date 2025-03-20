@@ -969,11 +969,16 @@ export const useEditorStore = defineStore("editor", () => {
                 );
             }
 
+            console.log("sourceIndex", sourceIndex);
+            console.log("newPosition", newPosition);
+
             if (isSameUnit) {
                 const adjustedPosition = newPosition > sourceIndex
                     ? newPosition - 1
                     : newPosition;
                 const workingArray = [...targetExercisesIndex];
+
+                console.log("adjustedPosition", adjustedPosition);
 
                 workingArray.splice(sourceIndex, 1);
                 workingArray.splice(adjustedPosition, 0, exerciseId);
@@ -1003,8 +1008,12 @@ export const useEditorStore = defineStore("editor", () => {
                     Math.max(0, newPosition),
                     targetExercisesIndex.length,
                 );
+                console.log("safeNewPosition", safeNewPosition);
 
                 targetExercisesIndex.splice(safeNewPosition, 0, exerciseId);
+
+                console.log("sourceExercisesIndex", sourceExercisesIndex);
+                console.log("targetExercisesIndex", targetExercisesIndex);
 
                 await supabase
                     .from("units")

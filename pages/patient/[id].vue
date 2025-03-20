@@ -1,5 +1,8 @@
 <template>
-  <div class="flex flex-col gap-4 w-full h-full">
+  <div
+    class="flex flex-col gap-4 w-full h-full"
+    v-if="isLoadingPage"
+  >
     <WidgetsBreadcumbs
       :breadcrumbs="[
         { path: '/patients', translationKey: 'patient-overview-title' },
@@ -11,20 +14,18 @@
     />
     <div
       id="patient-info"
-      class="flex justify-between w-full p-4"
+      class="flex justify-between w-full p-1"
     >
       <h2>{{ $t("patient-overview-title") }}</h2>
     </div>
     <div class="w-full h-full flex flex-row gap-4 overflow-hidden">
       <!-- left -->
-      <div
-        class="flex flex-col gap-4 w-full h-full"
-        v-if="f"
-      >
+      <div class="flex flex-col gap-4 w-full h-full">
         <!-- top-reft -->
         <div
           id="patient-info"
           class="flex flex-col w-full h-1/2 border rounded p-4 bg-white"
+          v-if="f"
         >
           <h2>{{ $t("patient-info") }}</h2>
           <p>
@@ -43,10 +44,10 @@
         <div
           id="units"
           class="flex flex-col border rounded p-4 w-full h-1/2 bg-white gap-4"
-          v-if="f.units && f.units.length > 0"
         >
           <div
             class="container-header flex flex-row justify-between align-center"
+            v-if="f && f.units && f.units.length > 0"
           >
             <h2>{{ $t("patient-units") }}</h2>
             <PrimitivesButton
@@ -60,7 +61,7 @@
           </div>
 
           <WidgetsVerticalCarousell
-            v-if="f.units && f.units.length > 0"
+            v-if="f && f.units && f.units.length > 0"
             @current-slide="
               (i) =>
                 f?.units?.[i]?.id &&
@@ -75,7 +76,7 @@
 
       <!-- right -->
       <div
-        class="flex flex-col w-full h-full border rounded p-4 bg-white gap-4"
+        class="flex flex-col w-full h-full border rounded p-4 bg-white gap-4 overflow-hidden"
       >
         <!-- right-top -->
         <div
@@ -119,11 +120,26 @@
           />
         </div>
         <!-- right-bottom -->
-        <PrimitivesDivider orientation="horizontal" />
-
-        <h2>Undefined</h2>
+        <div class="h-full flex flex-col gap-4">
+          <PrimitivesDivider orientation="horizontal" />
+          <AreaChart
+            :data="data"
+            index="name"
+            :categories="['total', 'predicted']"
+            class="w-full h-[250px]"
+          />
+        </div>
       </div>
     </div>
+  </div>
+  <div
+    v-else
+    class="flex items-center justify-center h-full"
+  >
+    <Icon
+      name="svg-spinners:180-ring"
+      size="3rem"
+    />
   </div>
 </template>
 
@@ -133,6 +149,7 @@ import {
   getLocalTimeZone,
   today,
 } from "@internationalized/date";
+import { AreaChart } from "@/components/ui/chart-area";
 
 const route = useRoute();
 const localePath = useLocalePath();
@@ -140,6 +157,7 @@ const supabase = useSupabaseClient<Database>();
 import type { QueryData } from "@supabase/supabase-js";
 
 const date = ref(today(getLocalTimeZone())) as Ref<DateValue>;
+const isLoadingPage = ref(false);
 
 const slidesFromUnits = (units: Tables<"units">[]): Slide[] => {
   return units.map((unit: Tables<"units">) => {
@@ -181,6 +199,7 @@ const loadPatientData = async () => {
 
 onMounted(async () => {
   await loadPatientData();
+  isLoadingPage.value = true;
 });
 
 const barChartData = ref([
@@ -190,6 +209,44 @@ const barChartData = ref([
   { name: "Apr", value: 78 },
   { name: "May", value: 42 },
 ]);
+
+const data = [
+  {
+    name: "Jan",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "Feb",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "Mar",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "Apr",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "May",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "Jun",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+  {
+    name: "Jul",
+    total: Math.floor(Math.random() * 2000) + 500,
+    predicted: Math.floor(Math.random() * 2000) + 500,
+  },
+];
 </script>
 
 <style scoped></style>

@@ -16,7 +16,7 @@
     <!-- Header -->
     <div
       id="patient-info"
-      class="flex justify-between w-full p-4"
+      class="flex justify-between w-full p-1"
     >
       <h2>{{ $t("training-data-title") }}</h2>
       <PrimitivesButton variant="secondary">
