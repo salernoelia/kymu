@@ -20,7 +20,7 @@
     "@types/three": "^0.174.0",
     "@vite-pwa/nuxt": "^0.10.6",
     "@vueuse/nuxt": "^12.5.0",
-    "nuxt": "^3.8.2",
+    "nuxt": "^3.16.1",
     "sass-embedded": "^1.83.4",
     "shadcn-nuxt": "^1.0.3",
     "typescript": "^5.8.2",
