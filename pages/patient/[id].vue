@@ -3,7 +3,7 @@
     class="flex flex-col gap-4 w-full h-full"
     v-if="isLoadingPage"
   >
-    <WidgetsBreadcumbs
+    <NavigationBreadcrumbs
       :breadcrumbs="[
         { path: '/patients', translationKey: 'patient-overview-title' },
         {

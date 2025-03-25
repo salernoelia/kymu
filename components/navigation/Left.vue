@@ -4,11 +4,12 @@
     id="sidebar"
   >
     <div class="text-xl font-semibold">
-      <NuxtImg
-        style="width: 3rem; margin-top: 0.5rem"
-        src="logo/logo_kymu_blue 1.png"
-      >
-      </NuxtImg>
+      <nuxt-link :to="localePath('/')">
+        <NuxtImg
+          style="width: 3rem; margin-top: 0.5rem"
+          src="logo/logo_kymu_blue 1.png"
+        />
+      </nuxt-link>
     </div>
 
     <!-- ============= UPPER PART =============== -->
@@ -20,7 +21,7 @@
           style="margin: 0.25rem 0 1rem"
         />
         <nuxt-link
-          :to="localePath('/')"
+          :to="localePath('/dashboard')"
           class="link"
         >
           <!-- <HomeOutlined class="mr-3" /> -->

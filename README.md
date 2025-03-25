@@ -140,7 +140,7 @@ const barChartData = ref([
 ## Breadcrumbs
 
 ```vue
-<WidgetsBreadcumbs
+<NavigationBreadcrumbs
   :breadcrumbs="[
     { path: '/patients', translationKey: 'patient-overview-title' },
     {

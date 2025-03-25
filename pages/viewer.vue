@@ -6,7 +6,7 @@
     <h3>
       {{ $t("vr-viewer-description") }}
     </h3>
-    <WidgetsPlayer id="player" />
+    <VRStreamPlayer id="player" />
   </div>
 </template>
 

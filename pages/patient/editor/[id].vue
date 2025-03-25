@@ -5,7 +5,7 @@
   >
     <div class="editor-container">
       <div class="editor-container">
-        <WidgetsBreadcumbs
+        <NavigationBreadcrumbs
           :breadcrumbs="[
             { path: '/patients', translationKey: 'patient-overview-title' },
             {

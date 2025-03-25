@@ -33,7 +33,7 @@ watch(user, (newUser) => {
 
 <template>
   <div class="parent">
-    <WidgetsNavigationLeft
+    <NavigationLeft
       :isActive="isActive"
       icon="HomeOutlined"
       text="Home"

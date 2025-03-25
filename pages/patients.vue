@@ -68,13 +68,13 @@
         <div>
           <!-- views -->
           <div v-if="view === 'list'">
-            <WidgetsPatientList
+            <PatientList
               :families="filteredFamilies"
               @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
             />
           </div>
           <div v-else-if="view === 'grid'">
-            <WidgetsPatientGrid
+            <PatientGrid
               :families="filteredFamilies"
               @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
             />
@@ -84,7 +84,7 @@
     </div>
 
     <!-- popup -->
-    <WidgetsPatientDetails
+    <PatientDetails
       v-if="selectedPatient"
       :patient="selectedPatient"
       @close="closeDetails"

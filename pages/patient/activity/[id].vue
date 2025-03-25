@@ -1,6 +1,6 @@
 <template>
   <div class="flex flex-col gap-4 w-full h-full">
-    <WidgetsBreadcumbs
+    <NavigationBreadcrumbs
       :breadcrumbs="[
         { path: '/patients', translationKey: 'patient-overview-title' },
         {
@@ -120,7 +120,7 @@
                 :interactive="false"
                 class="w-full flex items-center justify-center text-gray-400"
               >
-                <WidgetsActivityGraph :time-period="timeView" />
+                <ChartsActivity :time-period="timeView" />
               </PrimitivesContainer>
             </div>
           </div>
