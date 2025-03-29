@@ -151,6 +151,34 @@ const handleKeyDown = (event: KeyboardEvent) => {
     console.log("calculateVectorAngle");
     calculateVectorAngle();
   }
+
+  if (event.key === "c") {
+    saved_wrist_right_A.value = {
+      x: 0,
+      y: 0,
+      z: 0,
+      visibility: 0,
+    };
+    saved_wrist_right_B.value = {
+      x: 0,
+      y: 0,
+      z: 0,
+      visibility: 0,
+    };
+    saved_elbow_right.value = {
+      x: 0,
+      y: 0,
+      z: 0,
+      visibility: 0,
+    };
+    resultAngle.value = 0;
+    savedNormalizedLandmarks.value = null;
+    console.log("cleanup done");
+  }
+
+  if (event.key === "d") {
+    window.location.reload();
+  }
 };
 
 // Remove event listener when component is unmounted
