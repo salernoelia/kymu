@@ -8,8 +8,6 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import Divider from "~/components/primitives/Divider.vue";
-</script>
+<script setup lang="ts"></script>
 
 <style scoped></style>
