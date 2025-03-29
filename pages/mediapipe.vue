@@ -1,25 +1,29 @@
 <template>
   <div class="pose">
-    <p>Pose demo</p>
-    <!-- <p>Elbow Right: {{ elbow_right }}</p>
-    <p>Wrist Right: {{ wrist_right }}</p> -->
-    <p>saved wrist A: {{ saved_wrist_right_A }}</p>
-    <p>saved wrist B: {{ saved_wrist_right_B }}</p>
-    <p>saved elbow: {{ saved_elbow_right }}</p>
+    <p>Current Angle: {{ calculatedAngle }}</p>
+    <p>Result Angle: {{ savedAngle }}</p>
 
-    <p>Result Angle: {{ resultAngle }}</p>
+    <p>ROM Combinations</p>
+    <select
+      name="select-rom-combination"
+      @change="
+        setROMCombination(
+          ($event.target as HTMLSelectElement)
+            ?.value as keyof typeof ROMCombinations
+        )
+      "
+    >
+      <option
+        v-for="(value, key) in ROMCombinations"
+        :key="key"
+        :value="key"
+      >
+        {{ $t(key) }}
+      </option>
+    </select>
+
     <div class="flex flex-row w-full">
-      <div class="angle-visualization-container w-1/2">
-        <h2>Angle Visualization</h2>
-        <ThreeAngleVisualization
-          :pivot-point="saved_elbow_right"
-          :point-a="saved_wrist_right_A"
-          :point-b="saved_wrist_right_B"
-          height="400px"
-          width="400px"
-        />
-      </div>
-      <div class="container">
+      <div class="flex flex-col w-full items-center">
         <video
           class="input_video"
           ref="source"
@@ -52,126 +56,49 @@ const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
 const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
-const resultAngle = ref(0);
 const savedNormalizedLandmarks = ref<NormalizedLandmarkList | null>(null);
 
-// Update these computed properties to make debugging easier
-const elbow_right = computed(() => {
-  return mediapipeResults.value?.poseWorldLandmarks?.[14];
-});
+const ROMCombinations = {
+  // neck_flexion: { pivot: 11, movable: 0 },
+  shoulder_abduction_left: { pivot: 11, movable: 13 },
+  shoulder_abduction_right: { pivot: 12, movable: 14 },
+  elbow_flexion_left: { pivot: 13, movable: 15 },
+  elbow_flexion_right: { pivot: 14, movable: 16 },
+  wrist_flexion_left: { pivot: 15, movable: 17 },
+  wrist_flexion_right: { pivot: 16, movable: 18 },
+  hip_flexion_left: { pivot: 23, movable: 25 },
+  hip_flexion_right: { pivot: 24, movable: 26 },
+  knee_flexion_left: { pivot: 25, movable: 27 },
+  knee_flexion_right: { pivot: 26, movable: 28 },
+  ankle_flexion_left: { pivot: 27, movable: 31 },
+  ankle_flexion_right: { pivot: 28, movable: 32 },
+};
 
-const wrist_right = computed(() => {
-  return mediapipeResults.value?.poseWorldLandmarks?.[16];
-});
+const calculatedAngle = ref(0);
+const savedAngle = ref(0);
 
-const saved_wrist_right_A = ref({
-  x: 0,
-  y: 0,
-  z: 0,
-  visibility: 0,
-});
+const pivotIndex = ref(14);
+const pointAIndex = ref(16);
 
-const saved_wrist_right_B = ref({
-  x: 0,
-  y: 0,
-  z: 0,
-  visibility: 0,
-});
-
-const saved_elbow_right = ref({
-  x: 0,
-  y: 0,
-  z: 0,
-  visibility: 0,
-});
-
-const calculateVectorAngle = () => {
-  if (
-    saved_elbow_right.value &&
-    wrist_right.value &&
-    wrist_right.value.visibility
-  ) {
-    saved_wrist_right_B.value = {
-      x: wrist_right.value.x,
-      y: wrist_right.value.y,
-      z: wrist_right.value.z,
-      visibility: wrist_right.value.visibility,
-    };
-    const { angleDeg } = useCalculateVectorAngle(
-      saved_elbow_right.value,
-      saved_wrist_right_A.value,
-      wrist_right.value
-    );
-    resultAngle.value = angleDeg;
-    console.log("Angle between vectors:", angleDeg);
-    console.log(
-      "calculation done:",
-      saved_elbow_right.value,
-      saved_wrist_right_A.value,
-      saved_wrist_right_B.value
-    );
-  } else {
-    console.log(
-      "Elbow or wrist landmark not found",
-      elbow_right,
-      wrist_right,
-      saved_wrist_right_A
-    );
-  }
+const setROMCombination = (combination: keyof typeof ROMCombinations) => {
+  const { pivot, movable } = ROMCombinations[combination];
+  pivotIndex.value = pivot;
+  pointAIndex.value = movable;
 };
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === "a") {
-    if (
-      wrist_right.value &&
-      wrist_right.value.visibility &&
-      elbow_right.value &&
-      elbow_right.value.visibility
-    ) {
-      saved_wrist_right_A.value = {
-        x: wrist_right.value.x,
-        y: wrist_right.value.y,
-        z: wrist_right.value.z,
-        visibility: wrist_right.value.visibility,
-      };
-
-      saved_elbow_right.value = {
-        x: elbow_right.value.x,
-        y: elbow_right.value.y,
-        z: elbow_right.value.z,
-        visibility: elbow_right.value.visibility,
-      };
-
-      savedNormalizedLandmarks.value =
-        mediapipeResults.value?.poseLandmarks ?? null;
-    }
+    savedNormalizedLandmarks.value =
+      mediapipeResults.value?.poseLandmarks ?? null;
   }
 
   if (event.key === "b") {
     console.log("calculateVectorAngle");
-    calculateVectorAngle();
+    savedAngle.value = calculatedAngle.value;
   }
 
   if (event.key === "c") {
-    saved_wrist_right_A.value = {
-      x: 0,
-      y: 0,
-      z: 0,
-      visibility: 0,
-    };
-    saved_wrist_right_B.value = {
-      x: 0,
-      y: 0,
-      z: 0,
-      visibility: 0,
-    };
-    saved_elbow_right.value = {
-      x: 0,
-      y: 0,
-      z: 0,
-      visibility: 0,
-    };
-    resultAngle.value = 0;
+    calculatedAngle.value = 0;
     savedNormalizedLandmarks.value = null;
     console.log("cleanup done");
   }
@@ -204,7 +131,10 @@ onMounted(async () => {
       landmarkContainer.value,
       loadingCanvas,
       mediapipeResults,
-      savedNormalizedLandmarks
+      savedNormalizedLandmarks,
+      pivotIndex,
+      pointAIndex,
+      calculatedAngle
     ).setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
