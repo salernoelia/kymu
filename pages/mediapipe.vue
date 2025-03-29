@@ -42,11 +42,13 @@ const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
 const resultAngle = ref(0);
 
+// Update these computed properties to make debugging easier
 const elbow_right = computed(() => {
-  return mediapipeResults.value?.poseLandmarks?.[14];
+  return mediapipeResults.value?.poseWorldLandmarks?.[14];
 });
+
 const wrist_right = computed(() => {
-  return mediapipeResults.value?.poseLandmarks?.[16];
+  return mediapipeResults.value?.poseWorldLandmarks?.[16];
 });
 
 const saved_wrist_right_A = ref({

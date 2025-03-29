@@ -87,7 +87,11 @@ export class PoseService extends Camera {
         this.pipe.onResults((results) => {
             this.render(results);
             if (isRef(this.mediapipeResults)) {
-                this.mediapipeResults.value = results;
+                // Make sure poseWorldLandmarks is included in the results
+                this.mediapipeResults.value = {
+                    ...results,
+                    poseWorldLandmarks: results.poseWorldLandmarks,
+                };
             } else {
                 console.error("mediapipeResults is not a Vue ref!");
             }

@@ -1,12 +1,15 @@
-export const useCalculateVectorAngle = (
-    pivot: { x: number; y: number; z: number },
-    pointA: { x: number; y: number; z: number },
-    pointB: { x: number; y: number; z: number },
-) => {
-    //   const pivot = { x: 0, y: 0, z: 0 };
-    //   const pointA = { x: 1, y: 0, z: 0 };
-    //   const pointB = { x: 0, y: 1, z: 0 };
+// Add type definition
+interface Vector3 {
+    x: number;
+    y: number;
+    z: number;
+}
 
+export const useCalculateVectorAngle = (
+    pivot: Vector3,
+    pointA: Vector3,
+    pointB: Vector3,
+) => {
     // Calculate vector from pivot to a point
     const vectorFromPivot = (point: Vector3, pivot: Vector3) => ({
         x: point.x - pivot.x,
@@ -28,8 +31,11 @@ export const useCalculateVectorAngle = (
     const magV = magnitude(v);
     const magW = magnitude(w);
 
+    // Avoid division by zero and handle precision issues
+    const cosTheta = Math.min(Math.max(dot / (magV * magW), -1), 1);
+
     // Calculate angle (in radians then convert to degrees)
-    const angleRad = Math.acos(dot / (magV * magW));
+    const angleRad = Math.acos(cosTheta);
     const angleDeg = angleRad * (180 / Math.PI);
 
     return {
