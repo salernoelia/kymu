@@ -11,8 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { useVectorAngleVisualization } from "~/composables/useVectorAngleVisualization";
-
 interface Point {
   x: number;
   y: number;
@@ -44,7 +42,6 @@ const {
   resetScene,
 } = useVectorAngleVisualization();
 
-// Check if we have all the required points with good visibility
 const hasValidPoints = computed(() => {
   return (
     props.pivotPoint &&
@@ -57,16 +54,12 @@ const hasValidPoints = computed(() => {
   );
 });
 
-// Watch for changes in the input points and re-render when they change
 watch(
   () => [props.pivotPoint, props.pointA, props.pointB],
   async () => {
     if (hasValidPoints.value) {
-      // Wait for DOM update if needed
       await nextTick();
-      // Reset the scene before visualizing to prevent accumulation of objects
       resetScene();
-      // Visualize the angle with the new points
       visualizeAngle(props.pivotPoint, props.pointA, props.pointB);
     }
   },
@@ -74,7 +67,7 @@ watch(
 );
 
 onMounted(async () => {
-  await nextTick(); // Make sure the canvas is in the DOM
+  await nextTick();
   initVisualization();
 
   if (hasValidPoints.value) {

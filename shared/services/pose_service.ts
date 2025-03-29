@@ -3,51 +3,6 @@ import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
 import type { Options, Results } from "@mediapipe/pose";
 import { Pose, POSE_CONNECTIONS } from "@mediapipe/pose";
 
-export class LogService {
-    // delay_log_last_at
-    private last_delay_log_at = 0;
-
-    public delay_log(delay: number, ...args: (string | number | object)[]) {
-        const now = Math.floor(Date.now() / 1000);
-        if (this.last_delay_log_at < now) {
-            this.last_delay_log_at = now + delay;
-            console.log(now, args);
-        }
-    }
-
-    public static debug_log(...args: (string | number | object)[]) {
-        if (import.meta.env.VITE_NODE_ENV === "development") {
-            console.log("[DEBUG]", args);
-        }
-    }
-
-    public debug_log(...args: (string | number | object)[]) {
-        if (import.meta.env.VITE_NODE_ENV === "development") {
-            console.log("[DEBUG]", args);
-        }
-    }
-
-    public static trace_log(...args: (string | number | object)[]) {
-        if (import.meta.env.VITE_NODE_ENV === "development") {
-            console.trace("[TRACE]", args);
-        }
-    }
-
-    public trace_log(...args: (string | number | object)[]) {
-        if (import.meta.env.VITE_NODE_ENV === "development") {
-            console.trace("[TRACE]", args);
-        }
-    }
-
-    public static error_log(...args: (string | number | object | unknown)[]) {
-        console.error("[ERROR]", args);
-    }
-
-    public error_log(...args: (string | number | object | unknown)[]) {
-        console.error("[ERROR]", args);
-    }
-}
-
 export class PoseService extends Camera {
     private readonly pipe = new Pose({
         locateFile: (file) =>
@@ -55,7 +10,6 @@ export class PoseService extends Camera {
     });
 
     private readonly ctx: CanvasRenderingContext2D;
-    private logService = new LogService();
 
     constructor(
         public readonly canvas: HTMLCanvasElement,
@@ -114,7 +68,6 @@ export class PoseService extends Camera {
         // }
         if (this.loadingCanvas.value) {
             this.loadingCanvas.value = false;
-            this.logService.debug_log("this.loadingCanvas.value is change.");
         }
 
         const { width, height } = this.canvas;

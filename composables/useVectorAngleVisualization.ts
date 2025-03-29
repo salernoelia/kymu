@@ -1,6 +1,5 @@
 import * as THREE from "three";
 import { OrbitControls } from "three/examples/jsm/controls/OrbitControls.js";
-import { onMounted, onUnmounted, ref } from "vue";
 
 interface Point {
     x: number;
@@ -41,7 +40,6 @@ export const useVectorAngleVisualization = () => {
         };
     };
 
-    // Create visualization elements
     const createVector = (
         start: Point,
         end: Point,
@@ -78,7 +76,6 @@ export const useVectorAngleVisualization = () => {
         let startAngle = Math.atan2(v1.y, v1.x);
         let endAngle = Math.atan2(v2.y, v2.x);
 
-        // Ensure we're drawing the smaller angle
         if (Math.abs(endAngle - startAngle) > Math.PI) {
             if (endAngle > startAngle) {
                 startAngle += 2 * Math.PI;
@@ -198,16 +195,13 @@ export const useVectorAngleVisualization = () => {
     const setupScene = () => {
         if (!canvasRef.value) return;
 
-        // Create scene
         scene = new THREE.Scene();
         scene.background = new THREE.Color(0x111111);
 
-        // Get canvas dimensions
         const width = canvasRef.value.clientWidth;
         const height = canvasRef.value.clientHeight;
         const aspectRatio = width / height;
 
-        // Create orthographic camera for 2D view
         const size = 1;
         camera = new THREE.OrthographicCamera(
             -size * aspectRatio,
@@ -220,7 +214,6 @@ export const useVectorAngleVisualization = () => {
         camera.position.set(0, 0, 5);
         camera.lookAt(0, 0, 0);
 
-        // Create renderer
         renderer = new THREE.WebGLRenderer({
             canvas: canvasRef.value,
             antialias: true,
@@ -236,17 +229,14 @@ export const useVectorAngleVisualization = () => {
         controls.update();
     };
 
-    // New function to properly clear scene
     const resetScene = () => {
         if (!scene) return;
 
-        // Properly dispose of all objects in the scene
         while (scene.children.length > 0) {
             const object = scene.children[0];
             if (!object) continue;
             scene.remove(object);
 
-            // Properly dispose of geometries and materials
             if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
                 if (object.geometry) {
                     object.geometry.dispose();
@@ -267,7 +257,6 @@ export const useVectorAngleVisualization = () => {
                 }
                 object.material.dispose();
             } else if (object instanceof THREE.Group) {
-                // For groups, we need to recursively dispose their children
                 object.traverse((child) => {
                     if (
                         child instanceof THREE.Mesh ||
@@ -292,7 +281,6 @@ export const useVectorAngleVisualization = () => {
     const visualizeAngle = (pivot: Point, pointA: Point, pointB: Point) => {
         if (!scene || !camera || !renderer) return;
 
-        // Scale points for better visualization
         const scaleFactor = 1;
         const scaledPivot = {
             x: pivot.x * scaleFactor,
@@ -330,10 +318,8 @@ export const useVectorAngleVisualization = () => {
         const angleDeg = angleRad * (180 / Math.PI);
         angleValue.value = angleDeg;
 
-        // Add grid for reference
         scene.add(addCircularGrid(scaledPivot));
 
-        // Add pivot point
         const pivotSphere = new THREE.Mesh(
             new THREE.SphereGeometry(0.03),
             new THREE.MeshBasicMaterial({ color: 0xffffff }),
@@ -341,27 +327,21 @@ export const useVectorAngleVisualization = () => {
         pivotSphere.position.set(scaledPivot.x, scaledPivot.y, scaledPivot.z);
         scene.add(pivotSphere);
 
-        // Add vectors
-        scene.add(createVector(scaledPivot, scaledPointA, 0xff0000)); // Red vector for point A
-        scene.add(createVector(scaledPivot, scaledPointB, 0x00ff00)); // Green vector for point B
+        scene.add(createVector(scaledPivot, scaledPointA, 0xff0000));
+        scene.add(createVector(scaledPivot, scaledPointB, 0x00ff00));
 
-        // Add angle arc
         scene.add(createAngleArc(scaledPivot, v, w, angleRad, 0xffff00));
 
-        // Add angle label
         scene.add(createAngleLabel(scaledPivot, angleDeg));
 
-        // Center camera on pivot
         camera.position.set(scaledPivot.x, scaledPivot.y, 5 + scaledPivot.z);
         camera.lookAt(scaledPivot.x, scaledPivot.y, scaledPivot.z);
 
-        // Update controls target
         if (controls) {
             controls.target.set(scaledPivot.x, scaledPivot.y, scaledPivot.z);
             controls.update();
         }
 
-        // Render scene
         renderer.render(scene, camera);
     };
 
@@ -390,7 +370,6 @@ export const useVectorAngleVisualization = () => {
             camera.updateProjectionMatrix();
         }
 
-        // Update renderer
         renderer.setSize(width, height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
     };
@@ -414,7 +393,6 @@ export const useVectorAngleVisualization = () => {
             renderer.dispose();
         }
 
-        // Reset scene before cleanup
         resetScene();
 
         window.removeEventListener("resize", resizeHandler);
@@ -426,6 +404,6 @@ export const useVectorAngleVisualization = () => {
         initVisualization,
         cleanupVisualization,
         visualizeAngle,
-        resetScene, // Expose resetScene method
+        resetScene,
     };
 };

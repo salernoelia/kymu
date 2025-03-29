@@ -42,14 +42,13 @@
 </template>
 
 <script setup lang="ts">
-import { PoseService, LogService } from "~/shared/services/pose_service";
+import { PoseService } from "~/shared/services/pose_service";
 import type { Results } from "@mediapipe/pose";
 import { set } from "@vueuse/core";
 
 const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
-const logService = new LogService();
 const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
 const resultAngle = ref(0);
@@ -163,9 +162,6 @@ const canvasHeight = computed(() => {
 });
 
 onMounted(async () => {
-  logService.debug_log("onMounted");
-  logService.debug_log("canvasWidth", canvasWidth);
-  logService.debug_log("canvasHeight", canvasHeight);
   if (canvas.value && source.value && landmarkContainer.value) {
     await new PoseService(
       canvas.value,
@@ -185,10 +181,6 @@ onMounted(async () => {
     });
   }
   window.addEventListener("keydown", handleKeyDown);
-});
-
-onActivated(() => {
-  logService.debug_log("onActivated");
 });
 </script>
 
