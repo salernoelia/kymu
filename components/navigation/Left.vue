@@ -32,7 +32,7 @@
           <!-- {{ $t("home") }} -->
         </nuxt-link>
         <nuxt-link
-          :to="localePath('/viewer')"
+          :to="localePath('/rom')"
           class="link"
         >
           <!-- <HomeOutlined class="mr-3" /> -->
