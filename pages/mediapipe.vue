@@ -1,30 +1,42 @@
 <template>
   <div class="pose">
-    <h1>Pose demo</h1>
-    <!-- <h1>Elbow Right: {{ elbow_right }}</h1>
-    <h1>Wrist Right: {{ wrist_right }}</h1> -->
-    <h1>saved wrist A: {{ saved_wrist_right_A }}</h1>
-    <h1>saved wrist B: {{ saved_wrist_right_B }}</h1>
-    <h1>saved elbow: {{ saved_elbow_right }}</h1>
+    <p>Pose demo</p>
+    <!-- <p>Elbow Right: {{ elbow_right }}</p>
+    <p>Wrist Right: {{ wrist_right }}</p> -->
+    <p>saved wrist A: {{ saved_wrist_right_A }}</p>
+    <p>saved wrist B: {{ saved_wrist_right_B }}</p>
+    <p>saved elbow: {{ saved_elbow_right }}</p>
 
-    <h1>Result Angle: {{ resultAngle }}</h1>
-    <div class="container">
-      <video
-        class="input_video"
-        ref="source"
-        v-show="false"
-      ></video>
-      <canvas
-        class="output_canvas"
-        :class="{ loading_canvas: loadingCanvas }"
-        :width="canvasWidth"
-        :height="canvasHeight"
-        ref="canvas"
-      ></canvas>
-      <div
-        class="landmark-grid-container"
-        ref="landmarkContainer"
-      ></div>
+    <p>Result Angle: {{ resultAngle }}</p>
+    <div class="flex flex-row w-full">
+      <div class="angle-visualization-container w-1/2">
+        <h2>Angle Visualization</h2>
+        <ThreeAngleVisualization
+          :pivot-point="saved_elbow_right"
+          :point-a="saved_wrist_right_A"
+          :point-b="saved_wrist_right_B"
+          height="400px"
+          width="400px"
+        />
+      </div>
+      <div class="container">
+        <video
+          class="input_video"
+          ref="source"
+          v-show="false"
+        ></video>
+        <canvas
+          class="output_canvas"
+          :class="{ loading_canvas: loadingCanvas }"
+          :width="canvasWidth"
+          :height="canvasHeight"
+          ref="canvas"
+        ></canvas>
+        <div
+          class="landmark-grid-container"
+          ref="landmarkContainer"
+        ></div>
+      </div>
     </div>
   </div>
 </template>
