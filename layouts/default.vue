@@ -15,6 +15,10 @@ onMounted(async () => {
 });
 
 const fetchTherapist = async () => {
+  if (!user.value) {
+    console.error("User not logged in");
+    return;
+  }
   const { data, error } = await client
     .from("therapists")
     .select("first_name, last_name")

@@ -37,7 +37,7 @@ const getTabClasses = (tabValue: string) => {
     "bg-white": isActive,
     border: isActive,
     "text-black": isActive,
-    "text-gray-500": !isActive,
+    "text-gray-700": !isActive,
     "hover:bg-gray-100": !isActive,
   };
 };

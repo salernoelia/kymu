@@ -60,13 +60,13 @@ button#gather {
 .icon-single {
   width: 1.5rem;
   height: 1.5rem;
-  background-color: var(--color-gray-600);
-  color: var(--color-gray-600);
+  background-color: var(--color-Gray-600);
+  color: var(--color-Gray-600);
   transition: all 0.3s;
 }
 
 .icon-single:hover {
-  background-color: var(--color-gray-900);
+  background-color: var(--color-Gray-900);
   color: rgb(0, 0, 0);
 }
 
@@ -187,15 +187,6 @@ video {
     --chart-3: 30 80% 55%;
     --chart-4: 280 65% 60%;
     --chart-5: 340 75% 55%;
-  }
-}
-
-@layer base {
-  * {
-    @apply border-border;
-  }
-  body {
-    @apply bg-background text-foreground;
   }
 }
 

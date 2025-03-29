@@ -43,16 +43,16 @@
 
           <div class="flex gap-4">
             <PrimitivesButton
+              variant="outline"
+              @click="navigateTo(localePath('/patient/new'))"
+            >
+              {{ $t("download-register") }}
+            </PrimitivesButton>
+            <PrimitivesButton
               variant="primary"
               @click="navigateTo(localePath('/patient/new'))"
             >
               {{ $t("add") }}
-            </PrimitivesButton>
-            <PrimitivesButton
-              variant="secondary"
-              @click="navigateTo(localePath('/patient/new'))"
-            >
-              {{ $t("download-register") }}
             </PrimitivesButton>
 
             <PrimitivesTab
@@ -69,15 +69,29 @@
           <!-- views -->
           <div v-if="view === 'list'">
             <PatientList
+              v-if="filteredFamilies.length > 0"
               :families="filteredFamilies"
-              @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
+              @patientClick="handlePatientClick"
             />
+            <div
+              v-else
+              class="p-4 text-center text-gray-500"
+            >
+              {{ $t("no-patients-found") || "No patients found" }}
+            </div>
           </div>
           <div v-else-if="view === 'grid'">
             <PatientGrid
+              v-if="filteredFamilies.length > 0"
               :families="filteredFamilies"
-              @patientClick="(p) => navigateTo(localePath(`/patient/${p.uid}`))"
+              @patientClick="handlePatientClick"
             />
+            <div
+              v-else
+              class="p-4 text-center text-gray-500"
+            >
+              {{ $t("no-patients-found") || "No patients found" }}
+            </div>
           </div>
         </div>
       </div>
@@ -151,31 +165,47 @@ const getButtonClass = (targetView: string) => {
     : "bg-white text-gray-700";
 };
 
+const handlePatientClick = (patient: any) => {
+  try {
+    if (patient && patient.uid) {
+      navigateTo(localePath(`/patient/${patient.uid}`));
+    } else {
+      console.error("Invalid patient data", patient);
+    }
+  } catch (error) {
+    console.error("Error handling patient click:", error);
+  }
+};
+
+// Make sure families data is properly initialized
 const loadFamilyData = async () => {
-  if (!supabaseUser.value) {
-    console.error("No user logged in");
-    return;
-  }
-  const { data, error } = await supabase
-    .from("families")
-    .select("*")
-    .eq("therapist_uid", supabaseUser.value?.id);
+  try {
+    if (!supabaseUser.value) {
+      console.error("No user logged in");
+      return;
+    }
 
-  if (error) {
-    console.error("Error fetching patient data", error);
-    return;
-  }
+    const { data, error } = await supabase
+      .from("families")
+      .select("*")
+      .eq("therapist_uid", supabaseUser.value?.id);
 
-  if (!data) {
-    console.error("No data found");
-    return;
-  }
+    if (error) {
+      console.error("Error fetching patient data", error);
+      return;
+    }
 
-  families.value = data;
+    families.value = data || [];
+    isLoadingPage.value = true;
+  } catch (err) {
+    console.error("Error in loadFamilyData:", err);
+    families.value = [];
+    isLoadingPage.value = true;
+  }
 };
 
 onMounted(async () => {
+  isLoadingPage.value = false;
   await loadFamilyData();
-  isLoadingPage.value = true;
 });
 </script>

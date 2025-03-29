@@ -71,7 +71,7 @@ function onDragEnd() {
 
 <style scoped lang="scss">
 .card {
-  border: 1px solid var(--color-gray-400);
+  border: 1px solid var(--color-Gray-400);
   background-color: #fff;
   filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
 

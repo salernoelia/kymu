@@ -1,9 +1,9 @@
 <script setup lang="ts">
 interface Props {
-  variant?: "primary" | "secondary" | "icon" | "text";
+  variant?: "primary" | "secondary" | "tertiary" | "icon" | "text" | "outline";
   disabled?: boolean;
   iconRight?: string;
-  size?: "md";
+  size?: "sm" | "md" | "lg";
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -27,17 +27,22 @@ const buttonClasses = computed(() => {
     "disabled:opacity-50 disabled:pointer-events-none": true,
 
     // variants
-    "bg-[var(--color-primary)] text-white hover:bg-[var(--color-primary-dark)]":
+    "bg-primary text-on-primary hover:bg-[var(--color-PrimaryHover)]":
       props.variant === "primary",
-    "bg-[var(--color-secondary)] text-[var(--color-text)] hover:bg-[var(--color-secondary-dark)]":
-      props.variant === "icon",
-    "border bg-white text-gray-700 hover:bg-gray-100":
+    "bg-secondary text-on-secondary hover:bg-[var(--color-SecondaryHover)]":
       props.variant === "secondary",
-    "bg-transparent text-[var(--color-primary)] hover:underline":
-      props.variant === "text",
+    "bg-tertiary text-on-tertiary hover:bg-[var(--color-TertiaryHover)]":
+      props.variant === "tertiary",
+    "bg-surface-container text-on-surface hover:bg-surface-container-high":
+      props.variant === "icon",
+    "bg-transparent text-primary hover:underline": props.variant === "text",
+    "border border-primary text-primary hover:bg-[var(--color-PrimaryHover)] hover:text-[var(--color-OnPrimary)]":
+      props.variant === "outline",
 
-    // text size
+    // sizes
+    "text-xs px-3 py-1.5": props.size === "sm",
     "text-sm px-4 py-2": props.size === "md",
+    "text-base px-6 py-3": props.size === "lg",
   };
 });
 </script>

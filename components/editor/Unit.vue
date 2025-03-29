@@ -173,7 +173,7 @@ function onDropInZone(event: DragEvent, position: number) {
   transition: all 0.3s ease;
   filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
   border-radius: 8px;
-  border-right: 1px solid var(--color-gray-300);
+  border-right: 1px solid var(--color-Gray-300);
 
   &.drop-active {
     border-color: #15ca82;

@@ -45,7 +45,7 @@ const localePath = useLocalePath();
 <style scoped lang="scss">
 .nav-link {
   display: flex;
-  color: var(--color-gray-500);
+  color: var(--color-Gray-500);
   font-size: 1rem;
 
   &:hover {

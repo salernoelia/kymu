@@ -160,14 +160,14 @@ const handleLogout = async () => {
 #sidebar {
   background-color: #fff;
   color: black;
-  border-right: var(--color-gray-400) 1px solid;
+  border-right: var(--color-Gray-400) 1px solid;
   border-radius: 0 0.4rem 0.4rem 0;
   align-items: center;
 
   .padded-line {
     height: 1px;
     width: 100%;
-    background-color: var(--color-gray-400);
+    background-color: var(--color-Gray-400);
     margin: 0.5rem 0;
   }
 }
@@ -183,7 +183,7 @@ const handleLogout = async () => {
 
 .link {
   &:hover {
-    background-color: var(--color-gray-400);
+    background-color: var(--color-Gray-400);
   }
   .icon {
     width: 1.5rem;
@@ -192,8 +192,8 @@ const handleLogout = async () => {
 }
 
 .router-link-active {
-  background-color: var(--color-primary);
-  color: white;
+  background-color: var(--color-Primary);
+  color: var(--color-OnPrimary);
 
   &:hover {
     color: rgb(0, 0, 0);

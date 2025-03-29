@@ -272,7 +272,7 @@ defineExpose({
       top: 0.75rem;
       padding-bottom: 0.75rem;
       width: 1px;
-      background-color: var(--color-gray-300);
+      background-color: var(--color-Gray-300);
     }
   }
 }
