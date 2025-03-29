@@ -19,7 +19,10 @@
       class="flex justify-between w-full p-1"
     >
       <h2>{{ $t("training-data-title") }}</h2>
-      <PrimitivesButton variant="secondary">
+      <PrimitivesButton
+        variant="outline"
+        icon-right="ic:outline-file-download"
+      >
         {{ $t("download-register") }}
       </PrimitivesButton>
     </div>

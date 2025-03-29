@@ -3,6 +3,7 @@ interface Props {
   variant?: "primary" | "secondary" | "tertiary" | "icon" | "text" | "outline";
   disabled?: boolean;
   iconRight?: string;
+  iconLeft?: string;
   size?: "sm" | "md" | "lg";
 }
 
@@ -53,13 +54,17 @@ const buttonClasses = computed(() => {
     :disabled="disabled"
     @click="(e) => emit('click', e)"
   >
+    <Icon
+      v-if="iconLeft"
+      class="mr-2 h-4 w-4"
+      :name="iconLeft"
+    />
     <slot></slot>
 
-    <span
+    <Icon
       v-if="iconRight"
-      class="ml-2"
-    >
-      <component :is="iconRight" />
-    </span>
+      class="ml-2 h-4 w-4"
+      :name="iconRight"
+    />
   </button>
 </template>
