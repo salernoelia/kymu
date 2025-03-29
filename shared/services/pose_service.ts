@@ -1,5 +1,9 @@
 import { Camera } from "@mediapipe/camera_utils";
-import { drawConnectors, drawLandmarks } from "@mediapipe/drawing_utils";
+import {
+    drawConnectors,
+    drawLandmarks,
+    type NormalizedLandmarkList,
+} from "@mediapipe/drawing_utils";
 import type { Options, Results } from "@mediapipe/pose";
 import { Pose, POSE_CONNECTIONS } from "@mediapipe/pose";
 
@@ -10,6 +14,7 @@ export class PoseService extends Camera {
     });
 
     private readonly ctx: CanvasRenderingContext2D;
+    // public savedLandmarks: Ref<NormalizedLandmarkList | null> = ref(null);
 
     constructor(
         public readonly canvas: HTMLCanvasElement,
@@ -19,6 +24,7 @@ export class PoseService extends Camera {
         public readonly landmarkContainer: HTMLDivElement,
         public readonly loadingCanvas: Ref<boolean>,
         public mediapipeResults: Ref<Results | null>,
+        public savedLandmarks: Ref<NormalizedLandmarkList | null>,
     ) {
         super(source, {
             onFrame: async () => await this.pipe.send({ image: source }),
@@ -96,8 +102,29 @@ export class PoseService extends Camera {
             lineWidth: 2,
         });
 
+        //  if saved landmarks is not null, draw them also
+        if (this.savedLandmarks.value) {
+            drawLandmarks(this.ctx, this.savedLandmarks.value, {
+                color: "#0000FF",
+                lineWidth: 2,
+            });
+            drawConnectors(
+                this.ctx,
+                this.savedLandmarks.value,
+                POSE_CONNECTIONS,
+                {
+                    color: "#0000FF",
+                    lineWidth: 4,
+                },
+            );
+        }
+
         this.ctx.restore();
 
         // grid.updateLandmarks(poseWorldLandmarks);
     }
+
+    /**
+     * saveNormalizedLandmarks
+     */
 }

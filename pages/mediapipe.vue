@@ -44,7 +44,8 @@
 <script setup lang="ts">
 import { PoseService } from "~/shared/services/pose_service";
 import type { Results } from "@mediapipe/pose";
-import { set } from "@vueuse/core";
+
+import { type NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 
 const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
@@ -52,6 +53,7 @@ const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
 const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
 const resultAngle = ref(0);
+const savedNormalizedLandmarks = ref<NormalizedLandmarkList | null>(null);
 
 // Update these computed properties to make debugging easier
 const elbow_right = computed(() => {
@@ -139,6 +141,9 @@ const handleKeyDown = (event: KeyboardEvent) => {
         z: elbow_right.value.z,
         visibility: elbow_right.value.visibility,
       };
+
+      savedNormalizedLandmarks.value =
+        mediapipeResults.value?.poseLandmarks ?? null;
     }
   }
 
@@ -170,7 +175,8 @@ onMounted(async () => {
       canvasHeight.value,
       landmarkContainer.value,
       loadingCanvas,
-      mediapipeResults
+      mediapipeResults,
+      savedNormalizedLandmarks
     ).setOptions({
       modelComplexity: 1,
       smoothLandmarks: true,
