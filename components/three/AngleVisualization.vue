@@ -11,7 +11,6 @@
 </template>
 
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, watch, computed, nextTick } from "vue";
 import { useVectorAngleVisualization } from "~/composables/useVectorAngleVisualization";
 
 interface Point {
@@ -42,6 +41,7 @@ const {
   initVisualization,
   cleanupVisualization,
   visualizeAngle,
+  resetScene,
 } = useVectorAngleVisualization();
 
 // Check if we have all the required points with good visibility
@@ -64,6 +64,8 @@ watch(
     if (hasValidPoints.value) {
       // Wait for DOM update if needed
       await nextTick();
+      // Reset the scene before visualizing to prevent accumulation of objects
+      resetScene();
       // Visualize the angle with the new points
       visualizeAngle(props.pivotPoint, props.pointA, props.pointB);
     }

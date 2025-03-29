@@ -19,7 +19,6 @@ export const useVectorAngleVisualization = () => {
 
     const angleValue = ref<number>(0);
 
-    // Helper functions for vector calculations
     const vectorFromPivot = (point: Point, pivot: Point): Point => ({
         x: point.x - pivot.x,
         y: point.y - pivot.y,
@@ -59,8 +58,8 @@ export const useVectorAngleVisualization = () => {
             new THREE.Vector3(start.x, start.y, start.z),
             length,
             color,
-            length * 0.2, // head length
-            length * 0.1, // head width
+            length * 0.2,
+            length * 0.1,
         );
         return arrowHelper;
     };
@@ -237,6 +236,59 @@ export const useVectorAngleVisualization = () => {
         controls.update();
     };
 
+    // New function to properly clear scene
+    const resetScene = () => {
+        if (!scene) return;
+
+        // Properly dispose of all objects in the scene
+        while (scene.children.length > 0) {
+            const object = scene.children[0];
+            if (!object) continue;
+            scene.remove(object);
+
+            // Properly dispose of geometries and materials
+            if (object instanceof THREE.Mesh || object instanceof THREE.Line) {
+                if (object.geometry) {
+                    object.geometry.dispose();
+                }
+
+                if (object.material) {
+                    if (Array.isArray(object.material)) {
+                        object.material.forEach((material) =>
+                            material.dispose()
+                        );
+                    } else {
+                        object.material.dispose();
+                    }
+                }
+            } else if (object instanceof THREE.Sprite) {
+                if (object.material && object.material.map) {
+                    object.material.map.dispose();
+                }
+                object.material.dispose();
+            } else if (object instanceof THREE.Group) {
+                // For groups, we need to recursively dispose their children
+                object.traverse((child) => {
+                    if (
+                        child instanceof THREE.Mesh ||
+                        child instanceof THREE.Line
+                    ) {
+                        if (child.geometry) child.geometry.dispose();
+                        if (child.material) {
+                            if (Array.isArray(child.material)) {
+                                child.material.forEach((material) =>
+                                    material.dispose()
+                                );
+                            } else {
+                                child.material.dispose();
+                            }
+                        }
+                    }
+                });
+            }
+        }
+    };
+
     const visualizeAngle = (pivot: Point, pointA: Point, pointB: Point) => {
         if (!scene || !camera || !renderer) return;
 
@@ -257,13 +309,6 @@ export const useVectorAngleVisualization = () => {
             y: pointB.y * scaleFactor,
             z: pointB.z * scaleFactor,
         };
-
-        // Clear existing scene
-        while (scene.children.length > 0) {
-            if (scene.children[0] instanceof THREE.Line) {
-                scene.remove(scene.children[0]);
-            }
-        }
 
         // Calculate vectors
         const v = vectorFromPivot(scaledPointA, scaledPivot);
@@ -369,6 +414,9 @@ export const useVectorAngleVisualization = () => {
             renderer.dispose();
         }
 
+        // Reset scene before cleanup
+        resetScene();
+
         window.removeEventListener("resize", resizeHandler);
     };
 
@@ -378,5 +426,6 @@ export const useVectorAngleVisualization = () => {
         initVisualization,
         cleanupVisualization,
         visualizeAngle,
+        resetScene, // Expose resetScene method
     };
 };
