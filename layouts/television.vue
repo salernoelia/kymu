@@ -18,15 +18,22 @@
 <script setup lang="ts">
 const menu = ref(false);
 const { remoteKey } = useRemoteControl();
+const { toggleFullscreen } = useFullscreen();
 
-watch(remoteKey, (newKey) => {
-  if (newKey === "menu") {
-    console.log("Menu button pressed - toggling menu");
-    menu.value = !menu.value;
-  } else if (newKey === "cancel") {
-    menu.value = false;
+watch(
+  () => remoteKey.value,
+  (newKey) => {
+    if (newKey === "menu") {
+      console.log("Menu button pressed - toggling menu");
+      menu.value = !menu.value;
+    } else if (newKey === "back") {
+      menu.value = false;
+    } else if (newKey === "fullscreen") {
+      console.log("Fullscreen button pressed - toggling fullscreen");
+      toggleFullscreen();
+    }
   }
-});
+);
 </script>
 
 <style scoped>

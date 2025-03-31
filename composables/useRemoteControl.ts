@@ -1,35 +1,24 @@
-import { onMounted, onUnmounted, ref } from "vue";
-import remoteData from "~/assets/xiaomi_remote.json";
-
 export function useRemoteControl() {
-  const remoteKey = ref<string | null>(null);
+  const remoteKey = ref<RemoteAction | null>(null);
   const isKeyPressed = ref(false);
 
   // Track when a key was last emitted to avoid duplicate events
-  const lastKeyPressTime = ref<Record<string, number>>({});
+  const lastKeyPressTime = ref<Record<RemoteAction, number>>(
+    {} as Record<RemoteAction, number>,
+  );
 
-  // Handle remote control events
-  const handleRemoteEvent = (event: any) => {
-    if (
-      !event.detail || !event.detail.name ||
-      !event.detail.name.consumer_key_code
-    ) {
-      return;
-    }
-  };
-
-  // For development/testing, also support keyboard keys
-  const keyMapping: Record<string, string> = {
+  const keyMapping: Record<string, RemoteAction> = {
     "w": "up",
     "a": "left",
     "s": "down",
     "d": "right",
     "Enter": "ok",
-    "Escape": "cancel",
+    // "Escape": "cancel",
     "Backspace": "back",
     "m": "menu",
     "v": "voice",
     "p": "shutdown",
+    "f": "fullscreen",
   };
 
   const handleKeyDown = (event: KeyboardEvent) => {
