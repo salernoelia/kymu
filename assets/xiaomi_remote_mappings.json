@@ -4,17 +4,6 @@
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "power"
-      },
-      "to": [
-        {
-          "key_code": "p"
-        }
-      ]
-    },
-    {
-      "type": "basic",
-      "from": {
         "consumer_key_code": "dictation"
       },
       "to": [
@@ -26,62 +15,29 @@
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "menu_up"
+        "key_code": "power"
       },
       "to": [
         {
-          "key_code": "up_arrow"
+          "key_code": "p"
         }
       ]
     },
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "menu_down"
+        "key_code": "menu_up"
       },
       "to": [
         {
-          "key_code": "down_arrow"
+          "key_code": "w"
         }
       ]
     },
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "menu_left"
-      },
-      "to": [
-        {
-          "key_code": "left_arrow"
-        }
-      ]
-    },
-    {
-      "type": "basic",
-      "from": {
-        "consumer_key_code": "menu_right"
-      },
-      "to": [
-        {
-          "key_code": "right_arrow"
-        }
-      ]
-    },
-    {
-      "type": "basic",
-      "from": {
-        "consumer_key_code": "menu_pick"
-      },
-      "to": [
-        {
-          "key_code": "return_or_enter"
-        }
-      ]
-    },
-    {
-      "type": "basic",
-      "from": {
-        "consumer_key_code": "al_network_chat"
+        "key_code": "menu_left"
       },
       "to": [
         {
@@ -92,18 +48,40 @@
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "ac_back"
+        "key_code": "menu_down"
       },
       "to": [
         {
-          "key_code": "escape"
+          "key_code": "s"
         }
       ]
     },
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "ac_home"
+        "key_code": "menu_right"
+      },
+      "to": [
+        {
+          "key_code": "d"
+        }
+      ]
+    },
+    {
+      "type": "basic",
+      "from": {
+        "key_code": "menu_pick"
+      },
+      "to": [
+        {
+          "key_code": "return_or_enter"
+        }
+      ]
+    },
+    {
+      "type": "basic",
+      "from": {
+        "key_code": "al_network_chat"
       },
       "to": [
         {
@@ -114,22 +92,22 @@
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "volume_increment"
+        "key_code": "ac_back"
       },
       "to": [
         {
-          "key_code": "volume_increment"
+          "key_code": "delete_or_backspace"
         }
       ]
     },
     {
       "type": "basic",
       "from": {
-        "consumer_key_code": "volume_decrement"
+        "key_code": "ac_home"
       },
       "to": [
         {
-          "key_code": "volume_decrement"
+          "key_code": "escape"
         }
       ]
     }
