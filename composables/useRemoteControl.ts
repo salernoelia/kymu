@@ -1,9 +1,24 @@
 import { onMounted, onUnmounted, ref } from "vue";
+import remoteData from "~/assets/xiaomi_remote.json";
 
 export function useRemoteControl() {
   const remoteKey = ref<string | null>(null);
-  const pressedKeys = ref<Set<string>>(new Set());
+  const isKeyPressed = ref(false);
 
+  // Track when a key was last emitted to avoid duplicate events
+  const lastKeyPressTime = ref<Record<string, number>>({});
+
+  // Handle remote control events
+  const handleRemoteEvent = (event: any) => {
+    if (
+      !event.detail || !event.detail.name ||
+      !event.detail.name.consumer_key_code
+    ) {
+      return;
+    }
+  };
+
+  // For development/testing, also support keyboard keys
   const keyMapping: Record<string, string> = {
     "w": "up",
     "a": "left",
@@ -11,52 +26,46 @@ export function useRemoteControl() {
     "d": "right",
     "Enter": "ok",
     "Escape": "cancel",
+    "Backspace": "back",
     "m": "menu",
-    "r": "voice",
-    "q": "shutdown",
+    "v": "voice",
+    "p": "shutdown",
   };
-
-  const validRemoteKeys = Object.values(keyMapping);
-
-  let lastEmittedKey: string | null = null;
 
   const handleKeyDown = (event: KeyboardEvent) => {
     const key = event.key;
-    const mappedKey = keyMapping[key];
+    const action = keyMapping[key];
 
-    if (mappedKey) {
-      if (!pressedKeys.value.has(key)) {
-        pressedKeys.value.add(key);
-        remoteKey.value = mappedKey;
-        lastEmittedKey = mappedKey;
+    if (action) {
+      const now = Date.now();
+      const lastPress = lastKeyPressTime.value[action] || 0;
+
+      if (now - lastPress > 300) { // Same debounce as remote
+        remoteKey.value = action;
+        isKeyPressed.value = true;
+        lastKeyPressTime.value[action] = now;
+        console.log(`Key pressed: ${action}`);
 
         setTimeout(() => {
-          if (lastEmittedKey === mappedKey) {
+          if (remoteKey.value === action) {
             remoteKey.value = null;
+            isKeyPressed.value = false;
           }
-        }, 10);
+        }, 100);
       }
     }
   };
 
-  const handleKeyUp = (event: KeyboardEvent) => {
-    const key = event.key;
-    pressedKeys.value.delete(key);
-  };
-
   onMounted(() => {
     window.addEventListener("keydown", handleKeyDown);
-    window.addEventListener("keyup", handleKeyUp);
   });
 
   onUnmounted(() => {
     window.removeEventListener("keydown", handleKeyDown);
-    window.removeEventListener("keyup", handleKeyUp);
   });
 
   return {
     remoteKey,
-    pressedKeys,
-    validRemoteKeys,
+    isKeyPressed,
   };
 }

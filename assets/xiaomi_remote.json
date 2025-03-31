@@ -1,0 +1,170 @@
+[
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "power" },
+    "usagePage": "12 (0x000c)",
+    "usage": "48 (0x0030)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "power" },
+    "usagePage": "12 (0x000c)",
+    "usage": "48 (0x0030)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "dictation" },
+    "usagePage": "12 (0x000c)",
+    "usage": "207 (0x00cf)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "dictation" },
+    "usagePage": "12 (0x000c)",
+    "usage": "207 (0x00cf)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "menu_up" },
+    "usagePage": "12 (0x000c)",
+    "usage": "66 (0x0042)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "menu_up" },
+    "usagePage": "12 (0x000c)",
+    "usage": "66 (0x0042)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "menu_left" },
+    "usagePage": "12 (0x000c)",
+    "usage": "68 (0x0044)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "menu_left" },
+    "usagePage": "12 (0x000c)",
+    "usage": "68 (0x0044)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "menu_down" },
+    "usagePage": "12 (0x000c)",
+    "usage": "67 (0x0043)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "menu_down" },
+    "usagePage": "12 (0x000c)",
+    "usage": "67 (0x0043)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "menu_right" },
+    "usagePage": "12 (0x000c)",
+    "usage": "69 (0x0045)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "menu_right" },
+    "usagePage": "12 (0x000c)",
+    "usage": "69 (0x0045)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "menu_pick" },
+    "usagePage": "12 (0x000c)",
+    "usage": "65 (0x0041)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "menu_pick" },
+    "usagePage": "12 (0x000c)",
+    "usage": "65 (0x0041)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "al_network_chat" },
+    "usagePage": "12 (0x000c)",
+    "usage": "409 (0x0199)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "al_network_chat" },
+    "usagePage": "12 (0x000c)",
+    "usage": "409 (0x0199)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "ac_back" },
+    "usagePage": "12 (0x000c)",
+    "usage": "548 (0x0224)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "ac_back" },
+    "usagePage": "12 (0x000c)",
+    "usage": "548 (0x0224)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "ac_home" },
+    "usagePage": "12 (0x000c)",
+    "usage": "547 (0x0223)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "ac_home" },
+    "usagePage": "12 (0x000c)",
+    "usage": "547 (0x0223)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "volume_increment" },
+    "usagePage": "12 (0x000c)",
+    "usage": "233 (0x00e9)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "volume_increment" },
+    "usagePage": "12 (0x000c)",
+    "usage": "233 (0x00e9)",
+    "misc": ""
+  },
+  {
+    "type": "down",
+    "name": { "consumer_key_code": "volume_decrement" },
+    "usagePage": "12 (0x000c)",
+    "usage": "234 (0x00ea)",
+    "misc": ""
+  },
+  {
+    "type": "up",
+    "name": { "consumer_key_code": "volume_decrement" },
+    "usagePage": "12 (0x000c)",
+    "usage": "234 (0x00ea)",
+    "misc": ""
+  }
+]
