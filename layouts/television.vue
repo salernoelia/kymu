@@ -27,7 +27,13 @@ watch(
       console.log("Menu button pressed - toggling menu");
       menu.value = !menu.value;
     } else if (newKey === "back") {
-      menu.value = false;
+      if (menu.value) {
+        menu.value = false;
+      } else if (useRoute().path == "/tv") {
+        console.log("already home");
+      } else {
+        useRouter().back();
+      }
     } else if (newKey === "fullscreen") {
       console.log("Fullscreen button pressed - toggling fullscreen");
       toggleFullscreen();

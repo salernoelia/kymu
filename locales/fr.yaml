@@ -1,3 +1,6 @@
 hello: "Bonjour le monde"
 signup: "Inscrivez-vous"
 login: "Connectez-vous"
+
+# tv
+tv-welcome-back: "Bienvenue à nouveau"

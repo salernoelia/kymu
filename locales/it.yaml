@@ -1,3 +1,6 @@
 hello: "Tutto il mondo"
 signup: "Registrati"
 login: "Accedi"
+
+# tv
+tv-welcome-back: "Benvenuto di nuovo"
