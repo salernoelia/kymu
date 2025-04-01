@@ -23,7 +23,8 @@ const { remoteKey } = useRemoteControl();
 const selectedIndex = ref(0);
 const route = useRoute();
 
-const unitId = route.params.id as string;
+const unitId = route.params.unitid;
+console.log("unitId", unitId);
 
 const exercises = [
   {
@@ -32,14 +33,14 @@ const exercises = [
     description: "Description for exercise 1",
   },
   {
-    Id: "be19bcfe-7fd5-4384-8d45-628e11bf8a2d",
+    Id: "8ec96432-1adf-499c-9680-3b3f702b8c57",
     title: "exercise 2",
-    description: "Description for exercise 2",
+    description: "Description for exercise 3",
   },
   {
-    Id: "8ec96432-1adf-499c-9680-3b3f702b8c57",
+    Id: "be19bcfe-7fd5-4384-8d45-628e11bf8a2d",
     title: "exercise 3",
-    description: "Description for exercise 3",
+    description: "Description for exercise 2",
   },
 ];
 
@@ -60,7 +61,7 @@ watch(
         (selectedIndex.value - 1 + exercises.length) % exercises.length;
     } else if (newKey === "ok") {
       const selectedexercise = exercises[selectedIndex.value];
-      if (selectedexercise) {
+      if (selectedexercise && unitId) {
         navigateTo(
           localePath(`/tv/unit/${unitId}/exercise/${selectedexercise.Id}`)
         );
