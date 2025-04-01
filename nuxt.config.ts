@@ -36,6 +36,8 @@ export default defineNuxtConfig({
     "@vite-pwa/nuxt",
     "@nuxt/image",
     "shadcn-nuxt",
+    "@nuxtjs/ionic",
+    "@nuxtjs/color-mode",
   ],
 
   shadcn: {
@@ -72,5 +74,8 @@ export default defineNuxtConfig({
 
   pinia: {
     storesDirs: ["./stores/**"],
+  },
+  colorMode: {
+    preference: "light",
   },
 });
