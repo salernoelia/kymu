@@ -149,6 +149,7 @@ export const useEditorStore = defineStore("editor", () => {
                 (unit) => ({
                     ...unit,
                     exercises: [],
+                    isFocus: false,
                 }),
             );
 
@@ -224,12 +225,16 @@ export const useEditorStore = defineStore("editor", () => {
                     ...exerciseTemplates.value,
                     ...customExerciseData.map((item) => ({
                         ...item,
+                        creator_username: item.therapist_uid || null,
+                        default_exercise_instruction_ids: [],
+                        image_urls: [],
+                        video_urls: [],
                         default_exercise_instructions: [],
                         default_scene_id: 1,
-                        description: "",
+                        description: item.description || "",
                         thumbnail_url: "",
                         name: item.name || "", // Provide a default value for name
-                    })),
+                    } as ExerciseTemplate)),
                 ];
             }
 
