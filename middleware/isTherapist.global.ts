@@ -1,31 +1,30 @@
 export default defineNuxtRouteMiddleware(async (to, from) => {
-    // Initialize composables inside the middleware function
     const supabase = useSupabaseClient();
     const supabaseUser = useSupabaseUser();
+    const localePath = useLocalePath();
 
-    // check if user is on therapist table
     if (to.path === "/dashboard") {
         if (!supabaseUser.value?.id) {
             console.log("No user found");
-            return navigateTo("/login");
+            alert("No user found");
+            return navigateTo(localePath("/login"));
         }
 
         const { data: therapistData, error } = await supabase
-            .from("therapist")
+            .from("therapists")
             .select("*")
-            .eq("user_id", supabaseUser.value.id)
+            .eq("uid", supabaseUser.value.id)
             .single();
 
         if (error) {
+            alert("User is not a therapist");
             console.error("Error fetching therapist data:", error);
-            return navigateTo("/");
+            return navigateTo(localePath("/"));
         }
-
-        console.log("Therapist data:", therapistData);
 
         if (!therapistData) {
             console.log("User is not a therapist");
-            return navigateTo("/");
+            return navigateTo(localePath("/"));
         }
     }
 });

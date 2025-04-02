@@ -7,13 +7,16 @@
       <div class="editor-container">
         <NavigationBreadcrumbs
           :breadcrumbs="[
-            { path: '/patients', translationKey: 'patient-overview-title' },
             {
-              path: `/patient/${route.params.id}`,
+              path: '/admin/patients',
+              translationKey: 'patient-overview-title',
+            },
+            {
+              path: `/admin/${route.params.patientid}`,
               translationKey: 'patient-info',
             },
             {
-              path: `/patient/editor/${route.params.id}`,
+              path: `/admin/${route.params.patientid}/editor/`,
               translationKey: 'unit-editor-title',
             },
           ]"
@@ -131,7 +134,6 @@
 <script setup lang="ts">
 const route = useRoute();
 const store = useEditorStore();
-const localePath = useLocalePath();
 
 const isLoadingPage = ref(true);
 
@@ -150,7 +152,7 @@ watch(sidebarOpen, (val) => {
 });
 
 const selectedPatientID = computed(() => {
-  const id = route.params.id?.toString();
+  const id = route.params.patientid?.toString();
   return id || null;
 });
 

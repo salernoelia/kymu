@@ -2,13 +2,13 @@
   <div class="flex flex-col gap-4 w-full h-full">
     <NavigationBreadcrumbs
       :breadcrumbs="[
-        { path: '/patients', translationKey: 'patient-overview-title' },
+        { path: '/admin/patients', translationKey: 'patient-overview-title' },
         {
-          path: `/patient/${route.params.id}`,
+          path: `/admin/${route.params.patientid}`,
           translationKey: 'patient-info',
         },
         {
-          path: `/patient/activity/${route.params.id}`,
+          path: `/admin/${route.params.patientid}/activity`,
           translationKey: 'activity-overview-title',
         },
       ]"
@@ -38,7 +38,9 @@
           <PrimitivesButton
             variant="primary"
             @click="
-              navigateTo(localePath(`/patient/activity/${route.params.id}`))
+              navigateTo(
+                localePath(`/admin/${route.params.patientid}/activity`)
+              )
             "
           >
             {{ $t("activity-details") }}
@@ -95,7 +97,9 @@
               <PrimitivesButton
                 variant="primary"
                 @click="
-                  navigateTo(localePath(`/patient/activity/${route.params.id}`))
+                  navigateTo(
+                    localePath(`/admin/${route.params.patientid}/activity`)
+                  )
                 "
               >
                 {{ $t("details") }}
@@ -140,7 +144,9 @@
             <PrimitivesButton
               variant="primary"
               @click="
-                navigateTo(localePath(`/patient/activity/${route.params.id}`))
+                navigateTo(
+                  localePath(`/admin/${route.params.patientid}/activity`)
+                )
               "
             >
               {{ $t("details") }}

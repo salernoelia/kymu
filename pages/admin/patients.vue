@@ -44,13 +44,13 @@
           <div class="flex gap-4">
             <PrimitivesButton
               variant="outline"
-              @click="navigateTo(localePath('/patient/new'))"
+              @click="navigateTo(localePath('/admin/add-patient'))"
             >
               {{ $t("download-register") }}
             </PrimitivesButton>
             <PrimitivesButton
               variant="primary"
-              @click="navigateTo(localePath('/patient/new'))"
+              @click="navigateTo(localePath('/admin/add-patient'))"
             >
               {{ $t("add") }}
             </PrimitivesButton>
@@ -168,7 +168,7 @@ const getButtonClass = (targetView: string) => {
 const handlePatientClick = (patient: any) => {
   try {
     if (patient && patient.uid) {
-      navigateTo(localePath(`/patient/${patient.uid}`));
+      navigateTo(localePath(`/admin/${patient.uid}`));
     } else {
       console.error("Invalid patient data", patient);
     }

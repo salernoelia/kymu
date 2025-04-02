@@ -5,9 +5,9 @@
   >
     <NavigationBreadcrumbs
       :breadcrumbs="[
-        { path: '/patients', translationKey: 'patient-overview-title' },
+        { path: '/admin/patients', translationKey: 'patient-overview-title' },
         {
-          path: `/patient/${route.params.id}`,
+          path: `/admin/${route.params.patientid}`,
           translationKey: 'patient-info',
         },
       ]"
@@ -53,7 +53,9 @@
             <PrimitivesButton
               variant="primary"
               @click="
-                navigateTo(localePath(`/patient/editor/${route.params.id}`))
+                navigateTo(
+                  localePath(`/admin/${route.params.patientid}/editor`)
+                )
               "
             >
               {{ $t("unit-editor-title") }}
@@ -65,7 +67,9 @@
             @current-slide="
               (i) =>
                 f?.units?.[i]?.id &&
-                navigateTo(localePath(`/patient/editor/${route.params.id}`))
+                navigateTo(
+                  localePath(`/admin/${route.params.patientid}/editor`)
+                )
             "
             :initialSlide="0"
             :slides="slidesFromUnits(f.units)"
@@ -86,7 +90,9 @@
           <PrimitivesButton
             variant="primary"
             @click="
-              navigateTo(localePath(`/patient/activity/${route.params.id}`))
+              navigateTo(
+                localePath(`/admin/${route.params.patientid}/activity`)
+              )
             "
           >
             {{ $t("activity-details") }}
@@ -168,8 +174,8 @@ const slidesFromUnits = (units: Tables<"units">[]): Slide[] => {
   });
 };
 
-if (!route.params.id) {
-  navigateTo(localePath("/patients"));
+if (!route.params.patientid) {
+  navigateTo(localePath("/admin/patients"));
   throw new Error("No patient ID provided");
 }
 
@@ -181,7 +187,7 @@ const familiesWithFkeyQuery = supabase
     units(*)
   `
   )
-  .eq("uid", route.params.id.toString())
+  .eq("uid", route.params.patientid.toString())
   .single();
 
 const f = ref<QueryData<typeof familiesWithFkeyQuery>>();

@@ -21,44 +21,29 @@
           style="margin: 0.25rem 0 1rem"
         />
         <nuxt-link
-          :to="localePath('/dashboard')"
+          :to="localePath('/admin')"
           class="link"
         >
-          <!-- <HomeOutlined class="mr-3" /> -->
           <Icon
             name="material-symbols-light:dashboard-2-outline"
-            class="icon"
-          />
-          <!-- {{ $t("home") }} -->
-        </nuxt-link>
-        <nuxt-link
-          :to="localePath('/rom')"
-          class="link"
-        >
-          <!-- <HomeOutlined class="mr-3" /> -->
-          <!-- {{ $t("vr-viewer") }} -->
-          <Icon
-            name="material-symbols-light:ar-on-you-outline-sharp"
             class="icon"
           />
         </nuxt-link>
 
         <!-- <nuxt-link
-          :to="localePath('/editor')"
+          :to="localePath('/rom')"
           class="link"
         >
           <Icon
-            name="material-symbols-light:edit-document-outline-rounded"
+            name="material-symbols-light:ar-on-you-outline-sharp"
             class="icon"
           />
         </nuxt-link> -->
 
         <nuxt-link
-          :to="localePath('/patients')"
+          :to="localePath('/admin/patients')"
           class="link"
         >
-          <!-- <UsergroupAddOutlined class="mr-3" /> -->
-          <!-- {{ $t("patients") }} -->
           <Icon
             name="material-symbols-light:patient-list"
             class="icon"
@@ -66,57 +51,58 @@
         </nuxt-link>
 
         <nuxt-link
-          :to="localePath('/training-programs')"
+          :to="localePath('/admin/rentals')"
           class="link"
         >
-          <!-- <CheckCircleOutlined class="mr-3" /> -->
+          <Icon
+            name="material-symbols-light:home-repair-service"
+            class="icon"
+          />
+        </nuxt-link>
+
+        <!-- <nuxt-link
+          :to="localePath('/admin/training-programs')"
+          class="link"
+        >
           <Icon
             name="material-symbols-light:explore-outline"
             class="icon"
           />
-          <!-- {{ $t("explore-kymu") }} -->
-        </nuxt-link>
+        </nuxt-link> -->
+
         <nuxt-link
-          :to="localePath('/plugins')"
+          :to="localePath('/admin/plugins')"
           class="link"
         >
-          <!-- <CheckCircleOutlined class="mr-3" /> -->
           <Icon
             name="material-symbols-light:power-plug-outline"
             class="icon"
           />
-          <!-- {{ $t("explore-kymu") }} -->
         </nuxt-link>
       </div>
+
       <!-- ============= LOWER PART =============== -->
       <div class="flex flex-col align-center gap-2">
         <span class="padded-line" />
-
-        <!-- <WidgetsLanguageSelector /> -->
 
         <nuxt-link
           to="/settings"
           class="link"
         >
-          <!-- <SettingOutlined class="mr-3" /> -->
-
           <Icon
             name="material-symbols-light:settings"
             class="icon"
           />
-          <!-- Settings -->
         </nuxt-link>
 
         <nuxt-link
           to="/profile"
           class="link"
         >
-          <!-- <UserOutlined class="mr-3" /> -->
           <Icon
             name="material-symbols-light:account-circle"
             class="icon"
           />
-          <!-- Profile -->
         </nuxt-link>
         <NuxtLink
           @click="handleLogout"
@@ -125,9 +111,7 @@
           <Icon
             name="material-symbols-light:logout"
             class="icon"
-            style="margin-bottom: 0.5rem"
           />
-          <!-- Logout -->
         </NuxtLink>
       </div>
     </div>

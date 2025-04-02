@@ -37,7 +37,7 @@ watch(user, (newUser) => {
 
 <template>
   <div class="parent">
-    <NavigationLeft
+    <NavigationAdminLeft
       :isActive="isActive"
       icon="HomeOutlined"
       text="Home"

@@ -36,7 +36,7 @@
       </PrimitivesButton>
       <PrimitivesButton
         class="flex flex-row items-center gap-2"
-        @click="() => navigateTo(localePath('/dashboard'))"
+        @click="() => navigateTo(localePath('/admin'))"
         variant="primary"
       >
         Dashboard
@@ -45,12 +45,35 @@
           class="w-4 h-4"
         />
       </PrimitivesButton>
+
+      <PrimitivesButton
+        @click="handleLogout"
+        class="flex flex-row items-center gap-2"
+        variant="outline"
+      >
+        <Icon
+          name="material-symbols-light:logout"
+          class="w-5 h-5"
+        />
+        <!-- Logout -->
+      </PrimitivesButton>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
 const localePath = useLocalePath();
+const supabase = useSupabaseClient();
+
+const handleLogout = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    navigateTo(localePath("/login"));
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
 </script>
 
 <style scoped lang="scss">
