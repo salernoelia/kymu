@@ -9,10 +9,13 @@ export const useEditorStore = defineStore("editor", () => {
 
     const units = ref<UnitsWithExercises[]>([]);
     const selectedExercise = ref<Tables<"exercises"> | null>(null);
+    const selectedAssesment = ref<Tables<"assessments"> | null>(null);
     const selectedUnit = ref<UnitsWithExercises | null>(null);
     const selectedPatientId = ref<string | null>(null);
     const sidebarOpen = ref(false);
-    const sidebarVariant = ref<"exercise" | "unit" | "template-selector">(
+    const sidebarVariant = ref<
+        "exercise" | "assessment" | "unit" | "template-selector"
+    >(
         "exercise",
     );
     const sidebarMode = ref<"edit" | "create">("edit");
@@ -33,6 +36,8 @@ export const useEditorStore = defineStore("editor", () => {
             sidebarTitle.value = `${mode} Unit`;
         } else if (sidebarVariant.value === "template-selector") {
             sidebarTitle.value = "Select Template";
+        } else if (sidebarVariant.value === "assessment") {
+            sidebarTitle.value = "Select Assessment";
         } else {
             sidebarTitle.value = "Details";
         }
@@ -61,6 +66,37 @@ export const useEditorStore = defineStore("editor", () => {
     function getExercisePosition(unit: UnitsWithExercises, exerciseId: string) {
         if (!unit.exercises_index) return 0;
         return unit.exercises_index.indexOf(exerciseId);
+    }
+
+    function selectAssessment(
+        assessment: Tables<"assessments">,
+        mode: "edit" | "create" = "edit",
+    ) {
+        selectedAssesment.value = assessment;
+        sidebarVariant.value = "assessment";
+        sidebarMode.value = mode;
+        sidebarOpen.value = true;
+    }
+
+    async function initializeNewAssessment(unitId: string) {
+        targetUnitId.value = unitId;
+        const newAssessment: TablesInsert<"assessments"> = {
+            name: "",
+            therapist_uid: supabaseUser.value?.id || "",
+        };
+
+        selectAssessment(
+            {
+                ...newAssessment,
+                id: "new",
+                created_at: new Date().toISOString(),
+                inherited_default_assessment_id: null,
+                test_ids: [],
+            },
+        );
+    }
+
+    function createAssessment(unitId: string, fromTemplateId?: string) {
     }
 
     function selectExercise(
@@ -227,6 +263,7 @@ export const useEditorStore = defineStore("editor", () => {
                         ...item,
                         creator_username: item.therapist_uid || null,
                         default_exercise_instruction_ids: [],
+                        default_exercise_instruction_id: null,
                         image_urls: [],
                         video_urls: [],
                         default_exercise_instructions: [],
@@ -320,7 +357,7 @@ export const useEditorStore = defineStore("editor", () => {
         selectExercise(
             {
                 ...newExercise,
-                id: "new", // temporary id
+                id: "new",
                 created_at: new Date().toISOString(),
                 focus_type: newExercise.focus_type || "strength",
             } as any,
@@ -1317,6 +1354,7 @@ export const useEditorStore = defineStore("editor", () => {
 
     return {
         units,
+        selectedAssesment,
         selectedExercise,
         selectedUnit,
         selectedPatientId,
@@ -1340,6 +1378,7 @@ export const useEditorStore = defineStore("editor", () => {
         handleDragEnd,
         loadTrainingUnit,
         loadTemplates,
+        initializeNewAssessment,
         initializeNewExercise,
         initializeNewUnit,
         createExercise,
