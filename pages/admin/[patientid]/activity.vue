@@ -199,7 +199,7 @@ definePageMeta({
 });
 
 const route = useRoute();
-const timeView = ref("month");
+const timeView = ref<TimePeriod>("month");
 const localePath = useLocalePath();
 
 import {

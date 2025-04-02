@@ -41,19 +41,19 @@ const units = [
   },
 ];
 
-const loadUnits = async () => {
-  const { data, error } = await supabase
-    .from("units")
-    .select("*")
-    .eq("isFocus", true)
-    .order("created_at", { ascending: false });
+// const loadUnits = async () => {
+//   const { data, error } = await supabase
+//     .from("units")
+//     .select("*")
+//     .eq("isFocus", true)
+//     .order("created_at", { ascending: false });
 
-  if (error) {
-    console.error("Error loading units:", error);
-  } else {
-    units.value = data;
-  }
-};
+//   if (error) {
+//     console.error("Error loading units:", error);
+//   } else {
+//     units.value = data;
+//   }
+// };
 
 const unitsWithFocus = computed(() => {
   return units.map((unit, index) => ({
@@ -73,7 +73,7 @@ watch(
     } else if (newKey === "ok") {
       const selectedUnit = units[selectedIndex.value];
       if (selectedUnit) {
-        navigateTo(localePath(`/tv/unit/${selectedUnit.Id}`));
+        navigateTo(localePath(`/tv/${selectedUnit.Id}`));
       }
     }
   }

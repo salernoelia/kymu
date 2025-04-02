@@ -1,12 +1,7 @@
 <script setup lang="ts">
-const props = defineProps({
-  timePeriod: {
-    type: String,
-    required: true,
-    validator: (value) =>
-      ["since-last", "week", "month", "six-months"].includes(value),
-  },
-});
+const props = defineProps<{
+  timePeriod: TimePeriod;
+}>();
 
 const graphData = computed(() => {
   switch (props.timePeriod) {

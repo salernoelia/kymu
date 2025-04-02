@@ -8,11 +8,11 @@ export default defineNuxtConfig({
   //   typeCheck: true,
   // },
 
-  //  auto imports of types
   imports: {
     dirs: [
-      "~/types/*.d.ts",
-      "~/types/ui/*.d.ts",
+      "~/shared/constants/*.ts",
+      "~/shared/types/*.d.ts",
+      "~/shared/utils/*.ts",
     ],
   },
 

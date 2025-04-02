@@ -62,9 +62,7 @@ watch(
     } else if (newKey === "ok") {
       const selectedexercise = exercises[selectedIndex.value];
       if (selectedexercise && unitId) {
-        navigateTo(
-          localePath(`/tv/unit/${unitId}/exercise/${selectedexercise.Id}`)
-        );
+        navigateTo(localePath(`/tv/${unitId}/${selectedexercise.Id}`));
       }
     }
   }

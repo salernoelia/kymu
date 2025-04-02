@@ -4,7 +4,9 @@
     :placeholder="placeholder || 'Patient suchen..'"
     :disabled="disabled"
     :value="modelValue"
-    @input="$emit('update:modelValue', $event.target.value)"
+    @input="
+      $emit('update:modelValue', ($event.target as HTMLInputElement).value)
+    "
     :class="[
       'flex h-10 w-full rounded-lg border text-sm',
       'placeholder:text-gray-500 focus-visible:outline-none focus-visible:ring-1',

@@ -67,11 +67,6 @@
 </template>
 
 <script setup lang="ts">
-definePageMeta({
-  title: "Kymu",
-  layout: "about",
-});
-
 const localePath = useLocalePath();
 const supabase = useSupabaseClient();
 
