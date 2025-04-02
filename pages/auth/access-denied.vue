@@ -17,6 +17,6 @@ const localePath = useLocalePath();
 
 definePageMeta({
   title: "Access Denied",
-  layout: "about",
+  layout: "auth",
 });
 </script>

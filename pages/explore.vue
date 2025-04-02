@@ -2,12 +2,7 @@
   <h1>Explore Key moves</h1>
 </template>
 
-<script setup lang="ts">
-definePageMeta({
-  title: "Kymu",
-  layout: "about",
-});
-</script>
+<script setup lang="ts"></script>
 
 <style scoped>
 @import url("https://use.typekit.net/vov2bbh.css");

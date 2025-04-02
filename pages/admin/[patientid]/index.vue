@@ -150,6 +150,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "admin",
+});
+
 import {
   type DateValue,
   getLocalTimeZone,

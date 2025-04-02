@@ -10,6 +10,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "admin",
+});
+
 const user = ref<User>({
   name: "Dr. Elanowski",
   email: "elanowski@example.com",

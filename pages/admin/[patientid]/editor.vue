@@ -132,6 +132,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "admin",
+});
+
 const route = useRoute();
 const store = useEditorStore();
 

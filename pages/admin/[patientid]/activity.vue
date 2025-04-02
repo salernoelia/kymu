@@ -193,6 +193,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "admin",
+});
+
 const route = useRoute();
 const timeView = ref("month");
 const localePath = useLocalePath();

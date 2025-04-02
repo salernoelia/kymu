@@ -1,4 +1,9 @@
 <script setup lang="ts">
+definePageMeta({
+  title: "Access Denied",
+  layout: "auth",
+});
+
 const user = useSupabaseUser();
 
 watch(

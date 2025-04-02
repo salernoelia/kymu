@@ -33,6 +33,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "admin",
+});
+
 const settings = ref<Settings>({
   username: "",
   email: "",
