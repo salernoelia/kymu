@@ -1,6 +1,6 @@
 <template>
   <div>
-    <NavigationTop />
+    <NavigationDefaultTop />
     <PrimitivesDivider class="px-4" />
     <main class="p-6">
       <slot></slot>

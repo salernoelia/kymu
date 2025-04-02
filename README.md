@@ -19,13 +19,13 @@ supabase db pull
 #### Local
 
 ```sh
-supabase gen types typescript --local > ./shared/types/database.types.ts
+supabase gen types typescript --local > ./shared/types/database.d.ts
 ```
 
 #### External
 
 ```sh
-npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema cccpublic > ./shared/types/database.types.ts
+npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema cccpublic > ./shared/types/database.d.ts
 ```
 
 ---

@@ -1,6 +1,4 @@
-import { exp } from "three/tsl";
-
-const ROMCombinations = {
+export const ROMCombinations = {
     shoulder_abduction_left: { pivot: 11, movable: 13 },
     shoulder_abduction_right: { pivot: 12, movable: 14 },
     elbow_flexion_left: { pivot: 13, movable: 15 },
@@ -14,5 +12,3 @@ const ROMCombinations = {
     ankle_flexion_left: { pivot: 27, movable: 31 },
     ankle_flexion_right: { pivot: 28, movable: 32 },
 };
-
-export default ROMCombinations;

@@ -1,4 +1,4 @@
-const mediapipePoseLandmarks: Record<string, number> = {
+export const mediapipePoseLandmarks: Record<string, number> = {
     nose: 0,
     left_eye_inner: 1,
     left_eye: 2,
@@ -33,5 +33,3 @@ const mediapipePoseLandmarks: Record<string, number> = {
     left_foot_index: 31,
     right_foot_index: 32,
 };
-
-export default mediapipePoseLandmarks;

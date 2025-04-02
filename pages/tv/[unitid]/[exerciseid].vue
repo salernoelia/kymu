@@ -25,7 +25,7 @@
 </template>
 
 <script setup lang="ts">
-import ROMCombinations from "~/shared/constants/ROMCombinations";
+import { ROMCombinations } from "~/shared/constants/ROMCombinations";
 
 definePageMeta({
   title: "Kymu",
