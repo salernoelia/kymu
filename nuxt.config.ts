@@ -64,9 +64,9 @@ export default defineNuxtConfig({
     url: process.env.SUPABASE_URL,
     key: process.env.SUPABASE_KEY,
     redirectOptions: {
-      login: "/login",
-      callback: "/confirm",
-      exclude: ["/signup", "/", "/explore"],
+      login: "/auth/login",
+      callback: "/auth/confirm",
+      exclude: ["/auth/signup", "/", "/explore"],
     },
   },
 

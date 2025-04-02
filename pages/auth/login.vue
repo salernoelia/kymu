@@ -46,7 +46,7 @@
       <div class=" text-center">
         <span class="text-gray-600"> Already have an account? </span>
         <NuxtLink
-          :to="localePath('/signup')"
+          :to="localePath('/auth/signup')"
           class="text-gray-700 hover:text-black hover:underline cursor-pointer"
         >
           {{ $t("signup") }}
@@ -100,7 +100,7 @@ const logIn = async () => {
     });
 
     if (error) throw error;
-    return navigateTo(localePath("/confirm"));
+    return navigateTo(localePath("/auth/confirm"));
   } catch (error) {
     errorMessage.value = error.message;
   }

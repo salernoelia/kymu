@@ -16,7 +16,7 @@
       id="patient-info"
       class="flex justify-between w-full p-1"
     >
-      <h2>{{ $t("patient-overview-title") }}</h2>
+      <h1 class="text-2xl font-bold">{{ $t("patient-info") }}</h1>
     </div>
     <div class="w-full h-full flex flex-row gap-4 overflow-hidden">
       <!-- left -->
@@ -27,7 +27,7 @@
           class="flex flex-col w-full h-1/2 border rounded p-4 bg-white"
           v-if="f"
         >
-          <h2>{{ $t("patient-info") }}</h2>
+          <h2>{{ $t("patient-details") }}</h2>
           <p>
             {{ $t("patient") }}: {{ f.patient_last_name }}
             {{ f.patient_first_name }}

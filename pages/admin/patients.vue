@@ -1,6 +1,6 @@
 <template>
   <div v-if="isLoadingPage">
-    <div class="flex justify-between space-x-4 p-4">
+    <div class="flex justify-between space-x-4">
       <div class="flex flex-col align-top gap-4 w-1/4">
         <h1 class="text-2xl font-bold">{{ $t("patient-overview") }}</h1>
         <div

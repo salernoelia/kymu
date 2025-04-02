@@ -25,7 +25,7 @@
           id="patient-info"
           class="flex justify-between w-full p-1"
         >
-          <h2>{{ $t("unit-editor-title") }}</h2>
+          <h1 class="text-2xl font-bold">{{ $t("unit-editor-title") }}</h1>
         </div>
         <div
           id="exercises"

@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-row p-4 items-center gap-2">
+  <div class="flex flex-row items-center gap-2">
     <Icon
       v-if="showBackButton"
       name="ic:baseline-arrow-back"
       @click="() => $router.back()"
       size="1.5rem"
-      class="cursor-pointer"
+      class="cursor-pointer opacity-50 hover:opacity-100 transition-opacity duration-200"
     />
     <template
       v-for="(crumb, index) in breadcrumbs"
@@ -13,7 +13,11 @@
     >
       <nuxt-link
         :to="localePath(crumb.path)"
-        :class="[index === breadcrumbs.length - 1 ? '' : 'opacity-50']"
+        :class="[
+          index === breadcrumbs.length - 1
+            ? ''
+            : 'opacity-50 hover:opacity-100 transition-opacity duration-200',
+        ]"
       >
         {{ $t(crumb.translationKey) }}
       </nuxt-link>

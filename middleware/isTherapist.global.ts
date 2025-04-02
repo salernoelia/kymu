@@ -7,7 +7,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         if (!supabaseUser.value?.id) {
             console.log("No user found");
             alert("No user found");
-            return navigateTo(localePath("/login"));
+            return navigateTo(localePath("/auth/login"));
         }
 
         const { data: therapistData, error } = await supabase
@@ -17,9 +17,8 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
             .single();
 
         if (error) {
-            alert("User is not a therapist");
             console.error("Error fetching therapist data:", error);
-            return navigateTo(localePath("/"));
+            return navigateTo(localePath("/auth/access-denied"));
         }
 
         if (!therapistData) {

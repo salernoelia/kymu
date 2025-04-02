@@ -18,7 +18,7 @@
       id="patient-info"
       class="flex justify-between w-full p-1"
     >
-      <h2>{{ $t("training-data-title") }}</h2>
+      <h1 class="text-2xl font-bold">{{ $t("training-data-title") }}</h1>
       <PrimitivesButton
         variant="outline"
         icon-right="ic:outline-file-download"

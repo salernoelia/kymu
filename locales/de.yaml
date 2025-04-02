@@ -16,6 +16,9 @@ loading: "Laden..."
 loading-error: "Fehler beim Laden"
 loading-error-retry: "Erneut versuchen"
 details: "Details"
+go-home: "Zur Startseite"
+access-denied: "Zugriff verweigert"
+access-denied-message: "Du hast nicht die Berechtigung, diese Seite zu sehen. Bitte melde dich an."
 
 # nav
 home: "Home"
@@ -43,9 +46,11 @@ vr-viewer-select-placeholder: "Wähle einen Viewer Typ"
 
 # patient overview
 patient-overview-title: "Patientenübersicht"
+
 patient: "Patient"
 patient-info: "Patienteninformationen"
 patient-overview: "Patientenübersicht"
+patient-details: "Patientendetails"
 patient-name: "Patientenname"
 patient-diagnosis: "Diagnose"
 patient-diagnosis-details: "Details"

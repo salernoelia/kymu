@@ -55,7 +55,7 @@
           class="link"
         >
           <Icon
-            name="material-symbols-light:home-repair-service"
+            name="material-symbols-light:home-repair-service-outline"
             class="icon"
           />
         </nuxt-link>
@@ -86,7 +86,7 @@
         <span class="padded-line" />
 
         <nuxt-link
-          to="/settings"
+          to="/admin/settings"
           class="link"
         >
           <Icon
@@ -96,7 +96,7 @@
         </nuxt-link>
 
         <nuxt-link
-          to="/profile"
+          to="/admin/profile"
           class="link"
         >
           <Icon
@@ -106,7 +106,7 @@
         </nuxt-link>
         <NuxtLink
           @click="handleLogout"
-          class="link"
+          class="link mb-2"
         >
           <Icon
             name="material-symbols-light:logout"
@@ -133,7 +133,7 @@ const handleLogout = async () => {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    navigateTo(localePath("/login"));
+    navigateTo(localePath("/auth/login"));
   } catch (error: any) {
     console.log(error.message);
   }

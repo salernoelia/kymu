@@ -1,6 +1,7 @@
 home: "Home"
 signup: "Sign Up"
 login: "Log In"
+go-home: "Go to Home"
 
 # units
 unit-editor: "Unit Editor"

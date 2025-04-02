@@ -19,6 +19,11 @@
         :to="localePath('/explore')"
         >Explore</nuxt-link
       >
+      <nuxt-link
+        class="nav-link"
+        :to="localePath('/examples')"
+        >Examples</nuxt-link
+      >
     </div>
 
     <div class="flex items-center gap-4 w-1/3 justify-end">
@@ -62,6 +67,11 @@
 </template>
 
 <script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "about",
+});
+
 const localePath = useLocalePath();
 const supabase = useSupabaseClient();
 
@@ -69,7 +79,7 @@ const handleLogout = async () => {
   try {
     const { error } = await supabase.auth.signOut();
     if (error) throw error;
-    navigateTo(localePath("/login"));
+    navigateTo(localePath("/auth/login"));
   } catch (error: any) {
     console.log(error.message);
   }

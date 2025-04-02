@@ -4,24 +4,53 @@
 
     <div class="statistics-container">
       <div class="dropdown-container">
-        <label for="patient-select" class="block text-gray-700 mb-2">Select Patient</label>
-        <select id="patient-select" v-model="selectedPatient" @change="fetchPatientStats"
-          class="border rounded px-4 py-2 w-full focus:ring focus:ring-blue-300">
-          <option disabled value="">Select a patient</option>
-          <option v-for="patient in patients" :key="patient.id" :value="patient.id">
+        <label
+          for="patient-select"
+          class="block text-gray-700 mb-2"
+          >Select Patient</label
+        >
+        <select
+          id="patient-select"
+          v-model="selectedPatient"
+          @change="fetchPatientStats"
+          class="border rounded px-4 py-2 w-full focus:ring focus:ring-blue-300"
+        >
+          <option
+            disabled
+            value=""
+          >
+            Select a patient
+          </option>
+          <option
+            v-for="patient in patients"
+            :key="patient.id"
+            :value="patient.id"
+          >
             {{ patient.name }}
           </option>
         </select>
       </div>
 
       <div class="statistics-content">
-        <div v-if="statistics.length" class="statistics">
-          <div class="stat-item" v-for="stat in statistics" :key="stat.id">
+        <div
+          v-if="statistics.length"
+          class="statistics"
+        >
+          <div
+            class="stat-item"
+            v-for="stat in statistics"
+            :key="stat.id"
+          >
             <h2 class="font-semibold text-lg">{{ stat.title }}</h2>
             <p class="text-gray-600">{{ stat.value }}</p>
           </div>
         </div>
-        <p v-else class="text-gray-500">No statistics available for the selected patient.</p>
+        <p
+          v-else
+          class="text-gray-500"
+        >
+          No statistics available for the selected patient.
+        </p>
       </div>
     </div>
   </div>
@@ -31,13 +60,12 @@
 import type { StatsByPatient } from "~/shared/types/stats";
 import type { Patient } from "~/shared/types/patient";
 
-
 const patients = ref<Patient[]>([]);
 const selectedPatient = ref("");
 const statistics = ref([]);
 
 const loadPatients = async () => {
-  const data = await import("../assets/data/data.json");
+  const data = await import("../../assets/data/data.json");
   if (!data.patients) {
     return;
   }
@@ -49,8 +77,6 @@ const fetchPatientStats = () => {
     statistics.value = [];
     return;
   }
-
-
 
   const statsByPatient: StatsByPatient = {
     1: [
@@ -86,12 +112,10 @@ onMounted(() => {
   padding: 20px;
 }
 
-
 .statistics-container {
   width: 600px;
   margin: 0 auto;
 }
-
 
 .dropdown-container {
   margin-bottom: 20px;
