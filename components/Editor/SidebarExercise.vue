@@ -16,7 +16,9 @@
         <option value="balance">Balance</option>
         <option value="endurance">Endurance</option>
         <option value="coordination">Coordination</option>
-        <option value="motor function">Motor Function</option>
+        <option value="motor-function">Motor Function</option>
+        <option value="range-of-motion">Range of Motion</option>
+        <option value="other">Other</option>
       </select>
     </div>
 
