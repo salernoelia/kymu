@@ -1,11 +1,11 @@
 <template>
-  <div class="flex flex-row justify-between items-center">
+  <div class="card flex flex-row justify-between items-center">
     <div class="left">
       <h2>
-        {{ name }}
+        {{ exercise.name }}
       </h2>
       <h3>
-        {{ description }}
+        {{ exercise.description }}
       </h3>
     </div>
     <div class="right">
@@ -15,16 +15,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  name: {
-    type: String,
-    default: "Title",
-  },
-  description: {
-    type: String,
-    default: "Subtitle",
-  },
-});
+const props = defineProps<{ exercise: Tables<"exercises"> }>();
 </script>
 
 <style scoped></style>

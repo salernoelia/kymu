@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row justify-between items-center">
+  <div class="card flex flex-row justify-between items-center">
     <div class="left">
       <h2>
         {{ name }}
@@ -22,9 +22,11 @@ const props = defineProps({
   },
   description: {
     type: String,
-    default: "Subtitle",
+    default: "",
   },
 });
+
+console.log("Title", props.name, props.description);
 </script>
 
 <style scoped></style>

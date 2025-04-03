@@ -104,3 +104,17 @@
     --vis-text-color: #333;
   }
 }
+
+.card {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: #fff;
+  border: var(--color-Stroke) 1px solid;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.card:hover {
+  background-color: var(--color-Gray-100);
+  border: var(--color-Primary) 1px solid;
+}

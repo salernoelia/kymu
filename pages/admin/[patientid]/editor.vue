@@ -1,5 +1,5 @@
 <template>
-  <div class="flex flex-row gap-4 overflow-x-auto">
+  <div class="flex flex-row gap-4">
     <EditorUnit
       v-for="unit in units"
       :key="unit.id"
