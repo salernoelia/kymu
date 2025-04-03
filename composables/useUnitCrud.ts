@@ -1,7 +1,3 @@
-export type Unit = Tables<"units">;
-export type UnitInsert = TablesInsert<"units">;
-export type UnitUpdate = TablesUpdate<"units">;
-
 export const useUnitCrud = () => {
     const supabase = useSupabaseClient<Database>();
     const route = useRoute();
@@ -14,6 +10,22 @@ export const useUnitCrud = () => {
         const { data, error } = await supabase
             .from("units")
             .select("*")
+            .eq("patient_uid", patientId.value)
+            .order("created_at", { ascending: false });
+
+        if (error) throw error;
+        return data || [];
+    };
+
+    /**
+     * Get all units for a specific patient with their assesments and exercises
+     */
+    const getWithDetails = async (): Promise<Unit[]> => {
+        const { data, error } = await supabase
+            .from("units")
+            .select("*,
+                assessments(*),
+                ")
             .eq("patient_uid", patientId.value)
             .order("created_at", { ascending: false });
 

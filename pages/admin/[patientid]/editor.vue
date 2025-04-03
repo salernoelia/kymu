@@ -1,6 +1,10 @@
 <template>
-  <div>
-    {{ units }}
+  <div class="flex flex-row gap-4 overflow-x-auto">
+    <EditorUnit
+      v-for="unit in units"
+      key="unit.id"
+      :unit="unit"
+    />
   </div>
 </template>
 
@@ -10,13 +14,16 @@ definePageMeta({
   layout: "admin-editor",
 });
 
+// composables
 const supabase = useSupabaseClient();
 const route = useRoute();
 const localePath = useLocalePath();
-const patientId = route.params.patientid;
-
-// crud
 const unit = useUnitCrud();
 
+// providers
+const patientId = route.params.patientid;
+provide("patientId", patientId);
+
 const units = await unit.get();
+provide("units", units);
 </script>
