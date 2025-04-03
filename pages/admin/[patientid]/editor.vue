@@ -24,6 +24,7 @@ const unit = useUnitCrud();
 const patientId = route.params.patientid;
 provide("patientId", patientId);
 
-const units = await unit.get();
+const units: UnitWithDetails[] = await unit.getWithDetails();
+console.log("units", units);
 provide("units", units);
 </script>

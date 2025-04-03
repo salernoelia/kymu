@@ -1,14 +1,15 @@
-drop policy "Enable insert for users based on therapist_uid" on "public"."assessments";
-
-drop policy "Enable select for users based on therapist_uid" on "public"."assessments";
-
-drop policy "Enable therapists read therapists based on uid" on "public"."therapists";
+create table "public"."profiles" (
+    "id" uuid not null,
+    "created_at" timestamp with time zone not null default now(),
+    "updated_at" timestamp with time zone not null default now(),
+    "first_name" text,
+    "last_name" text,
+    "user_type" text,
+    "language" text,
+    "avatar_url" text
+);
 
 alter table "public"."exercises" drop constraint "public_exercises_training_unit_id_fkey";
-
-alter table "public"."connection_families_and_therapists" drop constraint "public_connection_families_and_therapists_family_id_fkey";
-
-alter table "public"."connection_families_and_therapists" drop constraint "public_connection_families_and_therapists_therapist_id_fkey";
 
 create table "public"."assessments_and_tests" (
     "assessment_id" uuid not null,
@@ -64,14 +65,6 @@ alter table "public"."units_and_exercises" enable row level security;
 alter table "public"."assessments" drop column "test_ids";
 
 alter table "public"."assessments" add column "patient_uid" uuid;
-
-alter table "public"."connection_families_and_therapists" drop column "family_id";
-
-alter table "public"."connection_families_and_therapists" drop column "therapist_id";
-
-alter table "public"."connection_families_and_therapists" add column "family_uid" uuid not null;
-
-alter table "public"."connection_families_and_therapists" add column "therapist_uid" uuid not null;
 
 alter table "public"."default_assessments" drop column "default_test_ids";
 
@@ -204,14 +197,6 @@ alter table "public"."units_and_exercises" validate constraint "public_units_exe
 alter table "public"."units_and_exercises" add constraint "units_and_exercises_exercise_id_key" UNIQUE using index "units_and_exercises_exercise_id_key";
 
 alter table "public"."units_and_exercises" add constraint "units_exercises_prev_exercise_id_key" UNIQUE using index "units_exercises_prev_exercise_id_key";
-
-alter table "public"."connection_families_and_therapists" add constraint "public_connection_families_and_therapists_family_id_fkey" FOREIGN KEY (family_uid) REFERENCES families(uid) ON UPDATE CASCADE ON DELETE CASCADE not valid;
-
-alter table "public"."connection_families_and_therapists" validate constraint "public_connection_families_and_therapists_family_id_fkey";
-
-alter table "public"."connection_families_and_therapists" add constraint "public_connection_families_and_therapists_therapist_id_fkey" FOREIGN KEY (therapist_uid) REFERENCES therapists(uid) ON UPDATE CASCADE ON DELETE CASCADE not valid;
-
-alter table "public"."connection_families_and_therapists" validate constraint "public_connection_families_and_therapists_therapist_id_fkey";
 
 set check_function_bodies = off;
 
@@ -573,38 +558,6 @@ grant truncate on table "public"."units_and_exercises" to "service_role";
 
 grant update on table "public"."units_and_exercises" to "service_role";
 
-create policy "delete_own_assessments"
-on "public"."assessments"
-as permissive
-for delete
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "insert_own_assessments"
-on "public"."assessments"
-as permissive
-for insert
-to public
-with check ((therapist_uid = auth.uid()));
-
-
-create policy "select_own_assessments"
-on "public"."assessments"
-as permissive
-for select
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "update_own_assessments"
-on "public"."assessments"
-as permissive
-for update
-to public
-using ((therapist_uid = auth.uid()));
-
-
 create policy "patient_access_policy"
 on "public"."assessments_and_tests"
 as permissive
@@ -631,80 +584,8 @@ with check ((EXISTS ( SELECT 1
   WHERE ((assessments.id = assessments_and_tests.assessment_id) AND (assessments.therapist_uid = auth.uid())))));
 
 
-create policy "delete_connection_families_and_therapists_as_family"
-on "public"."connection_families_and_therapists"
-as permissive
-for delete
-to public
-using ((family_uid = auth.uid()));
-
-
-create policy "delete_families_and_therapists_as_therapist"
-on "public"."connection_families_and_therapists"
-as permissive
-for delete
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "insert_connection_families_and_therapists_as_family"
-on "public"."connection_families_and_therapists"
-as permissive
-for insert
-to public
-with check ((family_uid = auth.uid()));
-
-
-create policy "insert_families_and_therapists_as_therapist"
-on "public"."connection_families_and_therapists"
-as permissive
-for insert
-to public
-with check ((therapist_uid = auth.uid()));
-
-
-create policy "select_connection_families_and_therapists_as_family"
-on "public"."connection_families_and_therapists"
-as permissive
-for select
-to public
-using ((family_uid = auth.uid()));
-
-
-create policy "select_families_and_therapists_as_therapist"
-on "public"."connection_families_and_therapists"
-as permissive
-for select
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "update_connection_families_and_therapists_as_family"
-on "public"."connection_families_and_therapists"
-as permissive
-for update
-to public
-using ((family_uid = auth.uid()));
-
-
-create policy "update_families_and_therapists_as_therapist"
-on "public"."connection_families_and_therapists"
-as permissive
-for update
-to public
-using ((therapist_uid = auth.uid()));
-
-
 create policy "Enable read access for all users"
 on "public"."default_assessments_and_tests"
-as permissive
-for select
-to authenticated
-using (true);
-
-
-create policy "Enable read access for all users"
-on "public"."default_exercise_instructions"
 as permissive
 for select
 to authenticated
@@ -717,102 +598,6 @@ as permissive
 for select
 to authenticated
 using (true);
-
-
-create policy "delete_exercise_instruction_as_therapist"
-on "public"."exercise_instructions"
-as permissive
-for delete
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "insert_exercise_instruction_as_therapist"
-on "public"."exercise_instructions"
-as permissive
-for insert
-to public
-with check ((therapist_uid = auth.uid()));
-
-
-create policy "select_exercise_instruction_as_therapist"
-on "public"."exercise_instructions"
-as permissive
-for select
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "update_exercise_instruction_as_therapist"
-on "public"."exercise_instructions"
-as permissive
-for update
-to public
-using ((therapist_uid = auth.uid()));
-
-
-create policy "delete_patient_record_as_patient"
-on "public"."patient_records"
-as permissive
-for delete
-to public
-using ((patient_uid = auth.uid()));
-
-
-create policy "insert_patient_record_as_patient"
-on "public"."patient_records"
-as permissive
-for insert
-to public
-with check ((patient_uid = auth.uid()));
-
-
-create policy "select_patient_record_as_patient"
-on "public"."patient_records"
-as permissive
-for select
-to public
-using ((patient_uid = auth.uid()));
-
-
-create policy "update_patient_record_as_patient"
-on "public"."patient_records"
-as permissive
-for update
-to public
-using ((patient_uid = auth.uid()));
-
-
-create policy "delete_patient_session_as_patient"
-on "public"."patient_sessions"
-as permissive
-for delete
-to public
-using ((patient_uid = auth.uid()));
-
-
-create policy "insert_patient_session_as_patient"
-on "public"."patient_sessions"
-as permissive
-for insert
-to public
-with check ((patient_uid = auth.uid()));
-
-
-create policy "select_patient_session_as_patient"
-on "public"."patient_sessions"
-as permissive
-for select
-to public
-using ((patient_uid = auth.uid()));
-
-
-create policy "update_patient_session_as_patient"
-on "public"."patient_sessions"
-as permissive
-for update
-to public
-using ((patient_uid = auth.uid()));
 
 
 create policy "Enable read access for all users"
@@ -829,38 +614,6 @@ as permissive
 for all
 to public
 using ((therapist_uid = auth.uid()));
-
-
-create policy "delete_own_therapists"
-on "public"."therapists"
-as permissive
-for delete
-to public
-using ((uid = auth.uid()));
-
-
-create policy "insert_own_therapists"
-on "public"."therapists"
-as permissive
-for insert
-to public
-with check ((uid = auth.uid()));
-
-
-create policy "select_own_therapists"
-on "public"."therapists"
-as permissive
-for select
-to public
-using ((uid = auth.uid()));
-
-
-create policy "update_own_therapists"
-on "public"."therapists"
-as permissive
-for update
-to public
-using ((uid = auth.uid()));
 
 
 create policy "Enable read access for all auth users"
