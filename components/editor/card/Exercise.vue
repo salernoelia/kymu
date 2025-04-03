@@ -1,5 +1,17 @@
 <template>
-  <div class="card flex flex-row justify-between items-center">
+  <EditorDropZone
+    v-if="
+      editorStore.dragging && !editorStore.isExerciseBeingDragged(exercise.id)
+    "
+    :unit="unit"
+    :position="index"
+  />
+  <div
+    class="card flex flex-row justify-between items-center"
+    draggable="true"
+    @dragstart="emit('dragstart', $event)"
+    @dragend="handleDragEnd"
+  >
     <div class="left">
       <h2>
         {{ exercise.name }}
@@ -15,7 +27,19 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps<{ exercise: Tables<"exercises"> }>();
-</script>
+const props = defineProps<{
+  exercise: Tables<"exercises">;
+  index: number;
+  unit: UnitWithDetails;
+}>();
 
-<style scoped></style>
+const emit = defineEmits<{
+  dragstart: [event: DragEvent];
+}>();
+
+const editorStore = useEditorStore();
+
+const handleDragEnd = (event: DragEvent) => {
+  editorStore.endDragExercise(event);
+};
+</script>

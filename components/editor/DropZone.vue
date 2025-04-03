@@ -1,0 +1,35 @@
+<template>
+  <div
+    class="drop-zone"
+    @drop.prevent="handleDrop"
+    @dragover.prevent
+    @dragenter.prevent
+  ></div>
+</template>
+
+<script setup lang="ts">
+const props = defineProps<{
+  unit: UnitWithDetails;
+  position?: number;
+}>();
+
+const editorStore = useEditorStore();
+
+const handleDrop = (event: DragEvent) => {
+  editorStore.onDropExercise(event, props.unit, props.position);
+};
+</script>
+<style scoped>
+.drop-zone {
+  background-color: var(--color-Tertiary);
+  border-radius: 5px;
+  border: 2px dashed var(--color-Tertiary);
+  height: 40px;
+  transition: all 0.3s ease;
+  opacity: 0.5;
+}
+
+.drop-zone:hover {
+  opacity: 0.9;
+}
+</style>
