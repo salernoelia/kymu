@@ -2,6 +2,15 @@
 
 ## Supabase Commands
 
+```
+create policy "Enable update for users based on therapist_uid"
+on "public"."assessments"
+as permissive
+for update
+to public
+with check ((auth.uid() = therapist_uid));
+```
+
 ### Link Database
 
 ```sh

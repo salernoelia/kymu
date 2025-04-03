@@ -72,7 +72,7 @@
       v-if="endAssessment && endAssessment.id"
       class="assessment-container"
     >
-      <slot name="end-assessment"></slot>
+      <slot name="end-assessment" />
     </div>
     <div
       v-else

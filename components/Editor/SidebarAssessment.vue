@@ -162,6 +162,18 @@ const addTest = (testId: string) => {
 
 const saveAssessment = async () => {
   await store.saveAssessment(assessment, assessmentPosition.value);
+
+  let parent = getCurrentInstance()?.parent;
+  while (parent && !parent.exposed?.reloadAssessments) {
+    parent = parent.parent;
+  }
+
+  if (parent && parent.exposed && parent.exposed?.reloadAssessments) {
+    setTimeout(() => {
+      if (!parent.exposed) return;
+      parent.exposed.reloadAssessments();
+    }, 100);
+  }
 };
 </script>
 

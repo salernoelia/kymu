@@ -222,8 +222,7 @@ export const useEditorStore = defineStore("editor", () => {
                 }
 
                 if (data && data[0] && targetUnit.value) {
-                    // Update the unit with the new assessment ID
-                    const updateData: TablesUpdate<"units"> = {};
+                    const updateData: Record<string, any> = {};
 
                     if (position === "start") {
                         updateData.start_assessment_id = data[0].id;
@@ -231,36 +230,29 @@ export const useEditorStore = defineStore("editor", () => {
                         updateData.end_assessment_id = data[0].id;
                     }
 
-                    const { error: updateError } = await supabase
+                    await supabase
                         .from("units")
                         .update(updateData)
                         .eq("id", targetUnit.value.id);
-
-                    if (updateError) {
-                        console.error(
-                            "Error updating unit with assessment:",
-                            updateError,
-                        );
-                    }
-                    await loadTrainingUnit();
-                    await reloadExercisesForUnits();
                 }
             } else {
-                // Update existing assessment
+                if (!supabaseUser.value?.id) return;
+                console.log("assessment", assessment);
                 const { error } = await supabase
                     .from("assessments")
                     .update({
                         name: assessment.name,
                         test_ids: assessment.test_ids,
                     })
-                    .eq("id", assessment.id);
+                    .eq("id", assessment.id)
+                    .eq("therapist_uid", supabaseUser?.value?.id);
 
                 if (error) {
                     console.error("Error updating assessment:", error);
+
                     return;
                 }
 
-                // Handle position change if needed
                 if (targetUnit.value) {
                     const currentPosition =
                         targetUnit.value.start_assessment_id === assessment.id
@@ -270,60 +262,46 @@ export const useEditorStore = defineStore("editor", () => {
                             ? "end"
                             : null;
 
-                    // Only update if position changed
                     if (
                         currentPosition !== position && currentPosition !== null
                     ) {
                         const updateData: Record<string, any> = {};
 
-                        // Clear from old position
                         if (currentPosition === "start") {
                             updateData.start_assessment_id = null;
                         } else {
                             updateData.end_assessment_id = null;
                         }
 
-                        // Add to new position
                         if (position === "start") {
                             updateData.start_assessment_id = assessment.id;
                         } else {
                             updateData.end_assessment_id = assessment.id;
                         }
 
-                        const { error: updateError } = await supabase
+                        await supabase
                             .from("units")
                             .update(updateData)
                             .eq("id", targetUnit.value.id);
-
-                        if (updateError) {
-                            console.error(
-                                "Error updating unit assessment position:",
-                                updateError,
-                            );
-                        }
                     }
                 }
             }
 
-            // This is the critical part - maintain existing units data structure
-            for (const unit of units.value) {
-                if (
-                    unit.exercises && !unit.exercises.length &&
-                    unit.exercises_index && unit.exercises_index.length > 0
-                ) {
-                    // Reload exercises for this unit
-                    const { data: exercisesData } = await supabase
-                        .from("exercises")
-                        .select("*")
-                        .in("id", unit.exercises_index);
+            const { data: refreshedAssessments } = await supabase
+                .from("assessments")
+                .select("*");
 
-                    if (exercisesData) {
-                        unit.exercises = exercisesData;
+            if (refreshedAssessments) {
+                // Update the editor component's assessments array
+                const editorComponent = getCurrentInstance();
+                if (editorComponent && editorComponent.parent) {
+                    const parentComponent = editorComponent.parent;
+                    const assessmentsProp = parentComponent.refs.assessments;
+                    if (assessmentsProp) {
+                        assessmentsProp.value = refreshedAssessments;
                     }
                 }
             }
-            await loadTrainingUnit();
-            await reloadExercisesForUnits();
 
             toast({
                 title: "Assessment saved",
@@ -339,6 +317,9 @@ export const useEditorStore = defineStore("editor", () => {
             });
         } finally {
             closeSidebar();
+
+            await loadTrainingUnit();
+            await reloadExercisesForUnits();
         }
     }
 
@@ -467,12 +448,14 @@ export const useEditorStore = defineStore("editor", () => {
                 }));
             }
 
+            if (!supabaseUser.value?.id) return;
+
             const { data: customExerciseData, error: customExerciseError } =
                 await supabase
                     .from("exercises")
                     .select("*")
                     .eq("is_template", true)
-                    .eq("therapist_uid", supabaseUser.value?.id || "");
+                    .eq("therapist_uid", supabaseUser.value?.id);
 
             if (customExerciseError) {
                 console.error(
@@ -514,12 +497,14 @@ export const useEditorStore = defineStore("editor", () => {
                 }));
             }
 
+            if (!supabaseUser.value?.id) return;
+
             const { data: customUnitData, error: customUnitError } =
                 await supabase
                     .from("units")
                     .select("*")
                     .eq("is_template", true)
-                    .eq("therapist_uid", supabaseUser.value?.id || "");
+                    .eq("therapist_uid", supabaseUser.value?.id);
 
             if (customUnitError) {
                 console.error(

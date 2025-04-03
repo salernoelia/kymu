@@ -115,7 +115,6 @@
                 :assessment="getAssessmentById(unit.end_assessment_id)!"
                 position="end"
               >
-                >
                 <h4>
                   {{
                     getAssessmentById(unit.end_assessment_id)?.name ||
@@ -210,6 +209,19 @@ watch(
 watch(sidebarOpen, (val) => {
   store.sidebarOpen = val;
 });
+
+async function reloadAssessments() {
+  const supabase = useSupabaseClient<Database>();
+  const { data, error } = await supabase.from("assessments").select("*");
+
+  if (!error && data) {
+    assessments.value = data;
+    return data;
+  } else if (error) {
+    console.error("Error loading assessments:", error);
+  }
+  return [];
+}
 
 const selectedPatientID = computed(() => {
   const id = route.params.patientid?.toString();
@@ -337,11 +349,14 @@ const onAddAssessment = ({
   unitId: string;
   position: "start" | "end";
 }) => {
+  // Set the assessment position for reference
   assessmentPosition.value = position;
   templateSelectorUnitId.value = unitId;
 
+  // Find the target unit and store it for reference
   const targetUnit = store.units.find((u) => u.id.toString() === unitId);
   if (targetUnit) {
+    // Initialize the new assessment with the correct unit reference
     store.initializeNewAssessment(unitId, position);
 
     sidebarTitle.value = `Create ${
@@ -352,6 +367,7 @@ const onAddAssessment = ({
     console.error("Target unit not found:", unitId);
   }
 };
+
 const onTypeSelected = (type: "exercise" | "assessment") => {
   if (type === "exercise") {
     onAddExerciseClick(templateSelectorUnitId.value!);
@@ -406,6 +422,8 @@ const onTemplateSelected = (data: {
 defineExpose({
   openCreateExerciseModal: onAddExerciseClick,
   openCreateUnitModal: onAddUnitClick,
+  reloadAssessments,
+  assessments,
 });
 </script>
 
