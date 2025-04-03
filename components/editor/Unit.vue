@@ -14,6 +14,25 @@
       <slot name="header"></slot>
     </div>
 
+    <!-- Start Assessment -->
+    <div
+      v-if="startAssessment && startAssessment.id"
+      class="assessment-container"
+    >
+      <slot name="start-assessment"></slot>
+    </div>
+    <div
+      v-else
+      class="assessment-placeholder start-assessment-placeholder"
+      @click="onAddAssessment('start')"
+    >
+      <Icon
+        name="material-symbols:clinical-notes"
+        size="1.25rem"
+      />
+      <span>Add Start Assessment</span>
+    </div>
+
     <div class="exercise-container">
       <div
         class="drop-zone"
@@ -47,6 +66,25 @@
         ></div>
       </template>
     </div>
+
+    <!-- End Assessment -->
+    <div
+      v-if="endAssessment && endAssessment.id"
+      class="assessment-container"
+    >
+      <slot name="end-assessment"></slot>
+    </div>
+    <div
+      v-else
+      class="assessment-placeholder end-assessment-placeholder"
+      @click="onAddAssessment('end')"
+    >
+      <Icon
+        name="material-symbols:clinical-notes"
+        size="1.25rem"
+      />
+      <span>Add End Assessment</span>
+    </div>
   </div>
 </template>
 
@@ -54,6 +92,8 @@
 const props = defineProps<{
   id: string;
   exercises: Array<{ id: string; [key: string]: any }>;
+  startAssessment?: { id: string; [key: string]: any } | null;
+  endAssessment?: { id: string; [key: string]: any } | null;
 }>();
 
 const emit = defineEmits<{
@@ -64,6 +104,13 @@ const emit = defineEmits<{
       sourceUnitId: string;
       targetUnitId: string;
       newPosition: number;
+    }
+  ): void;
+  (
+    e: "add-assessment",
+    data: {
+      unitId: string;
+      position: "start" | "end";
     }
   ): void;
 }>();
@@ -140,7 +187,7 @@ function onDropInZone(event: DragEvent, position: number) {
 
   try {
     const dataString = event.dataTransfer.getData("application/json");
-    console.log("Drop data:", dataString); // Debug the actual data
+    console.log("Drop data:", dataString);
 
     if (!dataString) {
       console.error("No data found in drop event");
@@ -158,6 +205,13 @@ function onDropInZone(event: DragEvent, position: number) {
   } catch (e) {
     console.error("Invalid drop data", e);
   }
+}
+
+function onAddAssessment(position: "start" | "end") {
+  emit("add-assessment", {
+    unitId: props.id,
+    position: position,
+  });
 }
 </script>
 
@@ -183,6 +237,7 @@ function onDropInZone(event: DragEvent, position: number) {
     background-color: rgba(21, 202, 130, 0.05);
   }
 }
+
 .block-header {
   margin-bottom: 1rem;
   border: 1px solid #ccc;
@@ -217,6 +272,36 @@ function onDropInZone(event: DragEvent, position: number) {
     height: 30px;
     margin: 5px 0;
     display: block;
+  }
+}
+
+.assessment-container {
+  margin: 1rem 0;
+}
+
+.assessment-placeholder {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 0.75rem;
+  margin: 1rem 0;
+  border-radius: 6px;
+  border: 1px dashed #ccc;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: #2196f3;
+    background-color: rgba(33, 150, 243, 0.05);
+  }
+
+  &.start-assessment-placeholder {
+    border-left: 3px solid #2196f3;
+  }
+
+  &.end-assessment-placeholder {
+    border-left: 3px solid #9c27b0;
   }
 }
 </style>

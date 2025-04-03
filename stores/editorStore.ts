@@ -9,12 +9,16 @@ export const useEditorStore = defineStore("editor", () => {
 
     const units = ref<UnitsWithExercises[]>([]);
     const selectedExercise = ref<Tables<"exercises"> | null>(null);
-    const selectedAssesment = ref<Tables<"assessments"> | null>(null);
+
     const selectedUnit = ref<UnitsWithExercises | null>(null);
     const selectedPatientId = ref<string | null>(null);
     const sidebarOpen = ref(false);
     const sidebarVariant = ref<
-        "exercise" | "assessment" | "unit" | "template-selector"
+        | "exercise"
+        | "assessment"
+        | "unit"
+        | "template-selector"
+        | "type-selector"
     >(
         "exercise",
     );
@@ -27,6 +31,9 @@ export const useEditorStore = defineStore("editor", () => {
     const exerciseTemplates = ref<ExerciseTemplate[]>([]);
     const unitTemplates = ref<UnitTemplate[]>([]);
     const targetUnitId = ref<string | null>(null);
+
+    const targetUnit = ref<UnitsWithExercises | null>(null);
+    const selectedAssessment = ref<Tables<"assessments"> | null>(null);
 
     watch([sidebarVariant, sidebarMode], () => {
         const mode = sidebarMode.value === "create" ? "Create" : "Edit";
@@ -72,17 +79,26 @@ export const useEditorStore = defineStore("editor", () => {
         assessment: Tables<"assessments">,
         mode: "edit" | "create" = "edit",
     ) {
-        selectedAssesment.value = assessment;
+        selectedAssessment.value = assessment;
         sidebarVariant.value = "assessment";
         sidebarMode.value = mode;
         sidebarOpen.value = true;
     }
 
-    async function initializeNewAssessment(unitId: string) {
-        targetUnitId.value = unitId;
+    async function initializeNewAssessment(
+        unitId: string,
+        position: "start" | "end",
+    ) {
+        const unit = units.value.find((u) =>
+            u.id.toString() === unitId.toString()
+        );
+        if (!unit) return;
+
+        targetUnit.value = unit;
         const newAssessment: TablesInsert<"assessments"> = {
             name: "",
             therapist_uid: supabaseUser.value?.id || "",
+            test_ids: [],
         };
 
         selectAssessment(
@@ -93,10 +109,237 @@ export const useEditorStore = defineStore("editor", () => {
                 inherited_default_assessment_id: null,
                 test_ids: [],
             },
+            "create",
         );
     }
 
-    function createAssessment(unitId: string, fromTemplateId?: string) {
+    async function deleteAssessment(assessmentId: string) {
+        if (!confirm("Are you sure you want to delete this assessment?")) {
+            return;
+        }
+
+        try {
+            const { data: unitData, error: unitError } = await supabase
+                .from("units")
+                .select("*")
+                .or(`start_assessment_id.eq.${assessmentId},end_assessment_id.eq.${assessmentId}`)
+                .single();
+
+            if (unitError) {
+                console.error("Error finding unit with assessment:", unitError);
+                return;
+            }
+
+            if (unitData) {
+                const updateData: any = {};
+                if (unitData.start_assessment_id === assessmentId) {
+                    updateData.start_assessment_id = null;
+                }
+                if (unitData.end_assessment_id === assessmentId) {
+                    updateData.end_assessment_id = null;
+                }
+
+                await supabase
+                    .from("units")
+                    .update(updateData)
+                    .eq("id", unitData.id);
+            }
+
+            const { error } = await supabase
+                .from("assessments")
+                .delete()
+                .eq("id", assessmentId);
+
+            if (error) {
+                console.error("Error deleting assessment", error);
+                return;
+            }
+
+            await loadTrainingUnit();
+            sidebarOpen.value = false;
+
+            toast({
+                title: "Assessment deleted",
+                description: "The assessment has been deleted successfully.",
+                variant: "default",
+            });
+        } catch (err) {
+            console.error("Error in deleteAssessment:", err);
+            toast({
+                title: "Error",
+                description: "Failed to delete assessment. Please try again.",
+                variant: "destructive",
+            });
+        }
+    }
+
+    async function reloadExercisesForUnits() {
+        if (!units.value.length) return;
+
+        for (const unit of units.value) {
+            if (!unit.exercises_index || unit.exercises_index.length === 0) {
+                unit.exercises = [];
+                continue;
+            }
+
+            const { data, error } = await supabase
+                .from("exercises")
+                .select("*")
+                .in("id", unit.exercises_index);
+
+            if (error) {
+                console.error(
+                    "Error loading exercises for unit",
+                    unit.id,
+                    error,
+                );
+            } else if (data) {
+                unit.exercises = data;
+            }
+        }
+    }
+
+    async function saveAssessment(
+        assessment: Tables<"assessments">,
+        position: "start" | "end",
+    ) {
+        try {
+            if (assessment.id === "new") {
+                const assessmentToCreate: TablesInsert<"assessments"> = {
+                    name: assessment.name,
+                    test_ids: assessment.test_ids || [],
+                    therapist_uid: supabaseUser.value?.id || "",
+                };
+
+                const { data, error } = await supabase
+                    .from("assessments")
+                    .insert([assessmentToCreate])
+                    .select();
+
+                if (error) {
+                    console.error("Error creating assessment:", error);
+                    return;
+                }
+
+                if (data && data[0] && targetUnit.value) {
+                    // Update the unit with the new assessment ID
+                    const updateData: TablesUpdate<"units"> = {};
+
+                    if (position === "start") {
+                        updateData.start_assessment_id = data[0].id;
+                    } else {
+                        updateData.end_assessment_id = data[0].id;
+                    }
+
+                    const { error: updateError } = await supabase
+                        .from("units")
+                        .update(updateData)
+                        .eq("id", targetUnit.value.id);
+
+                    if (updateError) {
+                        console.error(
+                            "Error updating unit with assessment:",
+                            updateError,
+                        );
+                    }
+                    await loadTrainingUnit();
+                    await reloadExercisesForUnits();
+                }
+            } else {
+                // Update existing assessment
+                const { error } = await supabase
+                    .from("assessments")
+                    .update({
+                        name: assessment.name,
+                        test_ids: assessment.test_ids,
+                    })
+                    .eq("id", assessment.id);
+
+                if (error) {
+                    console.error("Error updating assessment:", error);
+                    return;
+                }
+
+                // Handle position change if needed
+                if (targetUnit.value) {
+                    const currentPosition =
+                        targetUnit.value.start_assessment_id === assessment.id
+                            ? "start"
+                            : targetUnit.value.end_assessment_id ===
+                                    assessment.id
+                            ? "end"
+                            : null;
+
+                    // Only update if position changed
+                    if (
+                        currentPosition !== position && currentPosition !== null
+                    ) {
+                        const updateData: Record<string, any> = {};
+
+                        // Clear from old position
+                        if (currentPosition === "start") {
+                            updateData.start_assessment_id = null;
+                        } else {
+                            updateData.end_assessment_id = null;
+                        }
+
+                        // Add to new position
+                        if (position === "start") {
+                            updateData.start_assessment_id = assessment.id;
+                        } else {
+                            updateData.end_assessment_id = assessment.id;
+                        }
+
+                        const { error: updateError } = await supabase
+                            .from("units")
+                            .update(updateData)
+                            .eq("id", targetUnit.value.id);
+
+                        if (updateError) {
+                            console.error(
+                                "Error updating unit assessment position:",
+                                updateError,
+                            );
+                        }
+                    }
+                }
+            }
+
+            // This is the critical part - maintain existing units data structure
+            for (const unit of units.value) {
+                if (
+                    unit.exercises && !unit.exercises.length &&
+                    unit.exercises_index && unit.exercises_index.length > 0
+                ) {
+                    // Reload exercises for this unit
+                    const { data: exercisesData } = await supabase
+                        .from("exercises")
+                        .select("*")
+                        .in("id", unit.exercises_index);
+
+                    if (exercisesData) {
+                        unit.exercises = exercisesData;
+                    }
+                }
+            }
+            await loadTrainingUnit();
+            await reloadExercisesForUnits();
+
+            toast({
+                title: "Assessment saved",
+                description: "The assessment has been saved successfully.",
+                variant: "default",
+            });
+        } catch (err) {
+            console.error("Error in saveAssessment:", err);
+            toast({
+                title: "Error",
+                description: "An error occurred while saving the assessment.",
+                variant: "destructive",
+            });
+        } finally {
+            closeSidebar();
+        }
     }
 
     function selectExercise(
@@ -153,16 +396,18 @@ export const useEditorStore = defineStore("editor", () => {
             const { data: unitsData, error: unitsError } = await supabase
                 .from("units")
                 .select(`
-                id, 
-                created_at, 
-                name, 
-                description, 
-                patient_uid, 
-                therapist_uid, 
-                exercises_index,
-                is_template,
-                inherited_default_unit
-            `)
+        id, 
+        created_at, 
+        name, 
+        description, 
+        patient_uid, 
+        therapist_uid, 
+        exercises_index,
+        start_assessment_id,
+        end_assessment_id,
+        is_template,
+        inherited_default_unit
+      `)
                 .eq("patient_uid", selectedPatientId.value)
                 .order("created_at", { ascending: true });
 
@@ -191,29 +436,7 @@ export const useEditorStore = defineStore("editor", () => {
 
             for (const unit of unitsWithExercises) {
                 if (unit.exercises_index && unit.exercises_index.length > 0) {
-                    const { data: exercisesData, error: exercisesError } =
-                        await supabase
-                            .from("exercises")
-                            .select("*")
-                            .in("id", unit.exercises_index);
-
-                    if (exercisesError) {
-                        console.error(
-                            `Error loading exercises for unit ${unit.id}:`,
-                            exercisesError,
-                        );
-                    } else if (exercisesData) {
-                        const sortedExercises = [...exercisesData].sort(
-                            (a, b) => {
-                                const aIndex =
-                                    unit.exercises_index?.indexOf(a.id) ?? -1;
-                                const bIndex =
-                                    unit.exercises_index?.indexOf(b.id) ?? -1;
-                                return aIndex - bIndex;
-                            },
-                        );
-                        unit.exercises = sortedExercises;
-                    }
+                    // Load exercises
                 }
             }
 
@@ -270,7 +493,7 @@ export const useEditorStore = defineStore("editor", () => {
                         default_scene_id: 1,
                         description: item.description || "",
                         thumbnail_url: "",
-                        name: item.name || "", // Provide a default value for name
+                        name: item.name || "",
                     } as ExerciseTemplate)),
                 ];
             }
@@ -1354,7 +1577,13 @@ export const useEditorStore = defineStore("editor", () => {
 
     return {
         units,
-        selectedAssesment,
+        targetUnit,
+        selectedAssessment,
+        selectAssessment,
+        initializeNewAssessment,
+        saveAssessment,
+        deleteAssessment,
+
         selectedExercise,
         selectedUnit,
         selectedPatientId,
@@ -1378,7 +1607,7 @@ export const useEditorStore = defineStore("editor", () => {
         handleDragEnd,
         loadTrainingUnit,
         loadTemplates,
-        initializeNewAssessment,
+        reloadExercisesForUnits,
         initializeNewExercise,
         initializeNewUnit,
         createExercise,

@@ -37,7 +37,10 @@
             :id="unit.id.toString()"
             :data-unit-id="unit.id"
             :exercises="store.getExercisesForUnit(unit.id.toString())"
+            :startAssessment="getUnitStartAssessment(unit)"
+            :endAssessment="getUnitEndAssessment(unit)"
             @drop="store.handleExerciseDrop"
+            @add-assessment="onAddAssessment"
             class="z-20"
           >
             <template #header>
@@ -47,7 +50,7 @@
                   <Icon
                     class="icon-single cursor-pointer"
                     name="material-symbols-light:add-circle-outline-rounded"
-                    @click="() => onAddExerciseClick(unit.id.toString())"
+                    @click="() => onAddClick(unit.id.toString())"
                   />
                   <Icon
                     class="icon-single cursor-pointer"
@@ -59,6 +62,28 @@
 
               <p>{{ unit.description }}</p>
             </template>
+
+            <!-- Start Assessment -->
+            <template
+              v-if="unit.start_assessment_id"
+              #start-assessment
+            >
+              <EditorUnitAssessment
+                :id="unit.start_assessment_id"
+                :assessment="getAssessmentById(unit.start_assessment_id)!"
+                position="start"
+                v-if="getAssessmentById(unit.start_assessment_id)"
+              >
+                <h4>
+                  {{
+                    getAssessmentById(unit.start_assessment_id)?.name ||
+                    "Initial Assessment"
+                  }}
+                </h4>
+              </EditorUnitAssessment>
+            </template>
+
+            <!-- Exercises -->
             <template
               v-for="exercise in store.getExercisesForUnit(unit.id.toString())"
               :key="exercise.id"
@@ -78,6 +103,26 @@
                   {{ exercise.duration_seconds_goal }} seconds
                 </p>
               </EditorUnitExercise>
+            </template>
+
+            <!-- End Assessment -->
+            <template
+              v-if="unit.end_assessment_id"
+              #end-assessment
+            >
+              <EditorUnitAssessment
+                :id="unit.end_assessment_id"
+                :assessment="getAssessmentById(unit.end_assessment_id)!"
+                position="end"
+              >
+                >
+                <h4>
+                  {{
+                    getAssessmentById(unit.end_assessment_id)?.name ||
+                    "Final Assessment"
+                  }}
+                </h4>
+              </EditorUnitAssessment>
             </template>
           </EditorUnit>
 
@@ -109,6 +154,16 @@
         </template>
         <template v-if="store.sidebarVariant === 'unit' && store.selectedUnit">
           <EditorSidebarUnit @create-exercise="onUnitCreateExercise" />
+        </template>
+        <template
+          v-if="
+            store.sidebarVariant === 'assessment' && store.selectedAssessment
+          "
+        >
+          <EditorSidebarAssessment />
+        </template>
+        <template v-if="store.sidebarVariant === 'type-selector'">
+          <EditorTypeSelector @select="onTypeSelected" />
         </template>
         <template v-if="store.sidebarVariant === 'template-selector'">
           <EditorSidebarTemplateSelector
@@ -163,15 +218,20 @@ const selectedPatientID = computed(() => {
 
 const templateSelectorType = ref<"exercise" | "unit">("unit");
 const templateSelectorUnitId = ref<string | null>(null);
+const assessmentPosition = ref<"start" | "end">("start");
 
 provide("dragInProgress", toRef(store, "dragInProgress"));
 provide("draggingExerciseData", toRef(store, "draggingExercise"));
+
+const assessments = ref<Tables<"assessments">[]>([]);
 
 onMounted(async () => {
   await store.loadTemplates();
 
   store.setSelectedPatientId(selectedPatientID.value);
   await store.loadTrainingUnit();
+  await loadAssessments();
+  await loadExercisesForUnits(); // Add this line
 
   if (route.query.create === "unit") {
     onAddUnitClick();
@@ -180,10 +240,79 @@ onMounted(async () => {
   isLoadingPage.value = false;
 });
 
+async function loadExercisesForUnits() {
+  if (!store.units.length) return;
+
+  const unitIds = store.units.map((unit) => unit.id);
+  const supabase = useSupabaseClient<Database>();
+
+  for (const unit of store.units) {
+    if (!unit.exercises_index || unit.exercises_index.length === 0) continue;
+
+    const { data, error } = await supabase
+      .from("exercises")
+      .select("*")
+      .in("id", unit.exercises_index);
+
+    if (error) {
+      console.error("Error loading exercises for unit", unit.id, error);
+    } else if (data) {
+      const sortedExercises = [...data].sort((a, b) => {
+        const aIndex = unit.exercises_index?.indexOf(a.id) ?? -1;
+        const bIndex = unit.exercises_index?.indexOf(b.id) ?? -1;
+        return aIndex - bIndex;
+      });
+
+      unit.exercises = sortedExercises;
+    }
+  }
+}
+
+async function loadAssessments() {
+  const supabase = useSupabaseClient<Database>();
+  const { data, error } = await supabase.from("assessments").select("*");
+
+  if (!error && data) {
+    assessments.value = data;
+  } else if (error) {
+    console.error("Error loading assessments:", error);
+  }
+}
+
+function getAssessmentById(id: string) {
+  return assessments.value.find((assessment) => assessment.id === id);
+}
+
+function getUnitStartAssessment(unit: any) {
+  if (!unit.start_assessment_id) return null;
+  const assessment = getAssessmentById(unit.start_assessment_id);
+  return assessment || null;
+}
+
+function getUnitEndAssessment(unit: any) {
+  if (!unit.end_assessment_id) return null;
+  const assessment = getAssessmentById(unit.end_assessment_id);
+  return assessment || null;
+}
+
 watch(selectedPatientID, async (newId) => {
   store.setSelectedPatientId(newId);
   await store.loadTrainingUnit();
+  await loadAssessments();
+  await loadExercisesForUnits();
 });
+
+const onAddClick = (unitId: string) => {
+  if (!unitId) {
+    console.error("Unit ID is undefined");
+    return;
+  }
+
+  templateSelectorUnitId.value = unitId;
+  store.sidebarVariant = "type-selector";
+  sidebarTitle.value = "Add to Unit";
+  sidebarOpen.value = true;
+};
 
 const onAddExerciseClick = (unitId: string) => {
   if (!unitId) {
@@ -199,6 +328,41 @@ const onAddExerciseClick = (unitId: string) => {
 
   sidebarTitle.value = "Create New Exercise";
   sidebarOpen.value = true;
+};
+
+const onAddAssessment = ({
+  unitId,
+  position,
+}: {
+  unitId: string;
+  position: "start" | "end";
+}) => {
+  assessmentPosition.value = position;
+  templateSelectorUnitId.value = unitId;
+
+  const targetUnit = store.units.find((u) => u.id.toString() === unitId);
+  if (targetUnit) {
+    store.initializeNewAssessment(unitId, position);
+
+    sidebarTitle.value = `Create ${
+      position === "start" ? "Start" : "End"
+    } Assessment`;
+    sidebarOpen.value = true;
+  } else {
+    console.error("Target unit not found:", unitId);
+  }
+};
+const onTypeSelected = (type: "exercise" | "assessment") => {
+  if (type === "exercise") {
+    onAddExerciseClick(templateSelectorUnitId.value!);
+  } else if (type === "assessment") {
+    sidebarTitle.value = "Select Assessment Position";
+
+    onAddAssessment({
+      unitId: templateSelectorUnitId.value!,
+      position: "start",
+    });
+  }
 };
 
 const onAddUnitClick = () => {
