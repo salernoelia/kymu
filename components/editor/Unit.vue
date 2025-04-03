@@ -8,7 +8,7 @@
 <script setup lang="ts">
 const patientID = inject("patientId");
 
-const props = defineProps<{ unit: Unit }>();
+const props = defineProps<{ unit: UnitWithDetails }>();
 </script>
 
 <style scoped></style>

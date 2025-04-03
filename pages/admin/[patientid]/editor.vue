@@ -2,7 +2,7 @@
   <div class="flex flex-row gap-4 overflow-x-auto">
     <EditorUnit
       v-for="unit in units"
-      key="unit.id"
+      :key="unit.id"
       :unit="unit"
     />
   </div>
@@ -24,7 +24,15 @@ const unit = useUnitCrud();
 const patientId = route.params.patientid;
 provide("patientId", patientId);
 
-const units: UnitWithDetails[] = await unit.getWithDetails();
-console.log("units", units);
-provide("units", units);
+const units = ref<UnitWithDetails[]>([]);
+
+onMounted(async () => {
+  try {
+    units.value = await unit.getWithDetails();
+  } catch (error) {
+    console.error("Error fetching units:", error);
+  }
+});
+
+provide("units", units as Ref<UnitWithDetails[]>);
 </script>
