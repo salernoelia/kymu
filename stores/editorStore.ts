@@ -226,8 +226,11 @@ export const useEditorStore = defineStore("editor", () => {
 
                     if (position === "start") {
                         updateData.start_assessment_id = data[0].id;
-                    } else {
+                    } else if (position === "end") {
                         updateData.end_assessment_id = data[0].id;
+                    } else {
+                        console.error("Invalid position:", position);
+                        return;
                     }
 
                     await supabase

@@ -295,13 +295,13 @@ function getAssessmentById(id: string) {
   return assessments.value.find((assessment) => assessment.id === id);
 }
 
-function getUnitStartAssessment(unit: any) {
+function getUnitStartAssessment(unit: Tables<"units">) {
   if (!unit.start_assessment_id) return null;
   const assessment = getAssessmentById(unit.start_assessment_id);
   return assessment || null;
 }
 
-function getUnitEndAssessment(unit: any) {
+function getUnitEndAssessment(unit: Tables<"units">) {
   if (!unit.end_assessment_id) return null;
   const assessment = getAssessmentById(unit.end_assessment_id);
   return assessment || null;

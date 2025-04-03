@@ -3,12 +3,26 @@
 ## Supabase Commands
 
 ```
-create policy "Enable update for users based on therapist_uid"
-on "public"."assessments"
-as permissive
-for update
-to public
-with check ((auth.uid() = therapist_uid));
+CREATE POLICY select_own_assessments
+ON "public"."assessments"
+FOR SELECT
+USING (therapist_uid = auth.uid());
+
+CREATE POLICY insert_own_assessments
+ON "public"."assessments"
+FOR INSERT
+WITH CHECK (therapist_uid = auth.uid());
+
+CREATE POLICY update_own_assessments
+ON "public"."assessments"
+FOR UPDATE
+USING (therapist_uid = auth.uid());
+
+
+CREATE POLICY delete_own_assessments
+ON "public"."assessments"
+FOR DELETE
+USING (therapist_uid = auth.uid());
 ```
 
 ### Link Database
