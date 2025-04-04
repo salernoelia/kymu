@@ -19,11 +19,11 @@
       >
       </EditorCardExercise>
       <EditorDropZone
-        v-if="editorStore.dragging && unit.exercises.length === 0"
+        v-if="editorStore.draggingExercise && unit.exercises.length === 0"
         :unit="unit"
       />
       <EditorDropZone
-        v-else-if="editorStore.dragging && !lastExerciseIsBeingDragged"
+        v-else-if="editorStore.draggingExercise && !lastExerciseIsBeingDragged"
         :unit="unit"
         :position="unit.exercises.length"
       />
@@ -36,6 +36,7 @@
 const patientID = inject("patientId");
 const props = defineProps<{ unit: UnitWithDetails }>();
 const editorStore = useEditorStore();
+const exerciseCrud = useExerciseCrud();
 
 const lastExerciseIsBeingDragged = computed(() => {
   if (!props.unit.exercises.length) return false;

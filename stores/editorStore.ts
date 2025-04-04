@@ -2,8 +2,13 @@ import type { Tables } from "~/shared/types/database";
 
 export const useEditorStore = defineStore("editorStore", () => {
     const units = reactive<UnitWithDetails[]>([]);
-    const dragging = ref(false);
+    const draggingExercise = ref(false);
     const draggedExerciseId = ref<string | null>(null);
+    const sidebarOpen = ref(true);
+
+    const draggingAssessment = ref(false);
+    const draggedAssessmentId = ref<string | null>(null);
+
     const sourceUnitId = ref<string | null>(null);
 
     const setUnits = (newUnits: UnitWithDetails[]) => {
@@ -16,7 +21,7 @@ export const useEditorStore = defineStore("editorStore", () => {
         unitId: string,
     ) => {
         if (event.dataTransfer) {
-            dragging.value = true;
+            draggingExercise.value = true;
             draggedExerciseId.value = exercise.id;
             sourceUnitId.value = unitId;
             event.dataTransfer.dropEffect = "move";
@@ -27,7 +32,7 @@ export const useEditorStore = defineStore("editorStore", () => {
     };
 
     const endDragExercise = (event: DragEvent) => {
-        dragging.value = false;
+        draggingExercise.value = false;
         draggedExerciseId.value = null;
         sourceUnitId.value = null;
     };
@@ -63,7 +68,7 @@ export const useEditorStore = defineStore("editorStore", () => {
     };
 
     const isExerciseBeingDragged = (exerciseId: string) => {
-        return dragging.value && draggedExerciseId.value === exerciseId;
+        return draggingExercise.value && draggedExerciseId.value === exerciseId;
     };
 
     return {
@@ -71,8 +76,9 @@ export const useEditorStore = defineStore("editorStore", () => {
         setUnits,
         startDragExercise,
         onDropExercise,
-        dragging,
+        draggingExercise,
         endDragExercise,
         isExerciseBeingDragged,
+        sidebarOpen,
     };
 });

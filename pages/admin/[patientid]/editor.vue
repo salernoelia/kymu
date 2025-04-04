@@ -5,6 +5,7 @@
       :key="unit.id"
       :unit="unit"
     />
+    <EditorSidebar v-if="editorStore.sidebarOpen"></EditorSidebar>
   </div>
 </template>
 
@@ -18,7 +19,8 @@ definePageMeta({
 const supabase = useSupabaseClient();
 const route = useRoute();
 const localePath = useLocalePath();
-const unit = useUnitCrud();
+const unitCrud = useUnitCrud();
+const exerciseCrud = useExerciseCrud();
 const editorStore = useEditorStore();
 
 // providers
@@ -27,7 +29,7 @@ provide("patientId", patientId);
 
 onMounted(async () => {
   try {
-    const unitsData = await unit.getWithDetails();
+    const unitsData = await unitCrud.getWithDetails();
     editorStore.setUnits(unitsData);
   } catch (error) {
     console.error("Error fetching units:", error);

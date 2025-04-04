@@ -1,5 +1,5 @@
 <template>
-  <div class="card flex flex-row justify-between items-center">
+  <div class="card flex flex-row justify-between items-start">
     <div class="left">
       <h2>
         {{ name }}
@@ -9,7 +9,7 @@
       </h3>
     </div>
     <div class="right">
-      <h1>:</h1>
+      <Icon name="mdi-light:dots-vertical" />
     </div>
   </div>
 </template>
