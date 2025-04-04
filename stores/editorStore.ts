@@ -9,6 +9,13 @@ export const useEditorStore = defineStore("editorStore", () => {
     const selectedAssessment = ref<Tables<"assessments"> | null>(null);
     const selectedAssessmentTest = ref<Tables<"tests"> | null>(null);
 
+    const getUnitByID = (
+        unitID: Tables<"units">["id"],
+    ): UnitWithDetails | null => {
+        const foundUnit = units.find((unit) => unit.id === unitID);
+        return foundUnit || null;
+    };
+
     const openNewExerciseSidebar = (
         unit: UnitWithDetails,
         sourcePriorIndexExerciseID: Tables<"exercises">["id"] | "new",
@@ -44,7 +51,7 @@ export const useEditorStore = defineStore("editorStore", () => {
     return {
         units,
         setUnits,
-
+        getUnitByID,
         sidebarOpen,
         sidebarMode,
         openNewExerciseSidebar,

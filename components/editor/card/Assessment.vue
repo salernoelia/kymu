@@ -1,12 +1,11 @@
 <template>
-  <EditorDropZone
+  <!-- <EditorDropZone
     v-if="
-      dragDropStore.draggingExercise &&
-      !dragDropStore.isExerciseBeingDragged(exercise.id)
+      // dragDropStore.draggingassessment &&
+      // !dragDropStore.isassessmentBeingDragged(assessment.id)
     "
     :unit="unit"
-    :position="index"
-  />
+  /> -->
   <div
     class="card flex flex-row justify-between items-start"
     draggable="true"
@@ -15,10 +14,10 @@
   >
     <div class="left">
       <h2>
-        {{ exercise.name }}
+        {{ assessment.name }}
       </h2>
       <h3>
-        {{ exercise.description }}
+        {{ assessment.description }}
       </h3>
     </div>
     <div class="right">
@@ -29,9 +28,8 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  exercise: Tables<"exercises">;
-  index: number;
-  unit: UnitWithDetails;
+  assessment: AssessmentWithTests;
+  unitID: Tables<"units">["id"];
 }>();
 
 const emit = defineEmits<{
@@ -42,6 +40,13 @@ const dragDropStore = useDragDropStore();
 const editorStore = useEditorStore();
 
 const handleDragEnd = (event: DragEvent) => {
-  dragDropStore.endDragExercise(event);
+  // dragDropStore.endDragassessment(event);
 };
 </script>
+
+<style scoped lang="scss">
+.card {
+  background-color: var(--color-Secondary);
+  color: var(--color-OnSecondary);
+}
+</style>

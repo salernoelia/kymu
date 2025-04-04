@@ -4,7 +4,7 @@
       dragDropStore.draggingExercise &&
       !dragDropStore.isExerciseBeingDragged(exercise.id)
     "
-    :unit="unit"
+    :unitID="unit.id"
     :position="index"
   />
   <div

@@ -1,13 +1,18 @@
 <template>
   <div class="flex flex-row gap-4">
     <div
-      class="flex flex-col gap-4 min-w-[350px]"
+      class="flex flex-col gap-4 min-w-[350px] overflow-y-auto"
       @dragover.prevent
       @drop.prevent="handleDropToUnit"
     >
       <EditorCardTitle
         :name="unit.name"
         :description="unit.description || ''"
+      />
+      <EditorCardAssessment
+        v-if="unit.start_assessment"
+        :assessment="unit.start_assessment"
+        :unitID="unit.id"
       />
       <EditorCardExercise
         v-for="(exercise, index) in unit.exercises || []"
@@ -20,28 +25,35 @@
       </EditorCardExercise>
       <EditorDropZone
         v-if="dragDropStore.draggingExercise && unit.exercises.length === 0"
-        :unit="unit"
+        :unitID="unit.id"
       />
       <EditorDropZone
         v-else-if="
           dragDropStore.draggingExercise && !lastExerciseIsBeingDragged
         "
-        :unit="unit"
+        :unitID="unit.id"
         :position="unit.exercises.length"
       />
+      <EditorCardNewExercise
+        :unit="unit"
+        v-if="lastExerciseInIndexID"
+        @click="editorStore.openNewExerciseSidebar(unit, lastExerciseInIndexID)"
+      />
+      <EditorCardAssessment
+        v-if="unit.end_assessment"
+        :assessment="unit.end_assessment"
+        :unitID="unit.id"
+      />
     </div>
-    <EditorCardNewExercise
-      :unit="unit"
-      v-if="lastExerciseInIndexID"
-      @click="editorStore.openNewExerciseSidebar(unit, lastExerciseInIndexID)"
-    />
     <PrimitivesDivider orientation="vertical" />
   </div>
 </template>
 
 <script setup lang="ts">
 const patientID = inject("patientId");
-const props = defineProps<{ unit: UnitWithDetails }>();
+const props = defineProps<{
+  unit: UnitWithDetails;
+}>();
 const editorStore = useEditorStore();
 const dragDropStore = useDragDropStore();
 const exerciseCrud = useExerciseCrud();

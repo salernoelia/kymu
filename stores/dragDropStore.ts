@@ -33,10 +33,17 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
 
     const onDropExercise = (
         event: DragEvent,
-        targetUnit: UnitWithDetails,
+        targetUnitId: Tables<"units">["id"],
         position?: number,
     ) => {
         event.preventDefault();
+
+        const targetUnit = editorStore.getUnitByID(targetUnitId);
+
+        if (!targetUnit) {
+            console.log("no unit found!");
+            return;
+        }
 
         const exerciseID = event.dataTransfer?.getData("exerciseID");
         const sourceUnitID = event.dataTransfer?.getData("sourceUnitID");

@@ -9,7 +9,7 @@
 
 <script setup lang="ts">
 const props = defineProps<{
-  unit: UnitWithDetails;
+  unitID: Tables<"units">["id"];
   position?: number;
 }>();
 
@@ -17,7 +17,7 @@ const editorStore = useEditorStore();
 const dragDropStore = useDragDropStore();
 
 const handleDrop = (event: DragEvent) => {
-  dragDropStore.onDropExercise(event, props.unit, props.position);
+  dragDropStore.onDropExercise(event, props.unitID, props.position);
 };
 </script>
 <style scoped>
