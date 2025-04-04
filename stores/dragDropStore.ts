@@ -1,8 +1,17 @@
 export const useDragDropStore = defineStore("dragDropStore", () => {
+    const exerciseCrud = useExerciseCrud();
+
     const draggingExercise = ref(false);
-    const draggedExerciseId = ref<string | null>(null);
+    const draggedExerciseID = ref<string | null>(null);
+    const draggedExerciseSourceUnitID = ref<Tables<"units">["id"]>();
+    const draggedExerciseTargetUnitID = ref<Tables<"units">["id"]>();
+    const draggedExerciseTargetPreviousExerciseID = ref<
+        Tables<"exercises">["id"] | null
+    >();
+
     const draggingAssessment = ref(false);
     const draggedAssessmentId = ref<string | null>(null);
+
     const sourceUnitId = ref<string | null>(null);
 
     const editorStore = useEditorStore();
@@ -16,8 +25,9 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
     ) => {
         if (event.dataTransfer) {
             draggingExercise.value = true;
-            draggedExerciseId.value = exercise.id;
+            draggedExerciseID.value = exercise.id;
             sourceUnitId.value = unitId;
+            draggedExerciseSourceUnitID.value = sourceUnitId.value;
             event.dataTransfer.dropEffect = "move";
             event.dataTransfer.effectAllowed = "move";
             event.dataTransfer.setData("exerciseID", exercise.id);
@@ -27,7 +37,10 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
 
     const endDragExercise = (event: DragEvent) => {
         draggingExercise.value = false;
-        draggedExerciseId.value = null;
+    };
+
+    const cleanupDragging = () => {
+        draggedExerciseID.value = null;
         sourceUnitId.value = null;
     };
 
@@ -39,6 +52,7 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
         event.preventDefault();
 
         const targetUnit = editorStore.getUnitByID(targetUnitId);
+        draggedExerciseTargetUnitID.value = targetUnit?.id;
 
         if (!targetUnit) {
             console.log("no unit found!", targetUnit);
@@ -60,16 +74,73 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
 
         const exercise = sourceUnit.exercises[exerciseIndex];
 
+        // Remove from source
         sourceUnit.exercises.splice(exerciseIndex, 1);
 
         const insertPosition = position !== undefined
             ? position
             : targetUnit.exercises.length;
+
+        // Add to target at the specified position
         targetUnit.exercises.splice(insertPosition, 0, exercise);
+
+        // Determine the previous exercise in the target unit
+        draggedExerciseTargetPreviousExerciseID.value = insertPosition > 0
+            ? targetUnit.exercises[insertPosition - 1]?.id
+            : null;
+
+        if (
+            draggedExerciseID.value &&
+            (draggedExerciseTargetPreviousExerciseID.value ||
+                draggedExerciseTargetPreviousExerciseID.value == null) &&
+            draggedExerciseSourceUnitID.value &&
+            draggedExerciseTargetUnitID.value
+        ) {
+            exerciseCrud.updateExercisePosition(
+                draggedExerciseID.value,
+                draggedExerciseTargetPreviousExerciseID.value,
+                draggedExerciseSourceUnitID.value,
+                draggedExerciseTargetUnitID.value,
+            );
+
+            console.log("draggedExerciseID.value", draggedExerciseID.value);
+            console.log(
+                "draggedExerciseTargetPreviousExerciseID.value",
+                draggedExerciseTargetPreviousExerciseID.value,
+            );
+            console.log(
+                "draggedExerciseSourceUnitID.value",
+                draggedExerciseSourceUnitID.value,
+            );
+            console.log(
+                "draggedExerciseTargetUnitID.value",
+                draggedExerciseTargetUnitID.value,
+            );
+        } else {
+            // If there's an issue, revert the UI change
+            targetUnit.exercises.splice(insertPosition, 1);
+            sourceUnit.exercises.splice(exerciseIndex, 0, exercise);
+
+            alert("cannot update on DB as a value is missing");
+            console.log("draggedExerciseID.value", draggedExerciseID.value);
+            console.log(
+                "draggedExerciseTargetPreviousExerciseID.value",
+                draggedExerciseTargetPreviousExerciseID.value,
+            );
+            console.log(
+                "draggedExerciseSourceUnitID.value",
+                draggedExerciseSourceUnitID.value,
+            );
+            console.log(
+                "draggedExerciseTargetUnitID.value",
+                draggedExerciseTargetUnitID.value,
+            );
+        }
+        cleanupDragging();
     };
 
     const isExerciseBeingDragged = (exerciseId: string) => {
-        return draggingExercise.value && draggedExerciseId.value === exerciseId;
+        return draggingExercise.value && draggedExerciseID.value === exerciseId;
     };
 
     return {

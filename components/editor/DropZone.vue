@@ -27,7 +27,6 @@ const handleDrop = (event: DragEvent) => {
   border: 2px dashed var(--color-Tertiary);
   height: 40px;
   transition: all 0.3s ease;
-  opacity: 0.5;
 }
 
 .drop-zone:hover {

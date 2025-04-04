@@ -3,7 +3,6 @@
     <div
       class="flex flex-col gap-4 min-w-[350px] overflow-y-auto"
       @dragover.prevent
-      @drop.prevent="handleDropToUnit"
     >
       <EditorCardTitle
         :name="unit.name"
@@ -73,8 +72,4 @@ const lastExerciseIsBeingDragged = computed(() => {
 const handleDragStart = (event: DragEvent, exercise: Tables<"exercises">) => {
   dragDropStore.startDragExercise(event, exercise, props.unit.id);
 };
-
-// const handleDropToUnit = (event: DragEvent) => {
-//   dragDropStore.onDropExercise(event, props.unit.id);
-// };
 </script>

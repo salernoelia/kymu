@@ -38,7 +38,6 @@
         <ChartsBar
           v-if="showChart"
           :data="barChartData"
-          title="Monthly Sales"
           :width="300"
           :height="200"
           barColor="#3498db"
@@ -59,7 +58,7 @@ const dragDropStore = useDragDropStore();
 
 const showChart = ref(false);
 const hoverTimer = ref<number | null>(null);
-const HOVER_DELAY = 300; // 300ms delay
+const HOVER_DELAY = 300;
 
 const emit = defineEmits<{
   dragstart: [event: DragEvent];
@@ -70,12 +69,10 @@ const handleDragEnd = (event: DragEvent) => {
 };
 
 const startHoverTimer = () => {
-  // Clear any existing timer
   if (hoverTimer.value !== null) {
     clearTimeout(hoverTimer.value);
   }
 
-  // Start a new timer
   hoverTimer.value = window.setTimeout(() => {
     showChart.value = true;
     hoverTimer.value = null;
@@ -83,13 +80,11 @@ const startHoverTimer = () => {
 };
 
 const cancelHoverAndHideChart = () => {
-  // Cancel timer if it's running
   if (hoverTimer.value !== null) {
     clearTimeout(hoverTimer.value);
     hoverTimer.value = null;
   }
 
-  // Hide the chart
   showChart.value = false;
 };
 
@@ -115,7 +110,7 @@ const barChartData = ref([
   transition: max-height 0.3s ease-in-out;
 
   &.chart-visible {
-    max-height: 220px; // Slightly more than chart height to be safe
+    max-height: 220px;
   }
 }
 

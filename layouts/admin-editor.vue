@@ -61,12 +61,14 @@ const route = useRoute();
 const localePath = useLocalePath();
 const client = useSupabaseClient();
 const authReady = ref(false);
+const editorStore = useEditorStore();
 
-const isLoadingPage = ref(true);
 
-onMounted(() => {
-  isLoadingPage.value = false;
-});
+
+
+const isLoadingPage = ref(!editorStore.isEditorLoaded);
+
+
 
 const user = useSupabaseUser();
 
@@ -77,6 +79,8 @@ const therapist = ref<any>(null);
 
 onMounted(async () => {
   await fetchTherapist();
+
+  isLoadingPage.value = false;
 });
 
 const fetchTherapist = async () => {

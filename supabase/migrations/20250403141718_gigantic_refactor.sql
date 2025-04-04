@@ -1,13 +1,13 @@
-create table "public"."profiles" (
-    "id" uuid not null,
-    "created_at" timestamp with time zone not null default now(),
-    "updated_at" timestamp with time zone not null default now(),
-    "first_name" text,
-    "last_name" text,
-    "user_type" text,
-    "language" text,
-    "avatar_url" text
-);
+-- create table "public"."profiles" (
+--     "id" uuid not null,
+--     "created_at" timestamp with time zone not null default now(),
+--     "updated_at" timestamp with time zone not null default now(),
+--     "first_name" text,
+--     "last_name" text,
+--     "user_type" text,
+--     "language" text,
+--     "avatar_url" text
+-- );
 
 alter table "public"."exercises" drop constraint "public_exercises_training_unit_id_fkey";
 
