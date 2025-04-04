@@ -50,6 +50,8 @@ export const useEditorStore = defineStore("editorStore", () => {
         Object.assign(units, newUnits);
     };
 
+    // drag and drop
+
     const startDragExercise = (
         event: DragEvent,
         exercise: Tables<"exercises">,
@@ -118,5 +120,9 @@ export const useEditorStore = defineStore("editorStore", () => {
         sidebarMode,
         openNewExerciseSidebar,
         openEditExerciseSidebar,
+        selectedAssessment,
+        selectedAssessmentTest,
+        selectedExercise,
+        selectedUnit,
     };
 });
