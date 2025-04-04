@@ -9,6 +9,9 @@
       <EditorSidebarNewExercise
         v-if="editorStore.sidebarMode === 'newExercise'"
       />
+      <EditorSidebarEditExercise
+        v-if="editorStore.sidebarMode === 'editExercise'"
+      />
     </EditorSidebar>
   </div>
 </template>

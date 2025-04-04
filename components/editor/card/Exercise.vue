@@ -12,7 +12,7 @@
     draggable="true"
     @dragstart="emit('dragstart', $event)"
     @dragend="handleDragEnd"
-    @click="editorStore.openSidebar('newExercise', { exerciseId: exercise.id })"
+    @click="editorStore.openEditExerciseSidebar(exercise.id)"
   >
     <div class="left">
       <h2>

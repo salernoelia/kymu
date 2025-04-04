@@ -18,30 +18,32 @@ export const useEditorStore = defineStore("editorStore", () => {
     const selectedAssessment = ref<Tables<"assessments"> | null>(null);
     const selectedAssessmentTest = ref<Tables<"tests"> | null>(null);
 
-    const openSidebar = (
-        mode: sidebarModes,
-        options: {
-            unitId?: string;
-            exerciseId?: string;
-            assessmentId?: string;
-            testId?: string;
-        } = {},
+    const openNewExerciseSidebar = (
+        unit: UnitWithDetails,
+        sourcePriorIndexExerciseID: Tables<"exercises">["id"] | "new",
     ) => {
-        const { unitId, exerciseId, assessmentId, testId } = options;
         sidebarOpen.value = true;
-        sidebarMode.value = mode;
+        sidebarMode.value = "newExercise";
 
-        console.log("options", exerciseId);
+        console.log("unit", unit);
 
-        // Set selected items based on provided IDs
-        if (unitId) {
-            selectedUnit.value = units.find((u) => u.id === unitId) || null;
-        }
-        if (exerciseId) selectedExercise.value = /* find exercise logic */ null;
-        if (assessmentId) {
-            selectedAssessment.value = /* find assessment logic */ null;
-        }
-        if (testId) selectedAssessmentTest.value = /* find test logic */ null;
+        console.log(
+            "sourcePriorIndexExerciseID",
+            sourcePriorIndexExerciseID,
+        );
+    };
+
+    const openEditExerciseSidebar = (
+        exerciseID: Tables<"exercises">["id"],
+    ) => {
+        sidebarOpen.value = true;
+        sidebarMode.value = "editExercise";
+
+        selectedExercise.value = units
+            .flatMap((unit) => unit.exercises)
+            .find((exercise) => exercise.id === exerciseID) || null;
+
+        console.log("selectedExercise", selectedExercise.value);
     };
 
     const setUnits = (newUnits: UnitWithDetails[]) => {
@@ -114,6 +116,7 @@ export const useEditorStore = defineStore("editorStore", () => {
         isExerciseBeingDragged,
         sidebarOpen,
         sidebarMode,
-        openSidebar,
+        openNewExerciseSidebar,
+        openEditExerciseSidebar,
     };
 });

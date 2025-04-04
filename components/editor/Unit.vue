@@ -28,6 +28,11 @@
         :position="unit.exercises.length"
       />
     </div>
+    <EditorCardNewExercise
+      :unit="unit"
+      v-if="lastExerciseInIndexID"
+      @click="editorStore.openNewExerciseSidebar(unit, lastExerciseInIndexID)"
+    />
     <PrimitivesDivider orientation="vertical" />
   </div>
 </template>
@@ -37,6 +42,11 @@ const patientID = inject("patientId");
 const props = defineProps<{ unit: UnitWithDetails }>();
 const editorStore = useEditorStore();
 const exerciseCrud = useExerciseCrud();
+
+const lastExerciseInIndexID = computed(() => {
+  if (!props.unit.exercises.length) return "new";
+  return props.unit.exercises[props.unit.exercises.length - 1]?.id;
+});
 
 const lastExerciseIsBeingDragged = computed(() => {
   if (!props.unit.exercises.length) return false;
