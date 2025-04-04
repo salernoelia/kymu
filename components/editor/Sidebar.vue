@@ -16,13 +16,21 @@
     <div
       v-if="editorStore.sidebarOpen"
       class="sidebarScreenBackdrop"
-      @click="editorStore.sidebarOpen = false"
+      @click="dialog = true"
     ></div>
   </Transition>
+  <WidgetsDiscardDialog
+    v-if="dialog"
+    :onSave="() => ((editorStore.sidebarOpen = false), (dialog = false))"
+    :onDiscard="() => ((editorStore.sidebarOpen = false), (dialog = false))"
+  >
+  </WidgetsDiscardDialog>
 </template>
 
 <script setup lang="ts">
 const editorStore = useEditorStore();
+
+const dialog = ref(false);
 </script>
 
 <style scoped>

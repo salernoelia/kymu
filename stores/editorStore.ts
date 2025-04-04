@@ -1,11 +1,8 @@
-import type { Tables } from "~/shared/types/database";
-
 export const useEditorStore = defineStore("editorStore", () => {
     const units = reactive<UnitWithDetails[]>([]);
 
-    const sidebarOpen = ref(true);
-
-    const sidebarMode = ref<sidebarModes>("newExercise");
+    const sidebarOpen = ref(false);
+    const sidebarMode = ref<sidebarModes>("none");
 
     const selectedUnit = ref<UnitWithDetails | null>(null);
     const selectedExercise = ref<Tables<"exercises"> | null>(null);
