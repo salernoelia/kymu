@@ -1,8 +1,8 @@
 <template>
   <EditorDropZone
     v-if="
-      editorStore.draggingExercise &&
-      !editorStore.isExerciseBeingDragged(exercise.id)
+      dragDropStore.draggingExercise &&
+      !dragDropStore.isExerciseBeingDragged(exercise.id)
     "
     :unit="unit"
     :position="index"
@@ -38,9 +38,10 @@ const emit = defineEmits<{
   dragstart: [event: DragEvent];
 }>();
 
+const dragDropStore = useDragDropStore();
 const editorStore = useEditorStore();
 
 const handleDragEnd = (event: DragEvent) => {
-  editorStore.endDragExercise(event);
+  dragDropStore.endDragExercise(event);
 };
 </script>

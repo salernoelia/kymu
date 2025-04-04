@@ -14,9 +14,10 @@ const props = defineProps<{
 }>();
 
 const editorStore = useEditorStore();
+const dragDropStore = useDragDropStore();
 
 const handleDrop = (event: DragEvent) => {
-  editorStore.onDropExercise(event, props.unit, props.position);
+  dragDropStore.onDropExercise(event, props.unit, props.position);
 };
 </script>
 <style scoped>

@@ -19,11 +19,13 @@
       >
       </EditorCardExercise>
       <EditorDropZone
-        v-if="editorStore.draggingExercise && unit.exercises.length === 0"
+        v-if="dragDropStore.draggingExercise && unit.exercises.length === 0"
         :unit="unit"
       />
       <EditorDropZone
-        v-else-if="editorStore.draggingExercise && !lastExerciseIsBeingDragged"
+        v-else-if="
+          dragDropStore.draggingExercise && !lastExerciseIsBeingDragged
+        "
         :unit="unit"
         :position="unit.exercises.length"
       />
@@ -41,6 +43,7 @@
 const patientID = inject("patientId");
 const props = defineProps<{ unit: UnitWithDetails }>();
 const editorStore = useEditorStore();
+const dragDropStore = useDragDropStore();
 const exerciseCrud = useExerciseCrud();
 
 const lastExerciseInIndexID = computed(() => {
@@ -52,14 +55,14 @@ const lastExerciseIsBeingDragged = computed(() => {
   if (!props.unit.exercises.length) return false;
   const lastExercise = props.unit.exercises[props.unit.exercises.length - 1];
   if (!lastExercise) return false;
-  return editorStore.isExerciseBeingDragged(lastExercise.id);
+  return dragDropStore.isExerciseBeingDragged(lastExercise.id);
 });
 
 const handleDragStart = (event: DragEvent, exercise: Tables<"exercises">) => {
-  editorStore.startDragExercise(event, exercise, props.unit.id);
+  dragDropStore.startDragExercise(event, exercise, props.unit.id);
 };
 
 const handleDropToUnit = (event: DragEvent) => {
-  editorStore.onDropExercise(event, props.unit);
+  dragDropStore.onDropExercise(event, props.unit);
 };
 </script>
