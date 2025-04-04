@@ -4,12 +4,45 @@ export const useEditorStore = defineStore("editorStore", () => {
     const units = reactive<UnitWithDetails[]>([]);
     const draggingExercise = ref(false);
     const draggedExerciseId = ref<string | null>(null);
-    const sidebarOpen = ref(true);
-
     const draggingAssessment = ref(false);
     const draggedAssessmentId = ref<string | null>(null);
 
+    const sidebarOpen = ref(true);
+
+    const sidebarMode = ref<sidebarModes>("newExercise");
+
     const sourceUnitId = ref<string | null>(null);
+
+    const selectedUnit = ref<UnitWithDetails | null>(null);
+    const selectedExercise = ref<Tables<"exercises"> | null>(null);
+    const selectedAssessment = ref<Tables<"assessments"> | null>(null);
+    const selectedAssessmentTest = ref<Tables<"tests"> | null>(null);
+
+    const openSidebar = (
+        mode: sidebarModes,
+        options: {
+            unitId?: string;
+            exerciseId?: string;
+            assessmentId?: string;
+            testId?: string;
+        } = {},
+    ) => {
+        const { unitId, exerciseId, assessmentId, testId } = options;
+        sidebarOpen.value = true;
+        sidebarMode.value = mode;
+
+        console.log("options", exerciseId);
+
+        // Set selected items based on provided IDs
+        if (unitId) {
+            selectedUnit.value = units.find((u) => u.id === unitId) || null;
+        }
+        if (exerciseId) selectedExercise.value = /* find exercise logic */ null;
+        if (assessmentId) {
+            selectedAssessment.value = /* find assessment logic */ null;
+        }
+        if (testId) selectedAssessmentTest.value = /* find test logic */ null;
+    };
 
     const setUnits = (newUnits: UnitWithDetails[]) => {
         Object.assign(units, newUnits);
@@ -80,5 +113,7 @@ export const useEditorStore = defineStore("editorStore", () => {
         endDragExercise,
         isExerciseBeingDragged,
         sidebarOpen,
+        sidebarMode,
+        openSidebar,
     };
 });

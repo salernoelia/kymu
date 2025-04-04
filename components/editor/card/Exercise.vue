@@ -12,6 +12,7 @@
     draggable="true"
     @dragstart="emit('dragstart', $event)"
     @dragend="handleDragEnd"
+    @click="editorStore.openSidebar('newExercise', { exerciseId: exercise.id })"
   >
     <div class="left">
       <h2>
@@ -33,12 +34,11 @@ const props = defineProps<{
   index: number;
   unit: UnitWithDetails;
 }>();
+const editorStore = useEditorStore();
 
 const emit = defineEmits<{
   dragstart: [event: DragEvent];
 }>();
-
-const editorStore = useEditorStore();
 
 const handleDragEnd = (event: DragEvent) => {
   editorStore.endDragExercise(event);

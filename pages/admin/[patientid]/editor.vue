@@ -5,7 +5,11 @@
       :key="unit.id"
       :unit="unit"
     />
-    <EditorSidebar v-if="editorStore.sidebarOpen"></EditorSidebar>
+    <EditorSidebar>
+      <EditorSidebarNewExercise
+        v-if="editorStore.sidebarMode === 'newExercise'"
+      />
+    </EditorSidebar>
   </div>
 </template>
 
