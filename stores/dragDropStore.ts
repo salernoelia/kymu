@@ -41,7 +41,7 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
         const targetUnit = editorStore.getUnitByID(targetUnitId);
 
         if (!targetUnit) {
-            console.log("no unit found!");
+            console.log("no unit found!", targetUnit);
             return;
         }
 

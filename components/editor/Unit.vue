@@ -74,7 +74,7 @@ const handleDragStart = (event: DragEvent, exercise: Tables<"exercises">) => {
   dragDropStore.startDragExercise(event, exercise, props.unit.id);
 };
 
-const handleDropToUnit = (event: DragEvent) => {
-  dragDropStore.onDropExercise(event, props.unit);
-};
+// const handleDropToUnit = (event: DragEvent) => {
+//   dragDropStore.onDropExercise(event, props.unit.id);
+// };
 </script>
