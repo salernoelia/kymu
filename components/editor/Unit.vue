@@ -7,6 +7,7 @@
       <EditorCardTitle
         :name="unit.name"
         :description="unit.description || ''"
+        @click="editorStore.openEditUnitSidebar(unit, lastExerciseInIndexID)"
       />
       <EditorCardAssessment
         v-if="unit.start_assessment"
@@ -72,4 +73,9 @@ const lastExerciseIsBeingDragged = computed(() => {
 const handleDragStart = (event: DragEvent, exercise: Tables<"exercises">) => {
   dragDropStore.startDragExercise(event, exercise, props.unit.id);
 };
+
+function guiltTrip() {
+  guiltTrip();
+}
 </script>
+<!--   -->

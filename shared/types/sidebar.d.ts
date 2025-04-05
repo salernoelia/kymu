@@ -5,4 +5,7 @@ type sidebarModes =
     | "newAssessment"
     | "editAssessment"
     | "newUnit"
-    | "editUnit";
+    | "editUnit"
+    | "templateOrNewAssessment"
+    | "templateOrNewExercise"
+    | "templateOrNewAssessment";

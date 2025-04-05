@@ -44,6 +44,13 @@ export const useEditorStore = defineStore("editorStore", () => {
         console.log("selectedExercise", selectedExercise.value);
     };
 
+    const openEditUnitSidebar = (
+        unit: UnitWithDetails,
+    ) => {
+        sidebarOpen.value = true;
+        sidebarMode.value = "editUnit";
+    };
+
     const setUnits = (newUnits: UnitWithDetails[]) => {
         Object.assign(units, newUnits);
     };
@@ -56,6 +63,7 @@ export const useEditorStore = defineStore("editorStore", () => {
         sidebarMode,
         openNewExerciseSidebar,
         openEditExerciseSidebar,
+        openEditUnitSidebar,
         selectedAssessment,
         selectedAssessmentTest,
         selectedExercise,
