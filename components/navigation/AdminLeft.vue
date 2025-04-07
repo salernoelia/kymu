@@ -181,6 +181,13 @@ const handleLogout = async () => {
 
   &:hover {
     color: rgb(0, 0, 0);
+    .icon {
+      color: var(--color-Primary);
+    }
+  }
+
+  .icon {
+    color: var(--color-OnPrimary);
   }
 }
 </style>

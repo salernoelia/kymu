@@ -7,11 +7,28 @@
     />
     <EditorCardNewUnit @click="editorStore.openTemplateOrNewUnitSidebar()" />
     <EditorSidebar>
+      <EditorSidebarTemplateOrNewUnit
+        v-if="editorStore.sidebarMode === 'templateOrNewUnit'"
+      />
       <EditorSidebarNewExercise
         v-if="editorStore.sidebarMode === 'newExercise'"
       />
       <EditorSidebarEditExercise
         v-if="editorStore.sidebarMode === 'editExercise'"
+      />
+      <EditorSidebarNewAssessment
+        v-if="editorStore.sidebarMode === 'newAssessment'"
+      />
+      <EditorSidebarEditAssessment
+        v-if="editorStore.sidebarMode === 'editAssessment'"
+      />
+      <EditorSidebarNewUnit v-if="editorStore.sidebarMode === 'newUnit'" />
+      <EditorSidebarEditUnit v-if="editorStore.sidebarMode === 'editUnit'" />
+      <EditorSidebarTemplateOrNewExercise
+        v-if="editorStore.sidebarMode === 'templateOrNewExercise'"
+      />
+      <EditorSidebarTemplateOrNewAssessment
+        v-if="editorStore.sidebarMode === 'templateOrNewAssessment'"
       />
     </EditorSidebar>
   </div>
@@ -41,6 +58,8 @@ onMounted(async () => {
     editorStore.setUnits(unitsData);
 
     console.log("setting editorloaded true:");
+    editorStore.isEditorLoaded = true;
+    console.log(editorStore.isEditorLoaded);
   } catch (error) {
     console.error("Error fetching units:", error);
   }

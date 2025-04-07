@@ -13,7 +13,7 @@
 
       <Transition
         appear
-        v-if="!isLoadingPage"
+        v-if="editorStore.isEditorLoaded"
       >
         <div class="flex flex-col gap-4">
           <NavigationBreadcrumbs
@@ -64,12 +64,6 @@ const authReady = ref(false);
 const editorStore = useEditorStore();
 
 
-
-
-const isLoadingPage = ref(!editorStore.isEditorLoaded);
-
-
-
 const user = useSupabaseUser();
 
 const isActive = (path: string) => route.path === path;
@@ -80,8 +74,10 @@ const therapist = ref<any>(null);
 onMounted(async () => {
   await fetchTherapist();
 
-  isLoadingPage.value = false;
+  editorStore.isEditorLoaded = true;
+
 });
+
 
 const fetchTherapist = async () => {
   if (!user.value) {

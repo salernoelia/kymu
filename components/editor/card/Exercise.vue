@@ -48,12 +48,19 @@
               class="icon"
           /></DropdownMenuTrigger>
           <DropdownMenuContent>
-            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuLabel>{{ exercise.name }}</DropdownMenuLabel>
             <DropdownMenuSeparator />
-            <DropdownMenuItem>Profile</DropdownMenuItem>
-            <DropdownMenuItem>Billing</DropdownMenuItem>
-            <DropdownMenuItem>Team</DropdownMenuItem>
-            <DropdownMenuItem>Subscription</DropdownMenuItem>
+            <DropdownMenuItem
+              @click="editorStore.openEditExerciseSidebar(exercise.id)"
+              >{{ $t("ex-edit") }}</DropdownMenuItem
+            >
+            <DropdownMenuItem>{{ $t("ex-analysis") }}</DropdownMenuItem>
+            <DropdownMenuItem @click="toggleChart">{{
+              $t("ex-rating-graph")
+            }}</DropdownMenuItem>
+            <DropdownMenuItem @click="toggleChart">{{
+              $t("ex-execution-graph")
+            }}</DropdownMenuItem>
           </DropdownMenuContent>
         </DropdownMenu>
       </div>

@@ -7,6 +7,15 @@
     <Transition appear>
       <NavigationTelevisionMenu v-if="menu">
         <WidgetsLanguageSelector />
+        <NuxtLink
+          @click="handleLogout"
+          class="link mb-2"
+        >
+          <Icon
+            name="material-symbols-light:logout"
+            class="icon"
+          />
+        </NuxtLink>
       </NavigationTelevisionMenu>
     </Transition>
     <main class="p-6 flex flex-col items-center justify-center flex-grow">
@@ -18,6 +27,8 @@
 <script setup lang="ts">
 const menu = ref(false);
 const { remoteKey } = useRemoteControl();
+const supabase = useSupabaseClient();
+const localePath = useLocalePath();
 const { toggleFullscreen } = useFullscreen();
 
 watch(
@@ -40,6 +51,16 @@ watch(
     }
   }
 );
+
+const handleLogout = async () => {
+  try {
+    const { error } = await supabase.auth.signOut();
+    if (error) throw error;
+    navigateTo(localePath("/auth/login"));
+  } catch (error: any) {
+    console.log(error.message);
+  }
+};
 </script>
 
 <style scoped>
@@ -60,6 +81,25 @@ watch(
   background-size: 150% 150%;
   height: 100vh;
   animation: gradientAnimation 30s ease infinite;
+}
+
+.link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 1rem;
+  border-radius: 0.4rem;
+  transition: all 0.2s ease;
+}
+
+.link {
+  &:hover {
+    background-color: var(--color-Gray-400);
+  }
+  .icon {
+    width: 1.5rem;
+    height: 1.5rem;
+  }
 }
 
 .v-enter-active,

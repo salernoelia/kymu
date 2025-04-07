@@ -39,6 +39,12 @@ unit-description: "Unit Beschreibung"
 unit-type: "Unit Typ"
 unit-select-placeholder: "Wähle einen Unit Typ"
 
+# exercise editor
+ex-edit: "Bearbeiten"
+ex-analysis: "Übungsanalyse"
+ex-rating-graph: "Bewertungsdiagramm"
+ex-execution-graph: "Ausführungsdiagramm"
+
 # VR viewer
 vr-viewer-title: "Viewer"
 vr-viewer-description: "Mit dem Viewer kannst du eien Live-Vorschau der VR-Einheit sehen."

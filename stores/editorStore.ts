@@ -1,5 +1,6 @@
 export const useEditorStore = defineStore("editorStore", () => {
     const units = reactive<UnitWithDetails[]>([]);
+    const isEditorLoaded = ref(false);
 
     const sidebarOpen = ref(false);
     const sidebarMode = ref<sidebarModes>("none");
@@ -8,6 +9,11 @@ export const useEditorStore = defineStore("editorStore", () => {
     const selectedExercise = ref<Tables<"exercises"> | null>(null);
     const selectedAssessment = ref<Tables<"assessments"> | null>(null);
     const selectedAssessmentTest = ref<Tables<"tests"> | null>(null);
+
+    // temp
+    const tempUnit = ref<UnitWithDetails>();
+    const tempSourcePriorExerciseID = ref<Tables<"exercises">["id"]>();
+    const tempTargetPriorExerciseID = ref<Tables<"exercises">["id"]>();
 
     const getUnitByID = (
         unitID: Tables<"units">["id"],
@@ -23,18 +29,27 @@ export const useEditorStore = defineStore("editorStore", () => {
         console.log("new unit");
     };
 
-    const openNewExerciseSidebar = (
+    const openTemplateOrNewExerciseSidebar = (
         unit: UnitWithDetails,
         sourcePriorIndexExerciseID: Tables<"exercises">["id"] | "new",
     ) => {
         sidebarOpen.value = true;
+        sidebarMode.value = "templateOrNewExercise";
+        tempUnit.value = unit;
+        tempSourcePriorExerciseID.value = sourcePriorIndexExerciseID;
+
+        console.log("new exercise");
+    };
+
+    const openNewExerciseSidebar = () => {
+        sidebarOpen.value = true;
         sidebarMode.value = "newExercise";
 
-        console.log("unit", unit);
+        console.log("unit", tempUnit.value);
 
         console.log(
             "sourcePriorIndexExerciseID",
-            sourcePriorIndexExerciseID,
+            tempSourcePriorExerciseID.value,
         );
     };
 
@@ -64,11 +79,13 @@ export const useEditorStore = defineStore("editorStore", () => {
 
     return {
         units,
+        isEditorLoaded,
         setUnits,
         getUnitByID,
         sidebarOpen,
         sidebarMode,
         openTemplateOrNewUnitSidebar,
+        openTemplateOrNewExerciseSidebar,
         openNewExerciseSidebar,
         openEditExerciseSidebar,
         openEditUnitSidebar,

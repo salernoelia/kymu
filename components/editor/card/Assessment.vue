@@ -21,12 +21,35 @@
       </h3>
     </div>
     <div class="right">
-      <Icon name="mdi-light:dots-vertical" />
+      <DropdownMenu>
+        <DropdownMenuTrigger
+          ><Icon
+            name="ic:baseline-more-vert"
+            class="icon"
+        /></DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuLabel>{{ assessment.name }}</DropdownMenuLabel>
+          <DropdownMenuSeparator />
+          <DropdownMenuItem>{{ $t("ex-edit") }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ $t("ex-analysis") }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ $t("ex-rating-graph") }}</DropdownMenuItem>
+          <DropdownMenuItem>{{ $t("ex-execution-graph") }}</DropdownMenuItem>
+        </DropdownMenuContent>
+      </DropdownMenu>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const props = defineProps<{
   assessment: AssessmentWithTests;
   unitID: Tables<"units">["id"];

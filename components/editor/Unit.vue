@@ -5,15 +5,8 @@
       @dragover.prevent
     >
       <EditorCardTitle
-        :name="unit.name"
-        :description="unit.description || ''"
-        @click="
-          editorStore.openEditUnitSidebar(
-            unit
-            // ,
-            // lastExerciseInIndexID
-          )
-        "
+        v-if="unit"
+        :unit="unit"
       />
       <EditorCardAssessment
         v-if="unit.start_assessment"
@@ -43,7 +36,12 @@
       <EditorCardNewExercise
         :unit="unit"
         v-if="lastExerciseInIndexID"
-        @click="editorStore.openNewExerciseSidebar(unit, lastExerciseInIndexID)"
+        @click="
+          editorStore.openTemplateOrNewExerciseSidebar(
+            unit,
+            lastExerciseInIndexID
+          )
+        "
       />
       <EditorCardAssessment
         v-if="unit.end_assessment"
