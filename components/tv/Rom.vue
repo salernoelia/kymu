@@ -4,8 +4,12 @@
       <div class="flex flex-col w-full items-center">
         <!-- Display the angle information -->
         <div class="angle-display mb-4">
-          <h1>Current Angle: {{ calculatedAngle.toFixed(2) }}</h1>
-          <!-- <p>Result Angle: {{ savedAngle.toFixed(2) }}</p> -->
+          <h1>Current Angle: {{ currentAngle.toFixed(2) }}</h1>
+          <h1>Pain Moments: {{ romStore.painMomentAngles }}</h1>
+
+          <h1>{{ referenceAngle }}</h1>
+          <h1>{{ isInsideOfThreshold }}</h1>
+          <!-- <p>Result Angle: {{ romStore.resultAngle.toFixed(2) }}</p> -->
         </div>
 
         <video
@@ -32,35 +36,61 @@
 
 <script setup lang="ts">
 import { PoseService } from "~/shared/services/pose_service";
-import ROMCombinations from "~/shared/constants/ROMCombinations";
+import { ROMCombinations } from "~/shared/constants/ROMCombinations";
+import { getReferenceAngleDeg } from "~/shared/utils/getReferenceAngleDeg";
 import type { Results } from "@mediapipe/pose";
 import type { NormalizedLandmarkList } from "@mediapipe/drawing_utils";
+import { useRomStore } from "~/stores/romStore";
 
 const props = defineProps<{
   romCombination: string;
 }>();
+
+const romStore = useRomStore();
 
 const source = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
 const landmarkContainer = ref<HTMLDivElement | null>(null);
 const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
-const savedNormalizedLandmarks = ref<NormalizedLandmarkList | null>(null);
+const exerciseInitialNormalizedLandmarks = ref<NormalizedLandmarkList | null>(
+  null
+);
 
-const calculatedAngle = ref(0);
-const savedAngle = ref(0);
+const currentAngle = ref(0);
+const referenceAngle = ref(0);
 
 const pivotIndex = ref(14);
-const pointAIndex = ref(16);
+const movableIndex = ref(16);
+const referenceIndex = ref(23);
+const thresholdDeg = ref(30);
 
-// Expose methods to parent component
-defineExpose({
-  saveLandmarks,
-  calculateAngle,
-  cleanup,
+const isInsideOfThreshold = computed((): boolean => {
+  if (
+    !mediapipeResults.value ||
+    !mediapipeResults.value.poseWorldLandmarks ||
+    !mediapipeResults.value.poseWorldLandmarks.length ||
+    !mediapipeResults.value.poseWorldLandmarks[movableIndex.value] ||
+    !mediapipeResults.value.poseWorldLandmarks[pivotIndex.value] ||
+    !mediapipeResults.value.poseWorldLandmarks[referenceIndex.value]
+  )
+    return false;
+
+  const A = mediapipeResults.value.poseWorldLandmarks[movableIndex.value];
+  const B = mediapipeResults.value.poseWorldLandmarks[pivotIndex.value];
+  const C = mediapipeResults.value.poseWorldLandmarks[referenceIndex.value];
+
+  if (!A || !B || !C) return false;
+
+  referenceAngle.value = getReferenceAngleDeg(A, B, C);
+
+  if (referenceAngle.value <= thresholdDeg.value) {
+    return true;
+  } else {
+    return false;
+  }
 });
 
-// Update ROM combination when prop changes
 watch(
   () => props.romCombination,
   (newCombination) => {
@@ -75,27 +105,34 @@ watch(
 );
 
 function updateROMCombination(combination: keyof typeof ROMCombinations) {
-  const { pivot, movable } = ROMCombinations[combination];
+  const { pivot, movable, reference, threshold } = ROMCombinations[combination];
   pivotIndex.value = pivot;
-  pointAIndex.value = movable;
+  movableIndex.value = movable;
+  referenceIndex.value = reference;
+  thresholdDeg.value = threshold;
 }
 
-// Methods accessible from parent
 function saveLandmarks() {
-  savedNormalizedLandmarks.value =
+  exerciseInitialNormalizedLandmarks.value =
     mediapipeResults.value?.poseLandmarks ?? null;
   console.log("Landmarks saved");
 }
 
 function calculateAngle() {
   console.log("calculateVectorAngle");
-  savedAngle.value = calculatedAngle.value;
+  romStore.resultAngle = currentAngle.value;
+}
+
+function markPainMoment() {
+  console.log("marked pain moment at", currentAngle.value);
+  romStore.painMomentAngles.push(currentAngle.value);
+  romStore.painMomentAngles.sort((a, b) => a - b);
 }
 
 function cleanup() {
-  calculatedAngle.value = 0;
-  savedAngle.value = 0;
-  savedNormalizedLandmarks.value = null;
+  currentAngle.value = 0;
+  romStore.resultAngle = 0;
+  exerciseInitialNormalizedLandmarks.value = null;
   console.log("cleanup done");
 }
 
@@ -109,15 +146,15 @@ onMounted(async () => {
       landmarkContainer.value,
       loadingCanvas,
       mediapipeResults,
-      savedNormalizedLandmarks,
+      exerciseInitialNormalizedLandmarks,
       pivotIndex,
-      pointAIndex,
-      calculatedAngle
+      movableIndex,
+      currentAngle
     ).setOptions({
-      modelComplexity: 1,
+      modelComplexity: 0,
       smoothLandmarks: true,
-      enableSegmentation: true,
-      smoothSegmentation: true,
+      enableSegmentation: false,
+      smoothSegmentation: false,
       minDetectionConfidence: 0.3,
       minTrackingConfidence: 0.3,
     });
@@ -126,6 +163,13 @@ onMounted(async () => {
 
 const canvasWidth = computed(() => window.innerWidth);
 const canvasHeight = computed(() => canvasWidth.value * (9 / 16));
+
+defineExpose({
+  saveLandmarks,
+  calculateAngle,
+  cleanup,
+  markPainMoment,
+});
 </script>
 
 <style scoped>

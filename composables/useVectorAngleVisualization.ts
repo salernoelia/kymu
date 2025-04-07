@@ -221,7 +221,6 @@ export const useVectorAngleVisualization = () => {
         renderer.setSize(width, height);
         renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
 
-        // Create controls
         controls = new OrbitControls(camera, canvasRef.value);
         controls.enableDamping = true;
         controls.enableRotate = false; // Disable rotation for 2D view

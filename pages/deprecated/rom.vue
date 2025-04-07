@@ -6,7 +6,8 @@
     <PrimitivesButton
       @click="
         () => {
-          savedNormalizedLandmarks = mediapipeResults?.poseLandmarks ?? null;
+          exerciseInitialNormalizedLandmarks =
+            mediapipeResults?.poseLandmarks ?? null;
         }
       "
     >
@@ -66,7 +67,9 @@ const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
 const loadingCanvas = ref(true);
 const mediapipeResults = ref<Results | null>(null);
-const savedNormalizedLandmarks = ref<NormalizedLandmarkList | null>(null);
+const exerciseInitialNormalizedLandmarks = ref<NormalizedLandmarkList | null>(
+  null
+);
 
 const ROMCombinations = {
   // neck_flexion: { pivot: 11, movable: 0 },
@@ -98,7 +101,7 @@ const setROMCombination = (combination: keyof typeof ROMCombinations) => {
 
 const handleKeyDown = (event: KeyboardEvent) => {
   if (event.key === "a") {
-    savedNormalizedLandmarks.value =
+    exerciseInitialNormalizedLandmarks.value =
       mediapipeResults.value?.poseLandmarks ?? null;
   }
 
@@ -109,7 +112,7 @@ const handleKeyDown = (event: KeyboardEvent) => {
 
   if (event.key === "c") {
     calculatedAngle.value = 0;
-    savedNormalizedLandmarks.value = null;
+    exerciseInitialNormalizedLandmarks.value = null;
     console.log("cleanup done");
   }
 
@@ -141,7 +144,7 @@ onMounted(async () => {
       landmarkContainer.value,
       loadingCanvas,
       mediapipeResults,
-      savedNormalizedLandmarks,
+      exerciseInitialNormalizedLandmarks,
       pivotIndex,
       pointAIndex,
       calculatedAngle

@@ -1,222 +1,81 @@
 <template>
-  <div
-    class="unit-block"
-    :data-unit-id="id"
-    @dragover="onDragOver"
-    @dragleave="onDragLeave"
-    @drop="onDrop"
-    :class="{
-      'drop-active': isDropActive,
-      'drop-hover': isDropHover,
-    }"
-  >
-    <div class="block-header">
-      <slot name="header"></slot>
-    </div>
-
-    <div class="exercise-container">
-      <div
-        class="drop-zone"
-        :class="{
-          'drop-zone-active': activeDropZone === 0,
-          'drop-zone-visible': shouldShowDropZone(0),
-        }"
-        @dragover.prevent="activateDropZone(0)"
-        @dragleave="deactivateDropZone"
-        @drop.stop="onDropInZone($event, 0)"
-      ></div>
-
-      <template
-        v-for="(exercise, index) in exercises"
+  <div class="flex flex-row gap-4">
+    <div
+      class="flex flex-col gap-4 min-w-[350px] overflow-y-auto"
+      @dragover.prevent
+    >
+      <EditorCardTitle
+        :name="unit.name"
+        :description="unit.description || ''"
+        @click="editorStore.openEditUnitSidebar(unit, lastExerciseInIndexID)"
+      />
+      <EditorCardAssessment
+        v-if="unit.start_assessment"
+        :assessment="unit.start_assessment"
+        :unitID="unit.id"
+      />
+      <EditorCardExercise
+        v-for="(exercise, index) in unit.exercises || []"
         :key="exercise.id"
+        :exercise="exercise"
+        :index="index"
+        :unit="unit"
+        @dragstart="handleDragStart($event, exercise)"
       >
-        <slot
-          :name="`exercise-${exercise.id}`"
-          :exercise="exercise"
-        ></slot>
-
-        <div
-          class="drop-zone"
-          :class="{
-            'drop-zone-active': activeDropZone === index + 1,
-            'drop-zone-visible': shouldShowDropZone(index + 1, exercise.id),
-          }"
-          @dragover.prevent="activateDropZone(index + 1)"
-          @dragleave="deactivateDropZone"
-          @drop.stop="onDropInZone($event, index + 1)"
-        ></div>
-      </template>
+      </EditorCardExercise>
+      <EditorDropZone
+        v-if="dragDropStore.draggingExercise && unit.exercises.length === 0"
+        :unitID="unit.id"
+      />
+      <EditorDropZone
+        v-else-if="
+          dragDropStore.draggingExercise && !lastExerciseIsBeingDragged
+        "
+        :unitID="unit.id"
+        :position="unit.exercises.length"
+      />
+      <EditorCardNewExercise
+        :unit="unit"
+        v-if="lastExerciseInIndexID"
+        @click="editorStore.openNewExerciseSidebar(unit, lastExerciseInIndexID)"
+      />
+      <EditorCardAssessment
+        v-if="unit.end_assessment"
+        :assessment="unit.end_assessment"
+        :unitID="unit.id"
+      />
     </div>
+    <PrimitivesDivider orientation="vertical" />
   </div>
 </template>
 
 <script setup lang="ts">
+const patientID = inject("patientId");
 const props = defineProps<{
-  id: string;
-  exercises: Array<{ id: string; [key: string]: any }>;
+  unit: UnitWithDetails;
 }>();
+const editorStore = useEditorStore();
+const dragDropStore = useDragDropStore();
+const exerciseCrud = useExerciseCrud();
 
-const emit = defineEmits<{
-  (
-    e: "drop",
-    data: {
-      exerciseId: string;
-      sourceUnitId: string;
-      targetUnitId: string;
-      newPosition: number;
-    }
-  ): void;
-}>();
+const lastExerciseInIndexID = computed(() => {
+  if (!props.unit.exercises.length) return "new";
+  return props.unit.exercises[props.unit.exercises.length - 1]?.id;
+});
 
-const isDropActive = ref(false);
-const isDropHover = ref(false);
-const activeDropZone = ref(-1);
-const dragInProgress = inject("dragInProgress", ref(false));
+const lastExerciseIsBeingDragged = computed(() => {
+  if (!props.unit.exercises.length) return false;
+  const lastExercise = props.unit.exercises[props.unit.exercises.length - 1];
+  if (!lastExercise) return false;
+  return dragDropStore.isExerciseBeingDragged(lastExercise.id);
+});
 
-const draggingExerciseData = inject<Ref<DraggingExercise | null>>(
-  "draggingExerciseData",
-  ref(null)
-);
+const handleDragStart = (event: DragEvent, exercise: Tables<"exercises">) => {
+  dragDropStore.startDragExercise(event, exercise, props.unit.id);
+};
 
-function shouldShowDropZone(position: number, exerciseId?: string) {
-  if (!dragInProgress.value) return false;
-
-  if (
-    draggingExerciseData.value &&
-    draggingExerciseData.value.unitId &&
-    draggingExerciseData.value.unitId === props.id
-  ) {
-    if (exerciseId && draggingExerciseData.value.id === exerciseId)
-      return false;
-
-    const draggedIndex = props.exercises.findIndex(
-      (e) =>
-        draggingExerciseData.value?.id != null &&
-        e.id === draggingExerciseData.value.id
-    );
-    if (draggedIndex !== -1 && position === draggedIndex) return false;
-  }
-
-  return isDropActive.value || dragInProgress.value;
-}
-
-function onDragOver(event: DragEvent) {
-  event.preventDefault();
-  isDropActive.value = true;
-}
-
-function onDragLeave() {
-  isDropActive.value = false;
-}
-
-function activateDropZone(index: number) {
-  activeDropZone.value = index;
-  isDropHover.value = true;
-}
-
-function deactivateDropZone() {
-  setTimeout(() => {
-    activeDropZone.value = -1;
-    isDropHover.value = false;
-  }, 100);
-}
-
-function resetDropState() {
-  isDropActive.value = false;
-  isDropHover.value = false;
-  activeDropZone.value = -1;
-}
-
-function onDrop(event: DragEvent) {
-  event.preventDefault();
-  resetDropState();
-}
-
-function onDropInZone(event: DragEvent, position: number) {
-  event.preventDefault();
-  resetDropState();
-
-  if (!event.dataTransfer) return;
-
-  try {
-    const dataString = event.dataTransfer.getData("application/json");
-    console.log("Drop data:", dataString); // Debug the actual data
-
-    if (!dataString) {
-      console.error("No data found in drop event");
-      return;
-    }
-
-    const data = JSON.parse(dataString);
-
-    emit("drop", {
-      exerciseId: data.id,
-      sourceUnitId: data.unitId,
-      targetUnitId: props.id,
-      newPosition: position,
-    });
-  } catch (e) {
-    console.error("Invalid drop data", e);
-  }
+function guiltTrip() {
+  guiltTrip();
 }
 </script>
-
-<style scoped lang="scss">
-.unit-block {
-  padding: 1rem;
-  margin: 1rem 0;
-  min-width: 400px;
-  max-height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-  height: fit-content;
-  transition: all 0.3s ease;
-  filter: drop-shadow(0px 0px 20px rgba(40, 60, 126, 0.03));
-  border-radius: 8px;
-  border-right: 1px solid var(--color-Gray-300);
-
-  &.drop-active {
-    border-color: #15ca82;
-  }
-
-  &.drop-hover {
-    background-color: rgba(21, 202, 130, 0.05);
-  }
-}
-.block-header {
-  margin-bottom: 1rem;
-  border: 1px solid #ccc;
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 1rem;
-}
-
-.exercise-container {
-  position: relative;
-}
-
-.drop-zone {
-  height: 2px;
-  margin: 1px 0;
-  border-radius: 4px;
-  transition: all 0.2s ease;
-  background-color: transparent;
-  opacity: 0;
-  display: none;
-
-  &-visible {
-    opacity: 0.3;
-    height: 15px;
-    background-color: rgba(21, 202, 130, 0.2);
-    display: block;
-  }
-
-  &-active {
-    opacity: 1;
-    background-color: #15ca82;
-    height: 30px;
-    margin: 5px 0;
-    display: block;
-  }
-}
-</style>
+<!--   -->

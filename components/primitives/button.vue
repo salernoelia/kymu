@@ -1,6 +1,13 @@
 <script setup lang="ts">
 interface Props {
-  variant?: "primary" | "secondary" | "tertiary" | "icon" | "text" | "outline";
+  variant?:
+    | "primary"
+    | "secondary"
+    | "tertiary"
+    | "icon"
+    | "text"
+    | "outline"
+    | "danger";
   disabled?: boolean;
   iconRight?: string;
   iconLeft?: string;
@@ -30,6 +37,8 @@ const buttonClasses = computed(() => {
     // variants
     "bg-primary text-on-primary hover:bg-[var(--color-PrimaryHover)]":
       props.variant === "primary",
+    "bg-[var(--color-Error)] text-[var(--color-OnError)] hover:bg-[var(--color-ErrorContainer)]":
+      props.variant === "danger",
     "bg-secondary text-on-secondary hover:bg-[var(--color-SecondaryHover)]":
       props.variant === "secondary",
     "bg-tertiary text-on-tertiary hover:bg-[var(--color-TertiaryHover)]":

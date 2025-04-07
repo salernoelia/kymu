@@ -1,25 +1,15 @@
-interface Slide {
-  title: string;
-  description: string;
-}
+type Unit = Tables<"units">;
+type UnitInsert = TablesInsert<"units">;
+type UnitUpdate = TablesUpdate<"units">;
 
-interface DraggingExercise {
-  id: string;
-  unitId: string;
-  position: number;
-}
+type TestWithRelations = Tables<"tests">;
 
-interface ExerciseTemplate extends Tables<"default_exercises"> {}
-
-interface UnitTemplate extends Tables<"default_units"> {}
-
-interface UnitsWithExercises extends Tables<"units"> {
-  exercises: Tables<"exercises">[];
-}
-
-type ExerciseTemplate = Tables<"default_exercises"> | Tables<"exercises">;
-type UnitTemplate = Tables<"default_units"> | Tables<"units">;
-type UnitsWithExercises = Tables<"units"> & {
-  exercises: Tables<"exercises">[];
+type AssessmentWithTests = Tables<"assessments"> & {
+    tests: TestWithRelations[];
 };
-type ExerciseTemplate = Tables<"default_exercises"> | Tables<"exercises">;
+
+type UnitWithDetails = Tables<"units"> & {
+    start_assessment: AssessmentWithTests | null;
+    end_assessment: AssessmentWithTests | null;
+    exercises: Tables<"exercises">[];
+};
