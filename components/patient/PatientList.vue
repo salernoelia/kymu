@@ -13,7 +13,7 @@
       <!-- content -->
       <tbody>
         <tr
-          v-for="p in families"
+          v-for="p in patients"
           :key="p.id"
           @click="() => emits('patientClick', p)"
           class="border-b cursor-pointer hover:bg-gray-100"
@@ -34,8 +34,11 @@
         </tr>
 
         <!-- empty -->
-        <tr v-if="!families || families.length === 0">
-          <td colspan="4" class="py-6 px-4 text-center text-gray-500">
+        <tr v-if="!patients || patients.length === 0">
+          <td
+            colspan="4"
+            class="py-6 px-4 text-center text-gray-500"
+          >
             No patients found
           </td>
         </tr>
@@ -45,7 +48,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["families"]);
+const props = defineProps(["patients"]);
 const emits = defineEmits(["patientClick"]);
 
 function formatDate(dateString: string): string {

@@ -119,7 +119,6 @@ const country = ref("");
 
 const UserTypeOptions = [
   { label: "Patient", value: "patient" },
-  { label: "Caregiver", value: "caregiver" },
   { label: "Therapist", value: "therapist" },
 ];
 

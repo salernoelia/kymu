@@ -9,6 +9,10 @@
     <PrimitivesButton @click="navigateTo(localePath('/'))">
       {{ $t("go-home") }}
     </PrimitivesButton>
+
+    <PrimitivesButton @click="navigateTo(localePath('/auth/login'))">
+      {{ $t("login") }}
+    </PrimitivesButton>
   </div>
 </template>
 

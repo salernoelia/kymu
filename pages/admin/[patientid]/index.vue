@@ -184,8 +184,8 @@ if (!route.params.patientid) {
   throw new Error("No patient ID provided");
 }
 
-const familiesWithFkeyQuery = supabase
-  .from("families")
+const patientsWithFkeyQuery = supabase
+  .from("patients")
   .select(
     `
     *,
@@ -195,10 +195,10 @@ const familiesWithFkeyQuery = supabase
   .eq("uid", route.params.patientid.toString())
   .single();
 
-const f = ref<QueryData<typeof familiesWithFkeyQuery>>();
+const f = ref<QueryData<typeof patientsWithFkeyQuery>>();
 
 const loadPatientData = async () => {
-  const { data, error } = await familiesWithFkeyQuery;
+  const { data, error } = await patientsWithFkeyQuery;
 
   if (error) {
     console.error("Error fetching patient data", error);

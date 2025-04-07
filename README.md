@@ -231,3 +231,18 @@ watch(
   }
 );
 ```
+
+# Mobile App Dev
+
+Install the CLI
+
+```sh
+npm install -D @capacitor/cli
+```
+
+Forward localhost ip's to ADB
+
+```sh
+adb reverse tcp:54321 tcp:54321
+adb reverse tcp:3000 tcp:3000
+```

@@ -10,3 +10,14 @@
     </NuxtLayout>
   </div>
 </template>
+
+<script setup>
+const userRoleStore = useUserRoleStore();
+const supabaseUser = useSupabaseUser();
+
+onMounted(async () => {
+  if (supabaseUser.value) {
+    await userRoleStore.determineUserRole();
+  }
+});
+</script>

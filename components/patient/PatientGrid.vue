@@ -1,11 +1,11 @@
 <template>
   <div>
     <div
-      v-if="families && families.length > 0"
+      v-if="patients && patients.length > 0"
       class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
     >
       <PrimitivesContainer
-        v-for="p in families"
+        v-for="p in patients"
         :key="p.id"
         variant="white"
         :interactive="true"
@@ -44,7 +44,7 @@
       </PrimitivesContainer>
     </div>
     <PrimitivesContainer
-      v-if="!families || families.length === 0"
+      v-if="!patients || patients.length === 0"
       variant="white"
       class="text-center text-gray-500"
     >
@@ -54,7 +54,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps(["families"]);
+const props = defineProps(["patients"]);
 const emits = defineEmits(["patientClick"]);
 
 function formatDate(dateString: string): string {

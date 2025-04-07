@@ -69,8 +69,8 @@
           <!-- views -->
           <div v-if="view === 'list'">
             <PatientList
-              v-if="filteredFamilies.length > 0"
-              :families="filteredFamilies"
+              v-if="filteredpatients.length > 0"
+              :patients="filteredpatients"
               @patientClick="handlePatientClick"
             />
             <div
@@ -82,8 +82,8 @@
           </div>
           <div v-else-if="view === 'grid'">
             <PatientGrid
-              v-if="filteredFamilies.length > 0"
-              :families="filteredFamilies"
+              v-if="filteredpatients.length > 0"
+              :patients="filteredpatients"
               @patientClick="handlePatientClick"
             />
             <div
@@ -132,7 +132,7 @@ const supabaseUser = useSupabaseUser();
 const localePath = useLocalePath();
 
 const searchQuery = ref("");
-const families = ref<Tables<"families">[]>([]);
+const patients = ref<Tables<"patients">[]>([]);
 const view = ref("list");
 const selectedPatient = ref(null);
 const date = ref(today(getLocalTimeZone())) as Ref<DateValue>;
@@ -140,13 +140,13 @@ const sliderAgeValue = ref([17]);
 const isLoadingPage = ref(false);
 
 // Filtering basedon query
-const filteredFamilies = computed(() => {
+const filteredpatients = computed(() => {
   if (!searchQuery.value.trim()) {
-    return families.value;
+    return patients.value;
   }
 
   const query = searchQuery.value.toLowerCase().trim();
-  return families.value.filter((family) => {
+  return patients.value.filter((family) => {
     return (
       family.patient_first_name?.toLowerCase().includes(query) ||
       family.patient_last_name?.toLowerCase().includes(query) ||
@@ -182,7 +182,7 @@ const handlePatientClick = (patient: any) => {
   }
 };
 
-// Make sure families data is properly initialized
+// Make sure patients data is properly initialized
 const loadFamilyData = async () => {
   try {
     if (!supabaseUser.value) {
@@ -191,7 +191,7 @@ const loadFamilyData = async () => {
     }
 
     const { data, error } = await supabase
-      .from("families")
+      .from("patients")
       .select("*")
       .eq("therapist_uid", supabaseUser.value?.id);
 
@@ -200,11 +200,11 @@ const loadFamilyData = async () => {
       return;
     }
 
-    families.value = data || [];
+    patients.value = data || [];
     isLoadingPage.value = true;
   } catch (err) {
     console.error("Error in loadFamilyData:", err);
-    families.value = [];
+    patients.value = [];
     isLoadingPage.value = true;
   }
 };

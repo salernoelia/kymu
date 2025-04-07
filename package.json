@@ -34,6 +34,7 @@
     "@ant-design/icons-vue": "^7.0.1",
     "@capacitor/android": "^7.2.0",
     "@capacitor/core": "^7.2.0",
+    "@capacitor/device": "^7.0.1",
     "@capacitor/ios": "^7.2.0",
     "@mediapipe/camera_utils": "^0.3.1675466862",
     "@mediapipe/drawing_utils": "^0.3.1675466124",
