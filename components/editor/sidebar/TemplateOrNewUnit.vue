@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Edit Exercise</h1>
-    <h3>{{ editorStore.selectedExercise }}</h3>
+    <h1>New Unit or temp</h1>
+    <h3>{{ editorStore.selectedUnit }}</h3>
   </div>
 </template>
 

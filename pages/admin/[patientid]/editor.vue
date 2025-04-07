@@ -56,10 +56,7 @@ onMounted(async () => {
   try {
     const unitsData = await unitCrud.getWithDetails();
     editorStore.setUnits(unitsData);
-
-    console.log("setting editorloaded true:");
     editorStore.isEditorLoaded = true;
-    console.log(editorStore.isEditorLoaded);
   } catch (error) {
     console.error("Error fetching units:", error);
   }
