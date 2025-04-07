@@ -21,7 +21,7 @@
       >
       <nuxt-link
         class="nav-link"
-        :to="localePath('/examples')"
+        :to="localePrath('/examples')"
         >Examples</nuxt-link
       >
     </div>
@@ -29,20 +29,22 @@
     <div class="flex items-center gap-4 w-1/3 justify-end">
       <WidgetsLanguageSelector />
       <PrimitivesButton
+        v-if="roleStore.role === 'patient'"
         class="flex flex-row items-center gap-2"
-        @click="() => navigateTo(localePath('/family'))"
+        @click="() => navigateTo(localePath('/patient'))"
         variant="secondary"
       >
-        Family
+        Patient
         <Icon
           name="material-symbols-light:arrow-outward-rounded"
           class="w-4 h-4"
         />
       </PrimitivesButton>
       <PrimitivesButton
+        v-if="roleStore.role === 'patient'"
         class="flex flex-row items-center gap-2"
         @click="() => navigateTo(localePath('/tv'))"
-        variant="secondary"
+        variant="primary"
       >
         TV
         <Icon
@@ -51,6 +53,7 @@
         />
       </PrimitivesButton>
       <PrimitivesButton
+        v-if="roleStore.role === 'therapist'"
         class="flex flex-row items-center gap-2"
         @click="() => navigateTo(localePath('/admin'))"
         variant="primary"
@@ -80,6 +83,7 @@
 <script setup lang="ts">
 const localePath = useLocalePath();
 const supabase = useSupabaseClient();
+const roleStore = useUserRoleStore();
 
 const handleLogout = async () => {
   try {

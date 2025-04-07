@@ -12,21 +12,50 @@
     draggable="true"
     @dragstart="emit('dragstart', $event)"
     @dragend="handleDragEnd"
-    @mouseenter="startHoverTimer"
-    @mouseleave="cancelHoverAndHideChart"
-    @click="editorStore.openEditExerciseSidebar(exercise.id)"
   >
     <div class="flex flex-row w-full justify-between items-start">
-      <div class="left">
-        <h2>
-          {{ exercise.name }}
-        </h2>
-        <h3>
-          {{ exercise.description }}
-        </h3>
+      <div class="h-full flex flex-row gap-4 items-center">
+        <Icon
+          name="ic:baseline-drag-handle"
+          class="icon"
+        />
+
+        <div class="flex flex-col">
+          <h2>
+            {{ exercise.name }}
+          </h2>
+          <h3>
+            {{ exercise.description }}
+          </h3>
+        </div>
       </div>
-      <div class="right">
-        <Icon name="mdi-light:dots-vertical" />
+      <div class="right flex flex-row gap-3">
+        <Icon
+          @click="toggleChart"
+          name="ic:baseline-bar-chart"
+          class="icon"
+        />
+        <Icon
+          @click="editorStore.openEditExerciseSidebar(exercise.id)"
+          name="ic:baseline-edit"
+          class="icon"
+        />
+
+        <DropdownMenu>
+          <DropdownMenuTrigger
+            ><Icon
+              name="ic:baseline-more-vert"
+              class="icon"
+          /></DropdownMenuTrigger>
+          <DropdownMenuContent>
+            <DropdownMenuLabel>My Account</DropdownMenuLabel>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem>Profile</DropdownMenuItem>
+            <DropdownMenuItem>Billing</DropdownMenuItem>
+            <DropdownMenuItem>Team</DropdownMenuItem>
+            <DropdownMenuItem>Subscription</DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </div>
 
@@ -48,6 +77,15 @@
 </template>
 
 <script setup lang="ts">
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+
 const props = defineProps<{
   exercise: Tables<"exercises">;
   index: number;
@@ -57,8 +95,6 @@ const editorStore = useEditorStore();
 const dragDropStore = useDragDropStore();
 
 const showChart = ref(false);
-const hoverTimer = ref<number | null>(null);
-const HOVER_DELAY = 300;
 
 const emit = defineEmits<{
   dragstart: [event: DragEvent];
@@ -68,24 +104,8 @@ const handleDragEnd = (event: DragEvent) => {
   dragDropStore.endDragExercise(event);
 };
 
-const startHoverTimer = () => {
-  if (hoverTimer.value !== null) {
-    clearTimeout(hoverTimer.value);
-  }
-
-  hoverTimer.value = window.setTimeout(() => {
-    showChart.value = true;
-    hoverTimer.value = null;
-  }, HOVER_DELAY);
-};
-
-const cancelHoverAndHideChart = () => {
-  if (hoverTimer.value !== null) {
-    clearTimeout(hoverTimer.value);
-    hoverTimer.value = null;
-  }
-
-  showChart.value = false;
+const toggleChart = () => {
+  showChart.value = !showChart.value;
 };
 
 const barChartData = ref([

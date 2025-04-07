@@ -1,7 +1,8 @@
 import { useUserRoleStore } from "~/stores/userRoleStore";
 
 export default defineNuxtRouteMiddleware(async (to) => {
-    if (to.path.includes("/auth/")) {
+    if (to.path === "/auth/login" || to.path === "/auth/signup") {
+        console.log("returning");
         return;
     }
 
@@ -23,7 +24,7 @@ export default defineNuxtRouteMiddleware(async (to) => {
         return;
     }
 
-    if (to.path === "/" || to.path === "" || to.path === "/confirm") {
+    if (to.path === "/" || to.path === "" || to.path === "/auth/confirm") {
         if (userRoleStore.isMobileDevice) {
             if (userRoleStore.role === "patient") {
                 return navigateTo(localePath("/family"));
@@ -33,8 +34,10 @@ export default defineNuxtRouteMiddleware(async (to) => {
         } else {
             if (userRoleStore.role === "patient") {
                 return navigateTo(localePath("/tv"));
+                // return;
             } else if (userRoleStore.role === "therapist") {
                 return navigateTo(localePath("/admin"));
+                // return;
             }
             return;
         }

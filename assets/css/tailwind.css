@@ -118,3 +118,9 @@
   background-color: var(--color-Gray-100);
   border: var(--color-Primary) 1px solid;
 }
+
+.icon {
+  width: 20px;
+  height: 20px;
+  opacity: 0.8;
+}

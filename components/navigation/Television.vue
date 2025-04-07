@@ -1,6 +1,9 @@
 <template>
   <div class="flex items-center justify-between p-4 w-full">
-    <div class="flex items-center w-1/3 jusify-start">
+    <div
+      @click="() => navigateTo(localePath('/'))"
+      class="flex items-center w-1/3 jusify-start"
+    >
       <img
         src="/logo/logo_kymu_text.png"
         alt="Kymu Logo"

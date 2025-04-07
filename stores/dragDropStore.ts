@@ -74,25 +74,38 @@ export const useDragDropStore = defineStore("dragDropStore", () => {
 
         const exercise = sourceUnit.exercises[exerciseIndex];
 
-        // Remove from source
-        sourceUnit.exercises.splice(exerciseIndex, 1);
-
-        const insertPosition = position !== undefined
+        // Calculate insert position, accounting for the case where we're moving within the same unit
+        let insertPosition = position !== undefined
             ? position
             : targetUnit.exercises.length;
+        const isSameUnit = sourceUnitID === targetUnitId;
+
+        // If we're moving within the same unit, and moving to a later position,
+        // we need to adjust the insert position because removing the exercise will shift indexes
+        if (isSameUnit && exerciseIndex < insertPosition) {
+            insertPosition--;
+        }
+
+        // Remove from source
+        sourceUnit.exercises.splice(exerciseIndex, 1);
 
         // Add to target at the specified position
         targetUnit.exercises.splice(insertPosition, 0, exercise);
 
         // Determine the previous exercise in the target unit
-        draggedExerciseTargetPreviousExerciseID.value = insertPosition > 0
-            ? targetUnit.exercises[insertPosition - 1]?.id
-            : null;
+        // Ensure we're not setting an exercise as its own previous exercise
+        let previousExerciseId = null;
+        if (insertPosition > 0) {
+            const previousExercise = targetUnit.exercises[insertPosition - 1];
+            if (previousExercise.id !== exerciseID) {
+                previousExerciseId = previousExercise.id;
+            }
+        }
+
+        draggedExerciseTargetPreviousExerciseID.value = previousExerciseId;
 
         if (
             draggedExerciseID.value &&
-            (draggedExerciseTargetPreviousExerciseID.value ||
-                draggedExerciseTargetPreviousExerciseID.value == null) &&
             draggedExerciseSourceUnitID.value &&
             draggedExerciseTargetUnitID.value
         ) {
