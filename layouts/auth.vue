@@ -1,6 +1,9 @@
 <template>
-  <div>
+  <div class="h-screen overflow-y-hidden">
     <WidgetsLanguageSelector id="langselector" />
+
+    <NuxtImg src="/logo/logo_kymu_blue 1.png" />
+
     <NuxtPage />
   </div>
 </template>

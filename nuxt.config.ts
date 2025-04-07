@@ -52,6 +52,9 @@ export default defineNuxtConfig({
       { code: "it", files: ["it.yaml"], iso: "it-IT" },
     ],
     defaultLocale: "de",
+    bundle: {
+      optimizeTranslationDirective: false,
+    },
   },
 
   // app: {

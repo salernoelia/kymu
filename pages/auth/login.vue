@@ -1,7 +1,7 @@
 <template>
-  <div class="flex justify-center items-center h-screen">
+  <div class="flex justify-center items-center h-full">
     <div
-      class="max-w-sm w-full flex flex-col items-center bg-white p-8 pt-10 pb-10 rounded-md shadow-md gap-4"
+      class="max-w-sm w-full flex flex-col items-center bg-white p-8 pt-10 pb-10 rounded-md shadow-md gap-4 "
     >
       <h2 class="text-2xl font-bold ">Login</h2>
 

@@ -4,6 +4,11 @@
   </div>
 </template>
 
-<script setup lang="ts"></script>
+<script setup lang="ts">
+definePageMeta({
+  title: "Kymu",
+  layout: "family",
+});
+</script>
 
 <style scoped></style>

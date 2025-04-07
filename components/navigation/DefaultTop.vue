@@ -30,6 +30,17 @@
       <WidgetsLanguageSelector />
       <PrimitivesButton
         class="flex flex-row items-center gap-2"
+        @click="() => navigateTo(localePath('/family'))"
+        variant="secondary"
+      >
+        Family
+        <Icon
+          name="material-symbols-light:arrow-outward-rounded"
+          class="w-4 h-4"
+        />
+      </PrimitivesButton>
+      <PrimitivesButton
+        class="flex flex-row items-center gap-2"
         @click="() => navigateTo(localePath('/tv'))"
         variant="secondary"
       >
