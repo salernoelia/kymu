@@ -16,6 +16,13 @@ export const useEditorStore = defineStore("editorStore", () => {
         return foundUnit || null;
     };
 
+    const openTemplateOrNewUnitSidebar = () => {
+        sidebarOpen.value = true;
+        sidebarMode.value = "templateOrNewUnit";
+
+        console.log("new unit");
+    };
+
     const openNewExerciseSidebar = (
         unit: UnitWithDetails,
         sourcePriorIndexExerciseID: Tables<"exercises">["id"] | "new",
@@ -61,6 +68,7 @@ export const useEditorStore = defineStore("editorStore", () => {
         getUnitByID,
         sidebarOpen,
         sidebarMode,
+        openTemplateOrNewUnitSidebar,
         openNewExerciseSidebar,
         openEditExerciseSidebar,
         openEditUnitSidebar,

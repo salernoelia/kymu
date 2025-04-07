@@ -2,27 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Root Variables (Colors)
+   -------------------------------------------------------------------------- */
 :root {
-  /* --color-primary: #283c7e;
-  --color-primary-dark: #1f2d5e;
-  --color-primary-light: #3a4f9e;
-
-  --color-secondary: #e0e0e0;
-  --color-secondary-dark: #b0b0b0;
-  --color-secondary-light: #f0f0f0;
-
-  --color-tertiary: #d0d0d0;
-  --color-tertiary-dark: #a0a0a0;
-  --color-tertiary-light: #e0e0e0; */
-
+  /* Header Colors */
   --color-Header: #f0f0f0;
   --color-Header-dark: #d0d0d0;
   --color-Header-light: #f8f8f8;
 
+  /* Text Colors */
   --color-Text: #333;
   --color-Text-dark: #222;
   --color-Text-light: #444;
 
+  /* Grey Scale */
   --color-Gray-100: #f8f9fa;
   --color-Gray-200: #e9ecef;
   --color-Gray-300: #dee2e6;
@@ -33,43 +26,9 @@
   --color-Gray-800: #343a40;
   --color-Gray-900: #212529;
 
-  --color-Background: #f5fbf7;
-  --color-Error: #ba1a1a;
-  --color-ErrorContainer: #ffdad6;
-  --color-InverseOnSurface: #ecf2ee;
-  --color-InversePrimary: #85d6c0;
-  --color-InverseSurface: #2b322f;
-  --color-OnBackground: #171d1b;
-  --color-OnError: #ffffff;
-  --color-OnErrorContainer: #410002;
-  --color-OnPrimary: #ffffff;
-  --color-OnPrimaryContainer: #002019;
-  --color-OnPrimaryFixed: #002019;
-  --color-OnPrimaryFixedVariant: #005143;
-  --color-OnSecondary: #ffffff;
-  --color-OnSecondaryContainer: #07201a;
-  --color-OnSecondaryFixed: #07201a;
-  --color-OnSecondaryFixedVariant: #334b44;
+  /* Surface Colors */
   --color-OnSurface: #171d1b;
   --color-OnSurfaceVariant: #3f4945;
-  --color-OnTertiary: #ffffff;
-  --color-OnTertiaryContainer: #001e2e;
-  --color-OnTertiaryFixed: #001e2e;
-  --color-OnTertiaryFixedVariant: #294a5f;
-  --color-Outline: #6f7975;
-  --color-OutlineVariant: #bfc9c4;
-  --color-Primary: #283c7e;
-  --color-PrimaryHover: #3e5398;
-  --color-PrimaryContainer: #e4ebff;
-  --color-PrimaryFixed: #283c7e;
-  --color-PrimaryFixedDim: #182b6b;
-  --color-Scrim: #000000;
-  --color-Secondary: #4b635c;
-  --color-SecondaryHover: rgb(118, 141, 134);
-  --color-SecondaryContainer: #cde8df;
-  --color-SecondaryFixed: #cde8df;
-  --color-SecondaryFixedDim: #b1ccc3;
-  --color-Shadow: #000000;
   --color-Surface: #f5fbf7;
   --color-SurfaceBright: #f5fbf7;
   --color-SurfaceContainer: #e9efeb;
@@ -80,16 +39,162 @@
   --color-SurfaceDim: #d5dbd8;
   --color-SurfaceTint: #0b6b59;
   --color-SurfaceVariant: #dbe5e0;
+  --color-Background: #f5fbf7;
+
+  /* Error Colors */
+  --color-Error: #ba1a1a;
+  --color-ErrorContainer: #ffdad6;
+  --color-OnError: #ffffff;
+  --color-OnErrorContainer: #410002;
+
+  /* Other Colors */
+  --color-InverseOnSurface: #ecf2ee;
+  --color-InversePrimary: #85d6c0;
+  --color-InverseSurface: #2b322f;
+  --color-OnBackground: #171d1b;
+  --color-ExclamationLight: #ffa958;
+  --color-Exclamation: #ea7100;
+
+  /* Primary Colors */
+  --color-Primary: #283c7e;
+  --color-PrimaryHover: #3e5398;
+  --color-PrimaryContainer: #e4ebff;
+  --color-PrimaryFixed: #283c7e;
+  --color-PrimaryFixedDim: #182b6b;
+  --color-OnPrimary: #d3dcf8;
+  --color-OnPrimaryContainer: #002019;
+  --color-OnPrimaryFixed: #002019;
+  --color-OnPrimaryFixedVariant: #005143;
+
+  /* Secondary Colors */
+  --color-Secondary: #4b635c;
+  --color-SecondaryHover: rgb(118, 141, 134);
+  --color-SecondaryContainer: #cde8df;
+  --color-SecondaryFixed: #cde8df;
+  --color-SecondaryFixedDim: #b1ccc3;
+  --color-OnSecondary: #ffffff;
+  --color-OnSecondaryContainer: #07201a;
+  --color-OnSecondaryFixed: #07201a;
+  --color-OnSecondaryFixedVariant: #334b44;
+
+  /* Tertiary Colors */
   --color-Tertiary: #426277;
   --color-TertiaryHover: #5f88aa;
   --color-TertiaryContainer: #c6e7ff;
   --color-TertiaryFixed: #c6e7ff;
   --color-TertiaryFixedDim: #aacbe3;
+  --color-OnTertiary: #ffffff;
+  --color-OnTertiaryContainer: #001e2e;
+  --color-OnTertiaryFixed: #001e2e;
+  --color-OnTertiaryFixedVariant: #294a5f;
+
+  /* Stroke and Outline Colors */
+  --color-Outline: #6f7975;
+  --color-OutlineVariant: #bfc9c4;
   --color-Stroke: #c0c0c0;
-  --color-ExclamationLight: #ffa958;
-  --color-Exclamation: #ea7100;
+
+  /* Shadow Color */
+  --color-Shadow: #000000;
+
+  /* Radix UI Colors  (Copied from main.css) */
+  --background: 0 0% 100%;
+  --foreground: 20 14.3% 4.1%;
+  --card: 0 0% 100%;
+  --card-foreground: 20 14.3% 4.1%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 20 14.3% 4.1%;
+  --primary: 24 9.8% 10%;
+  --primary-foreground: 60 9.1% 97.8%;
+  --secondary: 60 4.8% 95.9%;
+  --secondary-foreground: 24 9.8% 10%;
+  --muted: 60 4.8% 95.9%;
+  --muted-foreground: 25 5.3% 44.7%;
+  --accent: 60 4.8% 95.9%;
+  --accent-foreground: 24 9.8% 10%;
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --border: 20 5.9% 90%;
+  --input: 20 5.9% 90%;
+  --ring: 20 14.3% 4.1%;
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+  --radius: 0.5rem;
 }
 
+.dark {
+  --background: 20 14.3% 4.1%;
+  --foreground: 60 9.1% 97.8%;
+  --card: 20 14.3% 4.1%;
+  --card-foreground: 60 9.1% 97.8%;
+  --popover: 20 14.3% 4.1%;
+  --popover-foreground: 60 9.1% 97.8%;
+  --primary: 60 9.1% 97.8%;
+  --primary-foreground: 24 9.8% 10%;
+  --secondary: 12 6.5% 15.1%;
+  --secondary-foreground: 60 9.1% 97.8%;
+  --muted: 12 6.5% 15.1%;
+  --muted-foreground: 24 5.4% 63.9%;
+  --accent: 12 6.5% 15.1%;
+  --accent-foreground: 60 9.1% 97.8%;
+  --destructive: 0 62.8% 30.6%;
+  --destructive-foreground: 60 9.1% 97.8%;
+  --border: 12 6.5% 15.1%;
+  --input: 12 6.5% 15.1%;
+  --ring: 24 5.7% 82.9%;
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+/* Base Styles
+   -------------------------------------------------------------------------- */
+body {
+  font-family: "Poppins", sans-serif;
+  font-weight: 300;
+  font-size: 14px;
+  margin: 0;
+  padding: 1em;
+  word-break: break-word;
+}
+
+h1 {
+  font-weight: 500;
+  margin: 0 0 0.8em 0;
+  padding: 0 0 0.2em 0;
+  font-size: 2rem;
+}
+
+h2 {
+  font-weight: 400;
+  margin: 0 0 0.8em 0;
+  padding: 0 0 0.2em 0;
+  font-size: 1.2rem;
+}
+
+h3 {
+  font-weight: 500;
+  margin: 0 0 0.8em 0;
+  padding: 0 0 0.2em 0;
+  font-size: 1rem;
+}
+
+h4 {
+  margin: 0;
+  padding: 0 0 0.2em 0;
+}
+
+p {
+  color: #444;
+  font-weight: 300;
+}
+
+/* Graph Styles
+   -------------------------------------------------------------------------- */
 @layer base {
   :root {
     --vis-tooltip-background-color: none !important;
@@ -105,22 +210,44 @@
   }
 }
 
-.card {
-  padding: 1rem;
-  border-radius: 0.5rem;
-  background-color: #fff;
-  border: var(--color-Stroke) 1px solid;
-  transition: all 0.3s ease;
-  cursor: pointer;
+/* Animation Styles
+   -------------------------------------------------------------------------- */
+@keyframes highlight-pulse {
+  0% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7);
+  }
+  70% {
+    box-shadow: 0 0 0 10px rgba(59, 130, 246, 0);
+  }
+  100% {
+    box-shadow: 0 0 0 0 rgba(59, 130, 246, 0);
+  }
 }
 
-.card:hover {
-  background-color: var(--color-Gray-100);
-  border: var(--color-Primary) 1px solid;
+.highlight-new {
+  animation: highlight-pulse 2s ease-in-out;
+  border: 2px solid #3b82f6;
 }
 
-.icon {
-  width: 20px;
-  height: 20px;
-  opacity: 0.8;
+/* Media Queries
+   -------------------------------------------------------------------------- */
+@media screen and (max-width: 650px) {
+  h1 {
+    font-size: 24px;
+  }
+}
+
+@media screen and (max-width: 550px) {
+  button:active {
+    background-color: darkRed;
+  }
+  h1 {
+    font-size: 22px;
+  }
+}
+
+@media screen and (max-width: 450px) {
+  h1 {
+    font-size: 20px;
+  }
 }

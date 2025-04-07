@@ -5,6 +5,7 @@
       :key="unit.id"
       :unit="unit"
     />
+    <EditorCardNewUnit @click="editorStore.openTemplateOrNewUnitSidebar()" />
     <EditorSidebar>
       <EditorSidebarNewExercise
         v-if="editorStore.sidebarMode === 'newExercise'"

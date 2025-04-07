@@ -7,7 +7,7 @@
     :unit="unit"
   /> -->
   <div
-    class="card flex flex-row justify-between items-start"
+    class="c flex flex-row justify-between items-start p-4"
     draggable="true"
     @dragstart="emit('dragstart', $event)"
     @dragend="handleDragEnd"
@@ -45,8 +45,10 @@ const handleDragEnd = (event: DragEvent) => {
 </script>
 
 <style scoped lang="scss">
-.card {
-  background-color: var(--color-Secondary);
-  color: var(--color-OnSecondary);
+.c {
+  padding: 1rem;
+  border-radius: 0.5rem;
+  background-color: var(--color-PrimaryContainer);
+  border: var(--color-Stroke) 1px solid;
 }
 </style>
