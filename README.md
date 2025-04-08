@@ -1,5 +1,7 @@
 # Kymu
 
+![showcase](/public/promotion/kymu-showcase.webp)
+
 ## Supabase Commands
 
 ```
