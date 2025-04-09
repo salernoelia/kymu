@@ -21,6 +21,7 @@ definePageMeta({
 const supabase = useSupabaseClient();
 const localePath = useLocalePath();
 const { remoteKey } = useRemoteControl();
+const unitCrud = useUnitCrud();
 const selectedIndex = ref(0);
 
 const units = [
@@ -40,20 +41,6 @@ const units = [
     description: "Description for Unit 3",
   },
 ];
-
-// const loadUnits = async () => {
-//   const { data, error } = await supabase
-//     .from("units")
-//     .select("*")
-//     .eq("isFocus", true)
-//     .order("created_at", { ascending: false });
-
-//   if (error) {
-//     console.error("Error loading units:", error);
-//   } else {
-//     units.value = data;
-//   }
-// };
 
 const unitsWithFocus = computed(() => {
   return units.map((unit, index) => ({
@@ -78,6 +65,11 @@ watch(
     }
   }
 );
+
+onMounted(async () => {
+  const unitsData = await unitCrud.getWithDetails();
+  console.log(unitsData);
+});
 </script>
 
 <style scoped></style>

@@ -55,6 +55,7 @@ provide("patientId", patientId);
 onMounted(async () => {
   try {
     const unitsData = await unitCrud.getWithDetails();
+    console.log(unitsData);
     editorStore.setUnits(unitsData);
     editorStore.isEditorLoaded = true;
   } catch (error) {
