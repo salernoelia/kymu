@@ -36,9 +36,9 @@ const romComponent = ref<null | {
 
 const { remoteKey } = useRemoteControl();
 
-onMounted(() => {
-  tvStore.initializeExercisesState();
-});
+// onMounted(() => {
+//   tvStore.initializeExercises();
+// });
 
 const handleRemoteKey = (newKey: string | null) => {
   if (!newKey) return;

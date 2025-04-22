@@ -26,9 +26,12 @@ const props = defineProps<{
   width: 300px;
   display: flex;
   flex-direction: column;
+
+  outline: 1px solid var(--color-Primary);
 }
 
 #container.bg-blue-500 {
-  border: 5px solid var(--color-Exclamation);
+  outline: 5px solid var(--color-Exclamation);
+  outline-offset: 2px;
 }
 </style>

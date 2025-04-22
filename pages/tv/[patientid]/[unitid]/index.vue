@@ -1,5 +1,6 @@
 <template>
   <div class="tv-exercise-container">
+    <h1>Heutiger Plan</h1>
     <div
       v-if="isLoading"
       class="loading"
@@ -23,7 +24,7 @@
 
     <div
       v-else
-      class="exercises flex flex-row"
+      class="exercises flex flex-row gap-4"
     >
       <TvExercises
         v-for="(exercise, index) in currentUnit.exercises"
@@ -85,7 +86,7 @@ const navigateToSelectedExercise = () => {
   console.log("navigating to", currentUnit.value?.exercises[0]?.id);
   navigateTo(
     localePath(
-      `/tv/${patientId}/${unitId}/${currentUnit.value?.exercises[0]?.id}`
+      `/tv/${patientId}/${unitId}/${currentUnit.value?.exercises[0]?.id}/progress`
     )
   );
 };
@@ -100,7 +101,7 @@ const fetchUnitData = async () => {
       return;
     }
 
-    await tvStore.getInstanceUnitByID(unitId);
+    await tvStore.getUnitById(unitId);
 
     if (!currentUnit.value) {
       error.value = "Unit not found";

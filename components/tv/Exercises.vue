@@ -32,13 +32,16 @@ const props = defineProps({
   animation: gradientAnimation 15s ease infinite;
   padding: 20px;
   border-radius: 10px;
-  height: 500px;
+  height: 250px;
   width: 300px;
   display: flex;
   flex-direction: column;
+
+  outline: 1px solid var(--color-Primary);
 }
 
 #container.bg-blue-500 {
-  border: 5px solid var(--color-Exclamation);
+  outline: 5px solid var(--color-Exclamation);
+  outline-offset: 2px;
 }
 </style>

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="flex flex-row justify-center align-center">
     <div v-if="currentExercise">
       <h1>{{ currentExercise.name }}</h1>
       <p>{{ currentExercise.description }}</p>
@@ -38,6 +38,10 @@
           Next
         </button>
       </div>
+      <TvProgress
+        :current="exerciseProgress.current - 1"
+        :total="exerciseProgress.total"
+      />
     </div>
 
     <div v-else>
