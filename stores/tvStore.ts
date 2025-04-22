@@ -1,6 +1,7 @@
 // import { useStorage } from "@vueuse/core";
 
 export const useTVStore = defineStore("tvStore", () => {
+    const exerciseStateMachine = useExerciseStateMachine();
     const unitCrud = useUnitCrud();
     const units = ref<UnitWithDetails[]>([]);
 
@@ -18,6 +19,7 @@ export const useTVStore = defineStore("tvStore", () => {
     const exercisesStates = ref<ExercisesStates>(
         [],
     );
+    const currentExercise = ref<ExerciseState>();
 
     const isLoading = ref(false);
     const error = ref<string | null>(null);
@@ -109,17 +111,18 @@ export const useTVStore = defineStore("tvStore", () => {
     const initializeExercisesState = () => {
         if (!currentUnit.value || !currentUnit.value.id) return;
         exercisesStates.value = currentUnit.value.exercises.map((exercise) => ({
-            ...(exercise as object),
+            ...exercise,
             unitID: currentUnit.value!.id,
-            created_at: new Date(),
+            created_at: new Date().toISOString(),
             completed_status: "none" as completed_status,
             results: {},
-        }));
+        })) as ExercisesStates;
         console.log("Exercise State inizialized", exercisesStates.value);
     };
 
     onMounted(async () => {
         await fetchUnits();
+        initializeExercisesState();
     });
 
     return {

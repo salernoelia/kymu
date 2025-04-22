@@ -234,6 +234,39 @@ watch(
 );
 ```
 
+## Rom Method selection
+
+```vue
+<select
+    name="select-rom-combination"
+    class="w-96 p-2 text-lg border rounded"
+    v-model="selectedROMCombination"
+    ref="dropdown"
+  >
+  <option
+    v-for="(value, key) in ROMCombinations"
+    :key="key"
+    :value="key"
+  >
+    {{ $t(key) }}
+  </option>
+</select>
+
+<script setup>
+const changeROMSelection = (direction: number) => {
+  const keys = romCombinationsKeys;
+  currentIndex.value =
+    (currentIndex.value + direction + keys.length) % keys.length;
+  const newSelection = keys[currentIndex.value];
+  if (newSelection) selectedROMCombination.value = newSelection;
+};
+
+changeROMSelection(1);
+changeROMSelection(-1);
+
+</script>
+```
+
 # Mobile App Dev
 
 Install the CLI
@@ -248,3 +281,4 @@ Forward localhost ip's to ADB
 adb reverse tcp:54321 tcp:54321
 adb reverse tcp:3000 tcp:3000
 ```
+

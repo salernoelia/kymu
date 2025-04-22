@@ -26,25 +26,18 @@
       class="exercises flex flex-row"
     >
       <TvExercises
-        v-if="exercisesWithFocus"
-        v-for="(exercise, index) in exercisesWithFocus"
+        v-for="(exercise, index) in currentUnit.exercises"
         :key="exercise.id || index"
         :title="exercise.name"
         :description="exercise.description"
-        :focus="exercise.focus"
       />
     </div>
 
     <div
       v-if="currentUnit"
       class="navigation-help mt-4"
-    >
-      <p>Use ⬅️ and ➡️ to navigate, OK to select</p>
-      <p>
-        Selected: {{ selectedIndex + 1 }} /
-        {{ currentUnit.exercises?.length || 0 }}
-      </p>
-    </div>
+    ></div>
+    <h1>Press Enter to start!</h1>
   </div>
 </template>
 
@@ -65,7 +58,6 @@ const patientId = route.params.patientid as string;
 const unitId = route.params.unitid as string;
 
 // State
-const selectedIndex = ref(0);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
 
@@ -76,34 +68,12 @@ const {
   error: storeError,
 } = storeToRefs(tvStore);
 
-// Computed
-const exercisesWithFocus = computed(() => {
-  if (!currentUnit.value?.exercises) return [];
-
-  return currentUnit.value.exercises.map((exercise, index) => {
-    const exerciseObj = exercise as Record<string, any>;
-    return {
-      ...exerciseObj,
-      focus: index === selectedIndex.value,
-    };
-  });
-});
-
 // Watch for remote control inputs
 watch(
   () => remoteKey.value,
   (newKey) => {
-    if (currentUnit.value?.exercises?.length) {
-      const exerciseCount = currentUnit.value.exercises.length;
-
-      if (newKey === "right") {
-        selectedIndex.value = (selectedIndex.value + 1) % exerciseCount;
-      } else if (newKey === "left") {
-        selectedIndex.value =
-          (selectedIndex.value - 1 + exerciseCount) % exerciseCount;
-      } else if (newKey === "ok") {
-        navigateToSelectedExercise();
-      }
+    if (newKey === "ok") {
+      navigateToSelectedExercise();
     }
   }
 );
@@ -112,10 +82,12 @@ watch(
 const navigateToSelectedExercise = () => {
   if (!currentUnit.value?.exercises) return;
 
-  const selectedExercise = currentUnit.value.exercises[selectedIndex.value];
-  if (selectedExercise && unitId) {
-    navigateTo(localePath(`/tv/${patientId}/${unitId}/${selectedExercise.Id}`));
-  }
+  console.log("navigating to", currentUnit.value?.exercises[0]?.id);
+  navigateTo(
+    localePath(
+      `/tv/${patientId}/${unitId}/${currentUnit.value?.exercises[0]?.id}`
+    )
+  );
 };
 
 const fetchUnitData = async () => {

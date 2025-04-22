@@ -1,270 +1,88 @@
-import { useRoute, useRouter } from "vue-router";
-import { useTVStore } from "~/stores/tvStore";
+export const useExerciseStateMachine = () => {
+};
 
-/**
- * Exercise state machine singleton that manages exercise navigation and state transitions
- */
-export class ExerciseStateMachine {
-    private static instance: ExerciseStateMachine;
-    private tvStore: ReturnType<typeof useTVStore>;
-    private router: ReturnType<typeof useRouter>;
-    private route: ReturnType<typeof useRoute>;
-    private currentExerciseIndex: number = 0;
-
-    private constructor() {
-        this.tvStore = useTVStore();
-        this.router = useRouter();
-        this.route = useRoute();
-    }
-
-    /**
-     * Get the singleton instance of the exercise state machine
-     */
-    public static getInstance(): ExerciseStateMachine {
-        if (!ExerciseStateMachine.instance) {
-            ExerciseStateMachine.instance = new ExerciseStateMachine();
-        }
-        return ExerciseStateMachine.instance;
-    }
-
-    /**
-     * Initialize the state machine with the current exercise
-     * @param exerciseId The current exercise ID
-     */
-    public initialize(exerciseId?: string): void {
-        const { currentUnit } = this.tvStore;
-
-        if (!currentUnit?.exercises?.length) {
-            console.error("Cannot initialize: No exercises available");
-            return;
-        }
-
-        // Initialize exercise states if not already done
-        if (!this.tvStore.exercisesStates?.length) {
-            this.tvStore.initializeExercisesState();
-        }
-
-        // Set current exercise index
-        if (exerciseId) {
-            const index = currentUnit.exercises.findIndex(
-                (ex) => ex.Id === exerciseId,
-            );
-            this.currentExerciseIndex = index >= 0 ? index : 0;
-        } else {
-            this.currentExerciseIndex = 0;
-        }
-    }
-
-    /**
-     * Navigate to the next exercise
-     */
-    public nextExercise(): void {
-        const { currentUnit } = this.tvStore;
-        if (!currentUnit?.exercises?.length) return;
-
-        const exercisesCount = currentUnit.exercises.length;
-        if (this.currentExerciseIndex < exercisesCount - 1) {
-            this.currentExerciseIndex++;
-            this.navigateToCurrentExercise();
-        } else {
-            // We're at the end, navigate back to unit page or show completion
-            this.navigateToUnitSummary();
-        }
-    }
-
-    /**
-     * Navigate to the previous exercise
-     */
-    public previousExercise(): void {
-        const { currentUnit } = this.tvStore;
-        if (!currentUnit?.exercises?.length) return;
-
-        if (this.currentExerciseIndex > 0) {
-            this.currentExerciseIndex--;
-            this.navigateToCurrentExercise();
-        } else {
-            // We're at the beginning, navigate back to unit list
-            this.navigateToUnitList();
-        }
-    }
-
-    /**
-     * Skip the current exercise
-     */
-    public skipExercise(): void {
-        this.updateExerciseStatus("skipped");
-        this.nextExercise();
-    }
-
-    /**
-     * Mark the current exercise as completed
-     * @param results Optional results data to save
-     */
-    public completeExercise(results?: ExerciseResults): void {
-        this.updateExerciseStatus("completed", results);
-        this.nextExercise();
-    }
-
-    /**
-     * Retry the current exercise
-     */
-    public retryExercise(): void {
-        this.updateExerciseStatus("none");
-        this.navigateToCurrentExercise();
-    }
-
-    /**
-     * Update the status of the current exercise
-     * @param status New status to set
-     * @param results Optional results data
-     */
-    private updateExerciseStatus(
-        status: completed_status,
-        results?: ExerciseResults,
-    ): void {
-        const { currentUnit, exercisesStates } = this.tvStore;
-
-        if (!currentUnit?.value?.exercises || !exercisesStates?.length) return;
-
-        const currentExercise =
-            currentUnit.value.exercises[this.currentExerciseIndex];
-        if (!currentExercise) return;
-
-        const stateIndex = exercisesStates.findIndex(
-            (state) => state.Id === currentExercise.Id,
-        );
-
-        if (stateIndex >= 0) {
-            // Clone the state to maintain reactivity
-            const updatedStates = [...exercisesStates];
-            updatedStates[stateIndex] = {
-                ...updatedStates[stateIndex],
-                completed_status: status,
-                results: results || updatedStates[stateIndex].results,
-            };
-
-            // Update the state in the store
-            this.tvStore.$patch({ exercisesStates: updatedStates });
-        }
-    }
-
-    /**
-     * Get the current exercise
-     */
-    public getCurrentExercise(): Tables<"exercises"> {
-        const { currentUnit } = this.tvStore;
-        if (!currentUnit?.exercises?.length) return undefined;
-
-        return currentUnit.exercises[this.currentExerciseIndex];
-    }
-
-    /**
-     * Get the state of the current exercise
-     */
-    public getCurrentExerciseState(): ExerciseState | undefined {
-        const currentExercise = this.getCurrentExercise();
-        if (!currentExercise) return undefined;
-
-        const { exercisesStates } = this.tvStore;
-        return exercisesStates.find((state) =>
-            state.unitID === currentExercise.id
-        );
-    }
-
-    /**
-     * Navigate to the current exercise
-     */
-    private navigateToCurrentExercise(): void {
-        const currentExercise = this.getCurrentExercise();
-        if (!currentExercise) return;
-
-        const { patientid, unitid } = this.route.params;
-        this.router.push(`/tv/${patientid}/${unitid}/${currentExercise.Id}`);
-    }
-
-    /**
-     * Navigate back to unit list
-     */
-    private navigateToUnitList(): void {
-        const { patientid } = this.route.params;
-        this.router.push(`/tv/${patientid}`);
-    }
-
-    /**
-     * Navigate to unit summary page
-     */
-    private navigateToUnitSummary(): void {
-        const { patientid, unitid } = this.route.params;
-        this.router.push(`/tv/${patientid}/${unitid}/summary`);
-    }
-
-    /**
-     * Get all exercise states
-     */
-    public getAllExerciseStates(): ExercisesStates {
-        return this.tvStore.exercisesStates;
-    }
-
-    /**
-     * Check if we're on the first exercise
-     */
-    public isFirstExercise(): boolean {
-        return this.currentExerciseIndex === 0;
-    }
-
-    /**
-     * Check if we're on the last exercise
-     */
-    public isLastExercise(): boolean {
-        const { currentUnit } = this.tvStore;
-        if (!currentUnit?.exercises?.length) return true;
-
-        return this.currentExerciseIndex ===
-            currentUnit.exercises.length - 1;
-    }
-
-    /**
-     * Get the progress as a percentage
-     */
-    public getProgressPercentage(): number {
-        const { currentUnit } = this.tvStore;
-        if (!currentUnit?.exercises?.length) return 0;
-
-        const total = currentUnit.exercises.length;
-        return Math.round(((this.currentExerciseIndex + 1) / total) * 100);
-    }
-
-    /**
-     * Get a summary of completed exercises
-     */
-    public getSummary(): {
-        total: number;
-        completed: number;
-        skipped: number;
-        remaining: number;
-    } {
-        const { exercisesStates } = this.tvStore;
-
-        const total = exercisesStates.length;
-        const completed = exercisesStates.filter(
-            (state) => state.completed_status === "completed",
-        ).length;
-        const skipped = exercisesStates.filter(
-            (state) => state.completed_status === "skipped",
-        ).length;
-
-        return {
-            total,
-            completed,
-            skipped,
-            remaining: total - completed - skipped,
-        };
-    }
-}
-
-/**
- * Composable that returns the singleton instance of ExerciseStateMachine
- */
-export function useExerciseStateMachine() {
-    return ExerciseStateMachine.getInstance();
-}
+[
+    {
+        "id": "575cd2db-bee3-41d0-adde-d1af310ae4fa",
+        "name": "Hanteln linker Arm",
+        "results": {},
+        "created_at": "2025-04-22T17:24:04.342Z",
+        "focus_type": "balance",
+        "description":
+            "Bewege die Hantel fünf mal hoch und runter mit deinem Linken Arm.",
+        "is_template": true,
+        "exercise_type": "exercise_screen",
+        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
+        "repetitions_goal": 5,
+        "duration_seconds_goal": null,
+        "exercise_instruction_ids": null,
+        "inherited_default_exercise": null,
+        "therapist_added_image_urls": null,
+        "therapist_added_video_urls": null,
+        "family_scene_adjustment_access": false,
+        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
+        "completed_status": "none",
+    },
+    {
+        "id": "52349c3a-dcfd-4256-872b-73f40e2457ad",
+        "name": "Beweglichkeit Linkes Bein",
+        "results": {},
+        "created_at": "2025-04-22T17:24:04.342Z",
+        "focus_type": "range-of-motion",
+        "description":
+            "Ein Test um die Beweglichkeit des linken beins zu testen",
+        "is_template": null,
+        "exercise_type": "exercise_screen",
+        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
+        "repetitions_goal": 3,
+        "duration_seconds_goal": null,
+        "exercise_instruction_ids": null,
+        "inherited_default_exercise": null,
+        "therapist_added_image_urls": null,
+        "therapist_added_video_urls": null,
+        "family_scene_adjustment_access": false,
+        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
+        "completed_status": "none",
+    },
+    {
+        "id": "952a62ab-5130-4088-b415-a97d0394751e",
+        "name": "Beweglichkeit Linke Hüftseite",
+        "results": {},
+        "created_at": "2025-04-22T17:24:04.342Z",
+        "focus_type": "range-of-motion",
+        "description": "Test für die Beweglichkeit der linken Hüftseite.",
+        "is_template": null,
+        "exercise_type": "exercise_screen",
+        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
+        "repetitions_goal": 3,
+        "duration_seconds_goal": null,
+        "exercise_instruction_ids": null,
+        "inherited_default_exercise": null,
+        "therapist_added_image_urls": null,
+        "therapist_added_video_urls": null,
+        "family_scene_adjustment_access": true,
+        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
+        "completed_status": "none",
+    },
+    {
+        "id": "cd7fbad2-1bc3-4c23-9f8e-0146233f441f",
+        "name": "Balance Full Tandem",
+        "results": {},
+        "created_at": "2025-04-22T17:24:04.342Z",
+        "focus_type": "balance",
+        "description":
+            "Versuche eine Minute mit den Füssen voreinander balanciert zu bleiben",
+        "is_template": false,
+        "exercise_type": "exercise_screen",
+        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
+        "repetitions_goal": null,
+        "duration_seconds_goal": 60,
+        "exercise_instruction_ids": null,
+        "inherited_default_exercise": null,
+        "therapist_added_image_urls": null,
+        "therapist_added_video_urls": null,
+        "family_scene_adjustment_access": false,
+        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
+        "completed_status": "none",
+    },
+];
