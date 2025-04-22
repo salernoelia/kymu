@@ -51,14 +51,41 @@
 </template>
 
 <script setup lang="ts">
-const tvStore = useTVStore();
 const route = useRoute();
+const tvStore = useTVStore();
+
+const localePath = useLocalePath();
 
 const exerciseId = computed(() => route.params.exerciseid as string);
 const unitId = computed(() => route.params.unitid as string);
-
 const currentExercise = computed(() => tvStore.currentExercise);
 const exerciseProgress = computed(() => tvStore.exerciseProgress);
+
+// Route params
+const patientId = route.params.patientid as string;
+
+// Access the reactive state from the store
+const {
+  currentUnit,
+  isLoading: storeLoading,
+  error: storeError,
+} = storeToRefs(tvStore);
+
+const { remoteKey } = useRemoteControl();
+
+watch(
+  () => remoteKey.value,
+  (newKey) => {
+    if (newKey === "right") {
+      console.log("unitid", unitId.value);
+      navigateTo(
+        localePath(
+          `/tv/${patientId}/${unitId.value}/${currentUnit.value?.exercises[0]?.id}/instruction`
+        )
+      );
+    }
+  }
+);
 
 onMounted(async () => {
   if (unitId.value) {

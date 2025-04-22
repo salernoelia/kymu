@@ -26,10 +26,10 @@
 
 <script setup lang="ts">
 const menu = ref(false);
-const { remoteKey } = useRemoteControl();
 const supabase = useSupabaseClient();
 const localePath = useLocalePath();
 const { toggleFullscreen } = useFullscreen();
+const { remoteKey } = useRemoteControl();
 
 watch(
   () => remoteKey.value,

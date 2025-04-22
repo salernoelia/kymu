@@ -38,7 +38,7 @@
       v-if="currentUnit"
       class="navigation-help mt-4"
     ></div>
-    <h1>Press Enter to start!</h1>
+    <h1>Drücke nach rechts um weiterzumachen!</h1>
   </div>
 </template>
 
@@ -57,6 +57,7 @@ const tvStore = useTVStore();
 // Route params
 const patientId = route.params.patientid as string;
 const unitId = route.params.unitid as string;
+const exerciseProgress = computed(() => tvStore.exerciseProgress);
 
 // State
 const isLoading = ref(true);
@@ -82,11 +83,12 @@ watch(
 // Methods
 const navigateToSelectedExercise = () => {
   if (!currentUnit.value?.exercises) return;
-
-  console.log("navigating to", currentUnit.value?.exercises[0]?.id);
+  console.log("unitid", unitId);
   navigateTo(
     localePath(
-      `/tv/${patientId}/${unitId}/${currentUnit.value?.exercises[0]?.id}/progress`
+      `/tv/${patientId}/${unitId}/${
+        currentUnit.value?.exercises[exerciseProgress.value.current - 1]?.id
+      }/progress`
     )
   );
 };

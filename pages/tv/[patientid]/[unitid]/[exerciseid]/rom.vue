@@ -3,6 +3,7 @@
 <template>
   <!-- ROM combination dropdown moved from component -->
   <div class="w-full h-full flex flex-col items-start justify-start gap-2">
+    <h1>{{ currentExercise?.name }}</h1>
     <TvRom
       :rom-combination="selectedROMCombination"
       ref="romComponent"
@@ -15,6 +16,9 @@ import { ROMCombinations } from "~/shared/constants/ROMCombinations";
 
 const tvStore = useTVStore();
 
+const currentExercise = computed(() => tvStore.currentExercise);
+const exerciseProgress = computed(() => tvStore.exerciseProgress);
+
 definePageMeta({
   title: "Kymu",
   layout: "television",
@@ -23,8 +27,8 @@ definePageMeta({
 const romCombinationsKeys = Object.keys(ROMCombinations) as Array<
   keyof typeof ROMCombinations
 >;
-const selectedROMCombination = ref<keyof typeof ROMCombinations>(
-  romCombinationsKeys[0] ?? "shoulder_abduction_left"
+const selectedROMCombination = ref<Tables<"exercise_categories">["name"]>(
+  currentExercise.value?.category ?? "shoulder_abduction_left"
 );
 
 const romComponent = ref<null | {

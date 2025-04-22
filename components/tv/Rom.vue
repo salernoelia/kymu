@@ -36,6 +36,7 @@
 
 <script setup lang="ts">
 import { PoseService } from "~/shared/services/pose_service";
+// todo: use the fetched categories
 import { ROMCombinations } from "~/shared/constants/ROMCombinations";
 import { getReferenceAngleDeg } from "~/shared/utils/getReferenceAngleDeg";
 import type { Results } from "@mediapipe/pose";
@@ -43,9 +44,18 @@ import type { NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 import { useRomStore } from "~/stores/romStore";
 import * as Tone from "tone";
 
+const supabase = useSupabaseClient();
+
+// const { data: romCombinationData } = await supabase
+//   .from("exercise_categories")
+//   .select("*");
+// console.log(romCombinationData);
+
 const props = defineProps<{
   romCombination: string;
 }>();
+
+console.log(props.romCombination);
 
 const romStore = useRomStore();
 

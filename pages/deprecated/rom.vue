@@ -1,5 +1,6 @@
 <template>
   <div class="pose">
+    <h1>isohf</h1>
     <p>Current Angle: {{ calculatedAngle }}</p>
     <p>Result Angle: {{ savedAngle }}</p>
 
@@ -62,6 +63,10 @@ import type { Results } from "@mediapipe/pose";
 
 import { type NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 
+const tvStore = useTVStore();
+
+const currentExercise = computed(() => tvStore.currentExercise);
+const exerciseProgress = computed(() => tvStore.exerciseProgress);
 const source = ref<InstanceType<typeof HTMLVideoElement> | null>(null);
 const canvas = ref<InstanceType<typeof HTMLCanvasElement> | null>(null);
 const landmarkContainer = ref<InstanceType<typeof HTMLDivElement> | null>(null);
