@@ -1,88 +1,106 @@
 export const useExerciseStateMachine = () => {
-};
+    const exercises = ref<ExerciseCollection>([]);
+    const currentExerciseIndex = ref<number>(0);
+    const isLoading = ref<boolean>(false);
+    const error = ref<string | null>(null);
 
-[
-    {
-        "id": "575cd2db-bee3-41d0-adde-d1af310ae4fa",
-        "name": "Hanteln linker Arm",
-        "results": {},
-        "created_at": "2025-04-22T17:24:04.342Z",
-        "focus_type": "balance",
-        "description":
-            "Bewege die Hantel fünf mal hoch und runter mit deinem Linken Arm.",
-        "is_template": true,
-        "exercise_type": "exercise_screen",
-        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
-        "repetitions_goal": 5,
-        "duration_seconds_goal": null,
-        "exercise_instruction_ids": null,
-        "inherited_default_exercise": null,
-        "therapist_added_image_urls": null,
-        "therapist_added_video_urls": null,
-        "family_scene_adjustment_access": false,
-        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
-        "completed_status": "none",
-    },
-    {
-        "id": "52349c3a-dcfd-4256-872b-73f40e2457ad",
-        "name": "Beweglichkeit Linkes Bein",
-        "results": {},
-        "created_at": "2025-04-22T17:24:04.342Z",
-        "focus_type": "range-of-motion",
-        "description":
-            "Ein Test um die Beweglichkeit des linken beins zu testen",
-        "is_template": null,
-        "exercise_type": "exercise_screen",
-        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
-        "repetitions_goal": 3,
-        "duration_seconds_goal": null,
-        "exercise_instruction_ids": null,
-        "inherited_default_exercise": null,
-        "therapist_added_image_urls": null,
-        "therapist_added_video_urls": null,
-        "family_scene_adjustment_access": false,
-        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
-        "completed_status": "none",
-    },
-    {
-        "id": "952a62ab-5130-4088-b415-a97d0394751e",
-        "name": "Beweglichkeit Linke Hüftseite",
-        "results": {},
-        "created_at": "2025-04-22T17:24:04.342Z",
-        "focus_type": "range-of-motion",
-        "description": "Test für die Beweglichkeit der linken Hüftseite.",
-        "is_template": null,
-        "exercise_type": "exercise_screen",
-        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
-        "repetitions_goal": 3,
-        "duration_seconds_goal": null,
-        "exercise_instruction_ids": null,
-        "inherited_default_exercise": null,
-        "therapist_added_image_urls": null,
-        "therapist_added_video_urls": null,
-        "family_scene_adjustment_access": true,
-        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
-        "completed_status": "none",
-    },
-    {
-        "id": "cd7fbad2-1bc3-4c23-9f8e-0146233f441f",
-        "name": "Balance Full Tandem",
-        "results": {},
-        "created_at": "2025-04-22T17:24:04.342Z",
-        "focus_type": "balance",
-        "description":
-            "Versuche eine Minute mit den Füssen voreinander balanciert zu bleiben",
-        "is_template": false,
-        "exercise_type": "exercise_screen",
-        "therapist_uid": "365a3487-0b98-4443-be87-df78c3bb5537",
-        "repetitions_goal": null,
-        "duration_seconds_goal": 60,
-        "exercise_instruction_ids": null,
-        "inherited_default_exercise": null,
-        "therapist_added_image_urls": null,
-        "therapist_added_video_urls": null,
-        "family_scene_adjustment_access": false,
-        "unitID": "34cac52f-8c90-479b-bf21-96fa40fdf3fd",
-        "completed_status": "none",
-    },
-];
+    const currentExercise = computed(() => {
+        if (exercises.value.length === 0) return null;
+        return exercises.value[currentExerciseIndex.value];
+    });
+
+    const isFirstExercise = computed(() => currentExerciseIndex.value === 0);
+
+    const isLastExercise = computed(() =>
+        currentExerciseIndex.value === exercises.value.length - 1
+    );
+
+    const progress = computed(() => {
+        if (exercises.value.length === 0) {
+            return { current: 0, total: 0, percentage: 0 };
+        }
+        const current = currentExerciseIndex.value + 1;
+        const total = exercises.value.length;
+        const percentage = Math.round((current / total) * 100);
+        return { current, total, percentage };
+    });
+
+    const initializeExercises = (unitExercises: any[]) => {
+        if (!unitExercises || unitExercises.length === 0) {
+            exercises.value = [];
+            return;
+        }
+
+        exercises.value = unitExercises.map((exercise) => ({
+            ...exercise,
+            status: exercise.completed_status === "none"
+                ? "not_started"
+                : exercise.completed_status,
+            results: exercise.results || {},
+            unitId: exercise.unitID,
+        })) as ExerciseCollection;
+
+        currentExerciseIndex.value = 0;
+    };
+
+    const goToNextExercise = () => {
+        if (isLastExercise.value) return;
+        currentExerciseIndex.value++;
+    };
+
+    const goToPreviousExercise = () => {
+        if (isFirstExercise.value) return;
+        currentExerciseIndex.value--;
+    };
+
+    const startExercise = () => {
+        if (!currentExercise.value) return;
+        currentExercise.value.status = "in_progress";
+    };
+
+    const completeExercise = (results?: ExerciseResults) => {
+        if (!currentExercise.value) return;
+        currentExercise.value.status = "completed";
+        if (results) {
+            currentExercise.value.results = results;
+        }
+    };
+
+    const skipExercise = () => {
+        if (!currentExercise.value) return;
+        currentExercise.value.status = "skipped";
+    };
+
+    const getExerciseStatus = () => {
+        if (!currentExercise.value) return null;
+        return currentExercise.value.status;
+    };
+
+    const getAllExercises = () => exercises.value;
+
+    const goToExercise = (index: number) => {
+        if (index >= 0 && index < exercises.value.length) {
+            currentExerciseIndex.value = index;
+        }
+    };
+
+    return {
+        exercises,
+        currentExercise,
+        currentExerciseIndex,
+        isLoading,
+        error,
+        progress,
+        isFirstExercise,
+        isLastExercise,
+        initializeExercises,
+        goToNextExercise,
+        goToPreviousExercise,
+        startExercise,
+        completeExercise,
+        skipExercise,
+        getExerciseStatus,
+        getAllExercises,
+        goToExercise,
+    };
+};

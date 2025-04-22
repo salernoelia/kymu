@@ -15,7 +15,7 @@ type UnitWithDetails = Tables<"units"> & {
     exercises: Tables<"exercises">[];
 };
 
-type completed_status = "none" | "ongoing" | "skipped" | "completed";
+type ExerciseStatus = "not_started" | "in_progress" | "skipped" | "completed";
 
 type ExerciseResults = {
     achieved_repetitions?: number;
@@ -25,11 +25,11 @@ type ExerciseResults = {
     rom?: {};
 };
 
-type ExerciseState = Tables<"exercises"> & {
-    unitID: Tables<"units">[id];
+type ExerciseItem = Tables<"exercises"> & {
+    unitId: Tables<"units">[id];
     created_at: Date;
-    completed_status: completed_status;
+    status: ExerciseStatus;
     results?: ExerciseResults;
 };
 
-type ExercisesStates = ExerciseState[];
+type ExerciseCollection = ExerciseItem[];

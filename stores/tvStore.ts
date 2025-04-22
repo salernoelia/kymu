@@ -1,34 +1,13 @@
-// import { useStorage } from "@vueuse/core";
-
 export const useTVStore = defineStore("tvStore", () => {
     const unitCrud = useUnitCrud();
     const units = ref<UnitWithDetails[]>([]);
-
-    // const currentUnit = useStorage<UnitWithDetails | undefined>(
-    //     "current-unit",
-    //     undefined,
-    // );
-    // const exercisesStates = useStorage<ExercisesStates>(
-    //     "exercises-state",
-    //     [],
-    // );
-    const currentUnit = ref<UnitWithDetails | undefined>(
-        undefined,
-    );
-    const exercisesStates = ref<ExercisesStates>(
-        [],
-    );
-    const activeExercise = ref<ExerciseState>();
-
+    const currentUnit = ref<UnitWithDetails | undefined>(undefined);
     const isLoading = ref(false);
     const error = ref<string | null>(null);
 
-    /**
-     * Get a unit by its ID, first checking the local cache, then fetching if needed
-     * @param id The unit ID to retrieve
-     * @returns The found unit or undefined
-     */
-    const getInstanceUnitByID = async (
+    const exerciseStateMachine = useExerciseStateMachine();
+
+    const getUnitById = async (
         id: string,
     ): Promise<UnitWithDetails | undefined> => {
         if (!id) {
@@ -42,14 +21,15 @@ export const useTVStore = defineStore("tvStore", () => {
             const cachedUnit = units.value.find((unit) => unit.id === id);
             if (cachedUnit) {
                 currentUnit.value = cachedUnit;
+                initializeExercises();
                 return cachedUnit;
             }
 
-            // If not in cache, fetch all units and find the one we want
             await fetchUnits();
 
             const fetchedUnit = units.value.find((unit) => unit.id === id);
             currentUnit.value = fetchedUnit;
+            initializeExercises();
 
             return fetchedUnit;
         } catch (err) {
@@ -63,9 +43,6 @@ export const useTVStore = defineStore("tvStore", () => {
         }
     };
 
-    /**
-     * Fetch all units with details
-     */
     const fetchUnits = async (): Promise<void> => {
         try {
             isLoading.value = true;
@@ -82,66 +59,49 @@ export const useTVStore = defineStore("tvStore", () => {
         }
     };
 
-    const checkAllExercisesStates = (): completed_status => {
-        if (
-            !exercisesStates.value ||
-            exercisesStates.value.length === 0
-        ) {
-            return "none";
+    const getUnitExerciseStatus = (): ExerciseStatus => {
+        const exercises = exerciseStateMachine.getAllExercises();
+        if (!exercises || exercises.length === 0) {
+            return "not_started";
         }
 
-        const hasCompleted = exercisesStates.value.some((state) =>
-            state.completed_status === "completed" ||
-            state.completed_status === "skipped"
+        const hasCompleted = exercises.some((ex) =>
+            ex.status === "completed" || ex.status === "skipped"
         );
-        const hasOngoing = exercisesStates.value.some((state) =>
-            state.completed_status === "ongoing"
+        const hasInProgress = exercises.some((ex) =>
+            ex.status === "in_progress"
         );
 
-        if (hasCompleted) {
+        if (hasCompleted && !hasInProgress) {
             return "completed";
-        } else if (hasOngoing) {
-            return "ongoing";
+        } else if (hasInProgress || hasCompleted) {
+            return "in_progress";
         } else {
-            return "none";
+            return "not_started";
         }
     };
 
-    const initializeExercisesState = () => {
+    const initializeExercises = () => {
         if (!currentUnit.value || !currentUnit.value.id) return;
-        exercisesStates.value = currentUnit.value.exercises.map((exercise) => ({
-            ...exercise,
-            unitID: currentUnit.value!.id,
-            created_at: new Date().toISOString(),
-            completed_status: "none" as completed_status,
-            results: {},
-        })) as ExercisesStates;
-        console.log("Exercise State inizialized", exercisesStates.value);
+        exerciseStateMachine.initializeExercises(currentUnit.value.exercises);
     };
 
-    const getExerciseByIdFromStates = (
-        exerciseId: string,
-    ): ExerciseState | undefined => {
-        const exercise = exercisesStates.value?.find((exercise) =>
-            exercise.id === exerciseId
-        );
-        return exercise ?? undefined;
+    const getExerciseById = (exerciseId: string) => {
+        const exercises = exerciseStateMachine.getAllExercises();
+        return exercises.find((ex) => ex.id === exerciseId);
     };
 
-    const setExerciseStateMachine = (
-        exerciseId: string,
-    ) => {
-        activeExercise.value = getExerciseByIdFromStates(exerciseId);
-        if (activeExercise.value) {
-            console.log("active exercise has been set");
-        } else {
-            console.log("No Active Exercise Found");
+    const setCurrentExercise = (exerciseId: string) => {
+        const exercises = exerciseStateMachine.getAllExercises();
+        const index = exercises.findIndex((ex) => ex.id === exerciseId);
+        if (index >= 0) {
+            exerciseStateMachine.goToExercise(index);
         }
     };
 
     onMounted(async () => {
         await fetchUnits();
-        initializeExercisesState();
+        initializeExercises();
     });
 
     return {
@@ -149,10 +109,14 @@ export const useTVStore = defineStore("tvStore", () => {
         currentUnit,
         isLoading,
         error,
-        exercisesStates,
-        getInstanceUnitByID,
+        getUnitById,
         fetchUnits,
-        initializeExercisesState,
-        checkAllExercisesStates,
+        initializeExercises,
+        getUnitExerciseStatus,
+        getExerciseById,
+        setCurrentExercise,
+        exerciseStateMachine,
+        currentExercise: exerciseStateMachine.currentExercise,
+        exerciseProgress: exerciseStateMachine.progress,
     };
 });
