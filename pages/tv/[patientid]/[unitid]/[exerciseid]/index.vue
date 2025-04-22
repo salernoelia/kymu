@@ -3,7 +3,7 @@
 <template>
   <!-- ROM combination dropdown moved from component -->
   <div class="w-full h-full flex flex-col items-start justify-start gap-2">
-    <h1>Exercises will be starting shortly</h1>
+    <h1>Unneeded Route</h1>
     <h2>{{ tvStore.exercisesStates }}</h2>
   </div>
 </template>

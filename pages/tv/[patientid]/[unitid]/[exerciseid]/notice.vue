@@ -1,5 +1,7 @@
 <template>
-  <div></div>
+  <div>
+    <h1>Image with exercise based security notice</h1>
+  </div>
 </template>
 
 <script setup lang="ts">

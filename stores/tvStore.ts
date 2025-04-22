@@ -1,7 +1,6 @@
 // import { useStorage } from "@vueuse/core";
 
 export const useTVStore = defineStore("tvStore", () => {
-    const exerciseStateMachine = useExerciseStateMachine();
     const unitCrud = useUnitCrud();
     const units = ref<UnitWithDetails[]>([]);
 
@@ -19,7 +18,7 @@ export const useTVStore = defineStore("tvStore", () => {
     const exercisesStates = ref<ExercisesStates>(
         [],
     );
-    const currentExercise = ref<ExerciseState>();
+    const activeExercise = ref<ExerciseState>();
 
     const isLoading = ref(false);
     const error = ref<string | null>(null);
@@ -83,7 +82,7 @@ export const useTVStore = defineStore("tvStore", () => {
         }
     };
 
-    const checkExercisesStates = (): completed_status => {
+    const checkAllExercisesStates = (): completed_status => {
         if (
             !exercisesStates.value ||
             exercisesStates.value.length === 0
@@ -120,6 +119,26 @@ export const useTVStore = defineStore("tvStore", () => {
         console.log("Exercise State inizialized", exercisesStates.value);
     };
 
+    const getExerciseByIdFromStates = (
+        exerciseId: string,
+    ): ExerciseState | undefined => {
+        const exercise = exercisesStates.value?.find((exercise) =>
+            exercise.id === exerciseId
+        );
+        return exercise ?? undefined;
+    };
+
+    const setExerciseStateMachine = (
+        exerciseId: string,
+    ) => {
+        activeExercise.value = getExerciseByIdFromStates(exerciseId);
+        if (activeExercise.value) {
+            console.log("active exercise has been set");
+        } else {
+            console.log("No Active Exercise Found");
+        }
+    };
+
     onMounted(async () => {
         await fetchUnits();
         initializeExercisesState();
@@ -134,6 +153,6 @@ export const useTVStore = defineStore("tvStore", () => {
         getInstanceUnitByID,
         fetchUnits,
         initializeExercisesState,
-        checkExercisesStates,
+        checkAllExercisesStates,
     };
 });
