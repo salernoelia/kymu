@@ -3,6 +3,8 @@
     <div v-if="currentExercise">
       <h1>{{ currentExercise.name }}</h1>
       <p>{{ currentExercise.description }}</p>
+      <p>{{ currentExercise.exercise_type }}</p>
+      <p>{{ currentExercise }}</p>
 
       <div>
         <p>

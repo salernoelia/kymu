@@ -8,11 +8,15 @@ type AssessmentWithTests = Tables<"assessments"> & {
     tests: TestWithRelations[];
 };
 
+type ExerciseWithCategory = Tables<"exercises"> & {
+    category_info: Tables<"exercise_categories"> | null;
+};
+
 type UnitWithDetails = Tables<"units"> & {
     id: Tables<"units">[id];
     start_assessment: AssessmentWithTests | null;
     end_assessment: AssessmentWithTests | null;
-    exercises: Tables<"exercises">[];
+    exercises: ExerciseWithCategory[];
 };
 
 type ExerciseStatus = "not_started" | "in_progress" | "skipped" | "completed";
@@ -25,7 +29,7 @@ type ExerciseResults = {
     rom?: {};
 };
 
-type ExerciseItem = Tables<"exercises"> & {
+type ExerciseItem = ExerciseWithCategory & {
     unitId: Tables<"units">[id];
     created_at: Date;
     status: ExerciseStatus;

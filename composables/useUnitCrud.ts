@@ -31,7 +31,10 @@ export const useUnitCrud = () => {
             end_assessment:end_assessment_id(*),
             exercises:units_and_exercises(
                 prev_exercise_id,
-                exercise:exercise_id(*)
+                exercise:exercise_id(
+                    *,
+                    exercise_categories:category(*)
+                )
             )
         `)
             .eq("patient_uid", patientId.value);
@@ -42,6 +45,7 @@ export const useUnitCrud = () => {
 
         const { data: units, error: unitsError } = await query
             .order("created_at", { ascending: true });
+        console.log(units);
 
         if (unitsError) throw unitsError;
         if (!units || units.length === 0) return [];
