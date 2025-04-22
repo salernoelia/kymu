@@ -3,26 +3,16 @@
     id="container"
     :class="[focus ? 'bg-blue-500' : 'bg-gray-200']"
   >
-    <h1>{{ title }}</h1>
-    <p>{{ description }}</p>
+    <h1>{{ unit?.name }}</h1>
+    <p>{{ unit?.description }}</p>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-  focus: {
-    type: Boolean,
-    default: false,
-  },
-});
+const props = defineProps<{
+  unit: UnitWithDetails;
+  focus: Boolean;
+}>();
 </script>
 
 <style scoped>

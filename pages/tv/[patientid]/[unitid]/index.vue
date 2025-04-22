@@ -1,13 +1,49 @@
 <template>
-  <div>
-    <div class="exercises flex flex-row">
+  <div class="tv-exercise-container">
+    <div
+      v-if="isLoading"
+      class="loading"
+    >
+      <p>Loading exercises...</p>
+    </div>
+
+    <div
+      v-else-if="error"
+      class="error"
+    >
+      <p>{{ error }}</p>
+    </div>
+
+    <div
+      v-else-if="!currentUnit || !currentUnit.exercises?.length"
+      class="no-exercises"
+    >
+      <p>No exercises available for this unit</p>
+    </div>
+
+    <div
+      v-else
+      class="exercises flex flex-row"
+    >
       <TvExercises
+        v-if="exercisesWithFocus"
         v-for="(exercise, index) in exercisesWithFocus"
-        :key="index"
-        :title="exercise.title"
+        :key="exercise.id || index"
+        :title="exercise.name"
         :description="exercise.description"
         :focus="exercise.focus"
       />
+    </div>
+
+    <div
+      v-if="currentUnit"
+      class="navigation-help mt-4"
+    >
+      <p>Use ⬅️ and ➡️ to navigate, OK to select</p>
+      <p>
+        Selected: {{ selectedIndex + 1 }} /
+        {{ currentUnit.exercises?.length || 0 }}
+      </p>
     </div>
   </div>
 </template>
@@ -18,58 +54,98 @@ definePageMeta({
   layout: "television",
 });
 
+// Composables
 const localePath = useLocalePath();
 const { remoteKey } = useRemoteControl();
-const selectedIndex = ref(0);
 const route = useRoute();
-const patientId = route?.params.patientid;
+const tvStore = useTVStore();
 
-const unitId = route.params.unitid;
-console.log("unitId", unitId);
+// Route params
+const patientId = route.params.patientid as string;
+const unitId = route.params.unitid as string;
 
-const exercises = [
-  {
-    Id: "6b238ad8-7da1-43f9-990b-1e4dedb72a82",
-    title: "exercise 1",
-    description: "Description for exercise 1",
-  },
-  {
-    Id: "8ec96432-1adf-499c-9680-3b3f702b8c57",
-    title: "exercise 2",
-    description: "Description for exercise 3",
-  },
-  {
-    Id: "be19bcfe-7fd5-4384-8d45-628e11bf8a2d",
-    title: "exercise 3",
-    description: "Description for exercise 2",
-  },
-];
+// State
+const selectedIndex = ref(0);
+const isLoading = ref(true);
+const error = ref<string | null>(null);
 
+// Access the reactive state from the store
+const {
+  currentUnit,
+  isLoading: storeLoading,
+  error: storeError,
+} = storeToRefs(tvStore);
+
+// Computed
 const exercisesWithFocus = computed(() => {
-  return exercises.map((exercise, index) => ({
-    ...exercise,
-    focus: index === selectedIndex.value,
-  }));
+  if (!currentUnit.value?.exercises) return [];
+
+  return currentUnit.value.exercises.map((exercise, index) => {
+    const exerciseObj = exercise as Record<string, any>;
+    return {
+      ...exerciseObj,
+      focus: index === selectedIndex.value,
+    };
+  });
 });
 
+// Watch for remote control inputs
 watch(
   () => remoteKey.value,
   (newKey) => {
-    if (newKey === "right") {
-      selectedIndex.value = (selectedIndex.value + 1) % exercises.length;
-    } else if (newKey === "left") {
-      selectedIndex.value =
-        (selectedIndex.value - 1 + exercises.length) % exercises.length;
-    } else if (newKey === "ok") {
-      const selectedexercise = exercises[selectedIndex.value];
-      if (selectedexercise && unitId) {
-        navigateTo(
-          localePath(`/tv/${patientId}/${unitId}/${selectedexercise.Id}`)
-        );
+    if (currentUnit.value?.exercises?.length) {
+      const exerciseCount = currentUnit.value.exercises.length;
+
+      if (newKey === "right") {
+        selectedIndex.value = (selectedIndex.value + 1) % exerciseCount;
+      } else if (newKey === "left") {
+        selectedIndex.value =
+          (selectedIndex.value - 1 + exerciseCount) % exerciseCount;
+      } else if (newKey === "ok") {
+        navigateToSelectedExercise();
       }
     }
   }
 );
+
+// Methods
+const navigateToSelectedExercise = () => {
+  if (!currentUnit.value?.exercises) return;
+
+  const selectedExercise = currentUnit.value.exercises[selectedIndex.value];
+  if (selectedExercise && unitId) {
+    navigateTo(localePath(`/tv/${patientId}/${unitId}/${selectedExercise.Id}`));
+  }
+};
+
+const fetchUnitData = async () => {
+  try {
+    isLoading.value = true;
+    error.value = null;
+
+    if (!unitId) {
+      error.value = "Invalid unit ID";
+      return;
+    }
+
+    await tvStore.getInstanceUnitByID(unitId);
+
+    if (!currentUnit.value) {
+      error.value = "Unit not found";
+    }
+  } catch (err) {
+    console.error("Error fetching unit data:", err);
+    error.value =
+      err instanceof Error ? err.message : "Failed to load unit data";
+  } finally {
+    isLoading.value = false;
+  }
+};
+
+// Lifecycle
+onMounted(async () => {
+  await fetchUnitData();
+});
 </script>
 
 <style scoped></style>

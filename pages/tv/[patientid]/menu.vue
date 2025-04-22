@@ -2,7 +2,7 @@
   <div>
     <div class="units flex flex-row gap-4">
       <TvUnit
-        v-if="units"
+        v-if="tvStore.units"
         v-for="(unit, index) in unitsWithFocus"
         :focus="unit.focus"
         :unit
@@ -12,6 +12,8 @@
 </template>
 
 <script setup lang="ts">
+import { useTVStore } from "~/stores/tvStore";
+
 definePageMeta({
   title: "Kymu",
   layout: "television",
@@ -20,26 +22,26 @@ definePageMeta({
 const supabase = useSupabaseClient();
 const localePath = useLocalePath();
 const { remoteKey } = useRemoteControl();
-const unitCrud = useUnitCrud();
+const tvStore = useTVStore();
+
 const selectedIndex = ref(0);
 
 const route = useRoute();
 const patientId = route?.params.patientid;
 
-const units = ref<UnitWithDetails[]>();
-
 watch(
   () => remoteKey.value,
   (newKey) => {
-    if (units.value && units.value.length > 1) {
+    if (tvStore.units && tvStore.units.length > 1) {
       if (newKey === "right") {
         selectedIndex.value =
-          (selectedIndex.value + 1) % (units.value?.length || 1);
+          (selectedIndex.value + 1) % (tvStore.units.length || 1);
       } else if (newKey === "left") {
         selectedIndex.value =
-          (selectedIndex.value - 1 + units.value.length) % units.value.length;
+          (selectedIndex.value - 1 + tvStore.units.length) %
+          tvStore.units.length;
       } else if (newKey === "ok") {
-        const selectedUnit = units.value?.[selectedIndex.value];
+        const selectedUnit = tvStore.units[selectedIndex.value];
         if (selectedUnit) {
           navigateTo(localePath(`/tv/${patientId}/${selectedUnit.id}`));
         }
@@ -49,17 +51,11 @@ watch(
 );
 
 const unitsWithFocus = computed(() => {
-  if (!units.value) return;
-  return units.value.map((unit, index) => ({
+  if (!tvStore.units) return;
+  return tvStore.units.map((unit, index) => ({
     ...unit,
     focus: index === selectedIndex.value,
   }));
-});
-
-onMounted(async () => {
-  units.value = await unitCrud.getWithDetails();
-
-  console.log(units.value);
 });
 </script>
 

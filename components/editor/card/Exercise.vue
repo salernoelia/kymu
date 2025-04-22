@@ -70,13 +70,15 @@
       class="chart-container"
       :class="{ 'chart-visible': showChart }"
     >
+      <PrimitivesDivider class="mt-1 mb-1" />
+      <h2>Herzfrequenz</h2>
       <Transition name="chart-fade">
-        <ChartsBar
-          v-if="showChart"
-          :data="barChartData"
-          :width="300"
-          :height="200"
-          barColor="#3498db"
+        <AreaChart
+          :data="data"
+          index="name"
+          :categories="['Total', 'Average']"
+          class="w-full h-[250px] -translate-x-4"
+          :show-gradiant="true"
         />
       </Transition>
     </div>
@@ -92,6 +94,52 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+
+import {
+  type DateValue,
+  getLocalTimeZone,
+  today,
+} from "@internationalized/date";
+import { AreaChart } from "@/components/ui/chart-area";
+import { curveCardinal } from "d3";
+
+const data = [
+  {
+    name: "2min",
+    Total: 75,
+    Average: 78,
+  },
+  {
+    name: "4min",
+    Total: 85,
+    Average: 82,
+  },
+  {
+    name: "6min",
+    Total: 110,
+    Average: 105,
+  },
+  {
+    name: "8min",
+    Total: 130,
+    Average: 125,
+  },
+  {
+    name: "10min",
+    Total: 145,
+    Average: 140,
+  },
+  {
+    name: "12min",
+    Total: 120,
+    Average: 130,
+  },
+  {
+    name: "14min",
+    Total: 100,
+    Average: 110,
+  },
+];
 
 const props = defineProps<{
   exercise: Tables<"exercises">;
@@ -114,30 +162,22 @@ const handleDragEnd = (event: DragEvent) => {
 const toggleChart = () => {
   showChart.value = !showChart.value;
 };
-
-const barChartData = ref([
-  { name: "Jan", value: 45 },
-  { name: "Feb", value: 23 },
-  { name: "Mar", value: 56 },
-  { name: "Apr", value: 78 },
-  { name: "May", value: 42 },
-]);
 </script>
 
 <style scoped lang="scss">
 .card {
   transition: all 0.3s ease-in-out;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .chart-container {
   width: 100%;
   max-height: 0;
   overflow: hidden;
-  transition: max-height 0.3s ease-in-out;
+  transition: max-height 0.5s ease-in-out;
 
   &.chart-visible {
-    max-height: 220px;
+    max-height: 300px; /* Increased from 220px */
   }
 }
 

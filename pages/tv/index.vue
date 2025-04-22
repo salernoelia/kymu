@@ -16,12 +16,14 @@ definePageMeta({
 
 const localePath = useLocalePath();
 const { remoteKey } = useRemoteControl();
+const user = useSupabaseUser();
+const userID = user.value?.id;
 
 watch(
   () => remoteKey.value,
   (newKey) => {
     if (newKey === "ok") {
-      navigateTo(localePath("/tv/menu"));
+      navigateTo(localePath(`/tv/${userID}/menu`));
     }
   }
 );

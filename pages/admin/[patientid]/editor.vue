@@ -1,5 +1,7 @@
 <template>
-  <div class="flex flex-row gap-4">
+  <div
+    class="flex flex-row gap-4 overflow-x-auto h-full min-h-[calc(100vh-theme(spacing.32))]"
+  >
     <EditorUnit
       v-for="unit in editorStore.units"
       :key="unit.id"

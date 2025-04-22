@@ -27,6 +27,8 @@
 <script setup lang="ts">
 import { ROMCombinations } from "~/shared/constants/ROMCombinations";
 
+const tvStore = useTVStore();
+
 definePageMeta({
   title: "Kymu",
   layout: "television",
@@ -49,6 +51,10 @@ const romComponent = ref<null | {
 }>(null);
 
 const { remoteKey } = useRemoteControl();
+
+onMounted(() => {
+  tvStore.initializeExercisesState();
+});
 
 const changeROMSelection = (direction: number) => {
   const keys = romCombinationsKeys;

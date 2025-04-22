@@ -50,7 +50,7 @@ supabase gen types typescript --local > ./shared/types/database.d.ts
 #### External
 
 ```sh
-npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema cccpublic > ./shared/types/database.d.ts
+npx supabase gen types typescript --project-id "whbtmepowglwmocqunyw" --schema public > ./shared/types/database.d.ts
 ```
 
 ---

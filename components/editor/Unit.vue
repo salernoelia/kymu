@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-row gap-4">
     <div
-      class="flex flex-col gap-4 min-w-[400px] max-w-[400px] overflow-y-auto"
+      class="unit flex flex-col gap-4 min-w-[400px] max-w-[400px] h-[calc(100vh-8rem)] overflow-y-auto"
       @dragover.prevent
     >
       <EditorCardTitle
@@ -82,4 +82,3 @@ function guiltTrip() {
   guiltTrip();
 }
 </script>
-<!--   -->

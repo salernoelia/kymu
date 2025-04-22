@@ -20,8 +20,10 @@ export const useUnitCrud = () => {
     /**
      * Get all units for a specific patient with their assessments and exercises
      */
-    const getWithDetails = async (): Promise<UnitWithDetails[]> => {
-        const { data: units, error: unitsError } = await supabase
+    const getWithDetails = async (
+        isFocus?: boolean,
+    ): Promise<UnitWithDetails[]> => {
+        let query = supabase
             .from("units")
             .select(`
             *,
@@ -33,6 +35,13 @@ export const useUnitCrud = () => {
             )
         `)
             .eq("patient_uid", patientId.value);
+
+        if (isFocus === true) {
+            query = query.eq("isFocus", true);
+        }
+
+        const { data: units, error: unitsError } = await query
+            .order("created_at", { ascending: true });
 
         if (unitsError) throw unitsError;
         if (!units || units.length === 0) return [];

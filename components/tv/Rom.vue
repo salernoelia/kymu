@@ -4,11 +4,11 @@
       <div class="flex flex-col w-full items-center">
         <!-- Display the angle information -->
         <div class="angle-display mb-4">
-          <h1>Current Angle: {{ currentAngle.toFixed(2) }}</h1>
-          <h1>Pain Moments: {{ romStore.painMomentAngles }}</h1>
+          <p>Current Angle: {{ currentAngle.toFixed(2) }}</p>
+          <p>Pain Moments: {{ romStore.painMomentAngles }}</p>
 
-          <h1>{{ referenceAngle }}</h1>
-          <h1>{{ isInsideOfThreshold }}</h1>
+          <p>{{ referenceAngle }}</p>
+          <p>{{ isInsideOfThreshold }}</p>
           <!-- <p>Result Angle: {{ romStore.resultAngle.toFixed(2) }}</p> -->
         </div>
 
@@ -22,7 +22,7 @@
           :class="{ loading_canvas: loadingCanvas }"
           :width="canvasWidth"
           :height="canvasHeight"
-          style="width: 90%"
+          style="width: 50%"
           ref="canvas"
         ></canvas>
         <div
@@ -41,12 +41,19 @@ import { getReferenceAngleDeg } from "~/shared/utils/getReferenceAngleDeg";
 import type { Results } from "@mediapipe/pose";
 import type { NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 import { useRomStore } from "~/stores/romStore";
+import * as Tone from "tone";
 
 const props = defineProps<{
   romCombination: string;
 }>();
 
 const romStore = useRomStore();
+
+//create a synth and connect it to the main output (your speakers)
+const synth = new Tone.Synth().toDestination();
+
+//play a middle 'C' for the duration of an 8th note
+synth.triggerAttackRelease("C4", "8n");
 
 const source = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -65,6 +72,8 @@ const movableIndex = ref(16);
 const referenceIndex = ref(23);
 const thresholdDeg = ref(30);
 
+const toneForRom = useToneForRom(currentAngle);
+
 const isInsideOfThreshold = computed((): boolean => {
   if (
     !mediapipeResults.value ||
@@ -72,9 +81,14 @@ const isInsideOfThreshold = computed((): boolean => {
     !mediapipeResults.value.poseWorldLandmarks.length ||
     !mediapipeResults.value.poseWorldLandmarks[movableIndex.value] ||
     !mediapipeResults.value.poseWorldLandmarks[pivotIndex.value] ||
-    !mediapipeResults.value.poseWorldLandmarks[referenceIndex.value]
-  )
+    !mediapipeResults.value.poseWorldLandmarks[referenceIndex.value] ||
+    mediapipeResults.value.poseWorldLandmarks[movableIndex.value]
+      ?.visibility === undefined ||
+    (mediapipeResults.value.poseWorldLandmarks[movableIndex.value]
+      ?.visibility ?? 0) < 0.9
+  ) {
     return false;
+  }
 
   const A = mediapipeResults.value.poseWorldLandmarks[movableIndex.value];
   const B = mediapipeResults.value.poseWorldLandmarks[pivotIndex.value];
@@ -85,8 +99,10 @@ const isInsideOfThreshold = computed((): boolean => {
   referenceAngle.value = getReferenceAngleDeg(A, B, C);
 
   if (referenceAngle.value <= thresholdDeg.value) {
+    // toneForRom.startTone();
     return true;
   } else {
+    toneForRom.stopTone();
     return false;
   }
 });
@@ -157,8 +173,13 @@ onMounted(async () => {
       smoothSegmentation: false,
       minDetectionConfidence: 0.3,
       minTrackingConfidence: 0.3,
+      selfieMode: true,
     });
   }
+});
+
+onBeforeUnmount(() => {
+  toneForRom.stopTone();
 });
 
 const canvasWidth = computed(() => window.innerWidth);
