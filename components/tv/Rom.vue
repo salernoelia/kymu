@@ -44,7 +44,7 @@ import type { NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 import { useRomStore } from "~/stores/romStore";
 import * as Tone from "tone";
 
-const supabase = useSupabaseClient();
+// const supabase = useSupabaseClient();
 
 // const { data: romCombinationData } = await supabase
 //   .from("exercise_categories")

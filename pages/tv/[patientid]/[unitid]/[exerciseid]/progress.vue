@@ -2,22 +2,22 @@
   <div class="flex flex-row justify-center align-center">
     <div v-if="currentExercise">
       <h1>{{ currentExercise.name }}</h1>
-      <p>{{ currentExercise.description }}</p>
-      <p>{{ currentExercise.exercise_type }}</p>
-      <p>{{ currentExercise }}</p>
+      <h2>{{ currentExercise.description }}</h2>
+      <h2>{{ currentExercise.exercise_type }}</h2>
+      <!-- <p>{{ currentExercise }}</p> -->
 
       <div>
-        <p>
+        <h2>
           Exercise {{ exerciseProgress.current }} of
           {{ exerciseProgress.total }} ({{ exerciseProgress.percentage }}%)
-        </p>
+        </h2>
 
         <div v-if="currentExercise.repetitions_goal">
-          <p>Goal: {{ currentExercise.repetitions_goal }} repetitions</p>
+          <h2>Goal: {{ currentExercise.repetitions_goal }} repetitions</h2>
         </div>
 
         <div v-if="currentExercise.duration_seconds_goal">
-          <p>Goal: {{ currentExercise.duration_seconds_goal }} seconds</p>
+          <h2>Goal: {{ currentExercise.duration_seconds_goal }} seconds</h2>
         </div>
       </div>
 
@@ -38,10 +38,12 @@
           Next
         </button>
       </div>
-      <TvProgress
-        :current="exerciseProgress.current - 1"
-        :total="exerciseProgress.total"
-      />
+      <div class="w-full flex justify-center">
+        <TvProgress
+          :current="exerciseProgress.current - 1"
+          :total="exerciseProgress.total"
+        />
+      </div>
     </div>
 
     <div v-else>

@@ -1,7 +1,4 @@
-<!-- Exercise ID -->
-
 <template>
-  <!-- ROM combination dropdown moved from component -->
   <div class="w-full h-full flex flex-col items-start justify-start gap-2">
     <h1>{{ currentExercise?.name }}</h1>
     <TvRom
@@ -14,10 +11,23 @@
 <script setup lang="ts">
 import { ROMCombinations } from "~/shared/constants/ROMCombinations";
 
+const localePath = useLocalePath();
+const route = useRoute();
+
 const tvStore = useTVStore();
 
+// Route params
+const patientId = route.params.patientid as string;
+
+const unitId = computed(() => route.params.unitid as string);
 const currentExercise = computed(() => tvStore.currentExercise);
 const exerciseProgress = computed(() => tvStore.exerciseProgress);
+
+const {
+  currentUnit,
+  isLoading: storeLoading,
+  error: storeError,
+} = storeToRefs(tvStore);
 
 definePageMeta({
   title: "Kymu",
@@ -48,7 +58,12 @@ const handleRemoteKey = (newKey: string | null) => {
   if (!newKey) return;
 
   if (newKey === "right") {
-  } else if (newKey === "left") {
+    tvStore.exerciseStateMachine.goToNextExercise();
+    navigateTo(
+      localePath(
+        `/tv/${patientId}/${unitId.value}/${currentExercise?.value?.id}/progress`
+      )
+    );
   } else if (newKey === "ok") {
     if (romComponent.value) {
       romComponent.value.saveLandmarks();
