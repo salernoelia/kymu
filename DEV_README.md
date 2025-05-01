@@ -1,6 +1,6 @@
 # Kymu
 
-![showcase](/public/promotion/kymu-showcase.webp)
+![showcase](/public/promotion/kymu-showcase.jpg)
 
 ## Supabase Commands
 
@@ -238,11 +238,11 @@ watch(
 
 ```vue
 <select
-    name="select-rom-combination"
-    class="w-96 p-2 text-lg border rounded"
-    v-model="selectedROMCombination"
-    ref="dropdown"
-  >
+  name="select-rom-combination"
+  class="w-96 p-2 text-lg border rounded"
+  v-model="selectedROMCombination"
+  ref="dropdown"
+>
   <option
     v-for="(value, key) in ROMCombinations"
     :key="key"
@@ -263,7 +263,6 @@ const changeROMSelection = (direction: number) => {
 
 changeROMSelection(1);
 changeROMSelection(-1);
-
 </script>
 ```
 
@@ -281,4 +280,3 @@ Forward localhost ip's to ADB
 adb reverse tcp:54321 tcp:54321
 adb reverse tcp:3000 tcp:3000
 ```
-

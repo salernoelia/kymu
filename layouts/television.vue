@@ -18,7 +18,7 @@
         </NuxtLink>
       </NavigationTelevisionMenu>
     </Transition>
-    <main class="p-6 flex flex-col items-center justify-center flex-grow">
+    <main class="pl-6 pr-6 flex flex-col items-center justify-center flex-grow">
       <slot></slot>
     </main>
   </div>

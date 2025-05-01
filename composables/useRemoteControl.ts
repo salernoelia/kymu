@@ -13,7 +13,6 @@ export function useRemoteControl() {
     "s": "down",
     "d": "right",
     "Enter": "ok",
-    // "Escape": "cancel",
     "Backspace": "back",
     "m": "menu",
     "v": "voice",

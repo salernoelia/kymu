@@ -9,6 +9,7 @@ export const useToneForRom = (angle: Ref<number>) => {
         if (!isPlaying.value) {
             Tone.start();
             synth.triggerAttack("C3");
+            console.log("starting tone");
             isPlaying.value = true;
         }
     };
@@ -17,6 +18,7 @@ export const useToneForRom = (angle: Ref<number>) => {
         if (isPlaying.value) {
             synth.triggerRelease();
             isPlaying.value = false;
+            console.log("stopping tone");
         }
     };
 

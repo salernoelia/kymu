@@ -1,6 +1,5 @@
 <template>
-  <div class="w-full h-full flex flex-col items-start justify-start gap-2">
-    <h1>{{ currentExercise?.name }}</h1>
+  <div class="w-full h-full flex flex-col items-start justify-start">
     <TvRom
       :rom-combination="selectedROMCombination"
       ref="romComponent"

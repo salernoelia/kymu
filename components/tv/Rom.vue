@@ -1,9 +1,12 @@
 <template>
   <div class="w-full">
-    <div class="flex flex-row w-full">
-      <div class="flex flex-col w-full items-center">
+    <div class="flex flex-row w-full overflow-hidden">
+      <div
+        class="flex flex-col w-full h-full items-center justify-start overflow-hidden"
+      >
         <!-- Display the angle information -->
-        <div class="angle-display mb-4">
+        <div class="angle-display">
+          <p>Exercise: {{ currentExercise?.name }}</p>
           <p>Current Angle: {{ currentAngle.toFixed(2) }}</p>
           <p>Pain Moments: {{ romStore.painMomentAngles }}</p>
 
@@ -22,7 +25,6 @@
           :class="{ loading_canvas: loadingCanvas }"
           :width="canvasWidth"
           :height="canvasHeight"
-          style="width: 50%"
           ref="canvas"
         ></canvas>
         <div
@@ -44,6 +46,9 @@ import type { NormalizedLandmarkList } from "@mediapipe/drawing_utils";
 import { useRomStore } from "~/stores/romStore";
 import * as Tone from "tone";
 
+const tvStore = useTVStore();
+const currentExercise = computed(() => tvStore.currentExercise);
+
 // const supabase = useSupabaseClient();
 
 // const { data: romCombinationData } = await supabase
@@ -63,7 +68,7 @@ const romStore = useRomStore();
 const synth = new Tone.Synth().toDestination();
 
 //play a middle 'C' for the duration of an 8th note
-synth.triggerAttackRelease("C4", "8n");
+// synth.triggerAttackRelease("C4", "8n");
 
 const source = ref<HTMLVideoElement | null>(null);
 const canvas = ref<HTMLCanvasElement | null>(null);
@@ -112,7 +117,7 @@ const isInsideOfThreshold = computed((): boolean => {
     // toneForRom.startTone();
     return true;
   } else {
-    toneForRom.stopTone();
+    // toneForRom.stopTone();
     return false;
   }
 });
@@ -186,14 +191,20 @@ onMounted(async () => {
       selfieMode: true,
     });
   }
+
+  toneForRom.startTone();
 });
 
 onBeforeUnmount(() => {
   toneForRom.stopTone();
 });
 
-const canvasWidth = computed(() => window.innerWidth);
-const canvasHeight = computed(() => canvasWidth.value * (9 / 16));
+const canvasWidth = computed(() =>
+  Math.min(window.innerWidth, window.innerHeight * (16 / 9))
+);
+const canvasHeight = computed(() =>
+  Math.min(window.innerHeight * 0.9, canvasWidth.value * (9 / 16))
+);
 
 defineExpose({
   saveLandmarks,
@@ -212,12 +223,16 @@ defineExpose({
 .pose h1 {
   margin: 1.5rem 1.5rem;
 }
+
 .loading_canvas {
   background: url("https://media.giphy.com/media/8agqybiK5LW8qrG3vJ/giphy.gif")
     center no-repeat;
 }
 .angle-display {
-  background-color: rgba(255, 255, 255, 0.7);
+  position: absolute;
+  bottom: 1rem;
+  right: 1rem;
+  background-color: rgba(255, 255, 255, 0.4);
   padding: 10px;
   border-radius: 5px;
   font-size: 1.2rem;
@@ -230,7 +245,7 @@ defineExpose({
   }
   .input_video,
   .output_canvas {
-    margin: 1.5rem 1.5rem;
+    margin: 1rem 0;
   }
 }
 </style>
