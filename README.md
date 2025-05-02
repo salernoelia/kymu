@@ -61,4 +61,3 @@ The project is rooted in a **Human-Centered Design** methodology, emphasizing th
 - Elia Salerno
 - Stepan Vedunov
 
-_(This project is part of a Bachelor's Thesis at the Zurich University of the Arts.)_
