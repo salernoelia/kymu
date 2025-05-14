@@ -55,7 +55,7 @@
     "js-yaml-loader": "^1.2.2",
     "lucide-vue-next": "^0.479.0",
     "nuxt-mcp": "^0.1.2",
-    "reka-ui": "^2.2.0",
+    "reka-ui": "^2.2.1",
     "tailwind-merge": "^3.0.2",
     "tailwindcss-animate": "^1.0.7",
     "three": "^0.174.0",

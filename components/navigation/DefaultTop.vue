@@ -21,7 +21,7 @@
       >
       <nuxt-link
         class="nav-link"
-        :to="localePrath('/examples')"
+        :to="localePath('/examples')"
         >Examples</nuxt-link
       >
     </div>
@@ -81,6 +81,7 @@
 </template>
 
 <script setup lang="ts">
+
 const localePath = useLocalePath();
 const supabase = useSupabaseClient();
 const roleStore = useUserRoleStore();
