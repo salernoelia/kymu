@@ -1,6 +1,8 @@
 # Kymu
 
-![Kymu Showcase](/public/promotion/kymu-showcase.jpg)
+![Kymu Overview](/public/promotion/kymu-overview.png)
+![Kymu Showcase](/public/promotion/kymu-admin.png)
+![Kymu Mobile](/public/promotion/kymu-mobile.png)
 
 **Kymu** is a platform designed for hybrid pediatric neuromuscular rehabilitation. Developed as a **Bachelor's Thesis project** at the **Zurich University of the Arts**, Kymu aims to bridge the gap between traditional in-clinic therapy and effective home-based exercises for children with neuromuscular conditions.
 
