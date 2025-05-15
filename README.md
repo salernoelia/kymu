@@ -60,6 +60,6 @@ The project is rooted in a **Human-Centered Design** methodology, emphasizing th
 
 ## Authors
 
-- Elia Salerno
 - Stepan Vedunov
+- Elia Salerno
 
