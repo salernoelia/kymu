@@ -11,6 +11,7 @@
 ## Related Repositories
 
 - [Exhibition Application with focus on body tracking in front of a TV (Kymu Exhibition)](https://github.com/salernoelia/kymu-exhibition)
+- [Demo Application of the therapist web-interface for user testing](https://github.com/salernoelia/kymu-web-demo)
 - [Unity VR/MR Prototype (Kymu VR)](https://github.com/salernoelia/kymu-vr)
 
 ## Project Overview
