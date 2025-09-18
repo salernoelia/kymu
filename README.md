@@ -4,19 +4,12 @@
 ![Kymu Showcase](/public/promotion/kymu-admin.png)
 ![Kymu Mobile](/public/promotion/kymu-mobile.png)
 
-Hybrid platform for pediatric neuromuscular rehabilitation - helping kids do therapy at home while keeping therapists in the loop.
+Hybrid platform for pediatric neuromuscular rehabilitation, assisting kids do therapy at home while keeping therapists in the loop.
+
+
+[Read More](https://interactiondesign.zhdk.ch/en/diploma-2025/projects/kymu/)
 
 **Bachelor's Thesis Project** - Zurich University of the Arts (June 2025)
-
-## Design Question
-
-Kids with neuromuscular conditions need lots of therapy, but clinic visits are exhausting and home exercises are boring. Therapists can't track what happens between sessions.
-
-## The Solution
-
-- **For therapists:** Web dashboard to create exercise plans, track patient progress, and see real performance data
-- **For families:** TV/screen interface that guides kids through exercises at home with pose tracking and feedback
-- **Data connection:** Exercise completion, movement quality, and pain levels flow back to therapists
 
 ## Related Projects
 
