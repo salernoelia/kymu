@@ -8,7 +8,7 @@ Hybrid platform for pediatric neuromuscular rehabilitation - helping kids do the
 
 **Bachelor's Thesis Project** - Zurich University of the Arts (June 2025)
 
-## The Problem
+## Design Question
 
 Kids with neuromuscular conditions need lots of therapy, but clinic visits are exhausting and home exercises are boring. Therapists can't track what happens between sessions.
 
